@@ -1,0 +1,19 @@
+.header {
+  width: 100%;
+  position: relative;
+  z-index: 10;
+  color: hsla(0, 0%, 100%, .87);
+}
+
+.navbar {
+  background-color: #3f51b5;
+  display: flex;
+  flex-wrap: wrap;
+  -webkit-box-align: center;
+  align-items: center;
+  padding: 8px 16px;
+}
+
+.navbar button {
+  font-size: 1.05rem;
+}
