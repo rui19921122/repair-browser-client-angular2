@@ -1,15 +1,21 @@
 <div class="header">
   <div class="navbar">
-    <a md-button [routerLink]="['home']">首页</a>
-    <button md-button [mdMenuTriggerFor]="RepairMenu">天窗修模块</button>
-    <md-menu #RepairMenu="mdMenu" [overlapTrigger]="false">
-      <button md-menu-item>历史天窗修采集</button>
-      <button md-menu-item>天窗修统计</button>
-    </md-menu>
-    <button md-button [mdMenuTriggerFor]="WorkMenu">施工模块</button>
-    <md-menu #WorkMenu="mdMenu" [overlapTrigger]="false">
-      <button md-menu-item>历史施工统计</button>
-      <button md-menu-item>施工统计</button>
-    </md-menu>
+    <div>
+      <a md-button [routerLink]="['home']">首页</a>
+      <button md-button [mdMenuTriggerFor]="RepairMenu">天窗修模块</button>
+      <md-menu #RepairMenu="mdMenu" [overlapTrigger]="false">
+        <a md-menu-item [routerLink]="['repair-history-collect']">历史天窗修采集</a>
+        <button md-menu-item>天窗修统计</button>
+      </md-menu>
+      <button md-button [mdMenuTriggerFor]="WorkMenu">施工模块</button>
+      <md-menu #WorkMenu="mdMenu" [overlapTrigger]="false">
+        <button md-menu-item>历史施工统计</button>
+        <button md-menu-item>施工统计</button>
+      </md-menu>
+    </div>
+    <button *ngIf="UserService.is_login&&!UserService.pending" md-button>
+      来自{{UserService.department}}的{{UserService.username}},注销登陆
+    </button>
+    <button *ngIf="!UserService.is_login&&!UserService.pending" md-button (click)="OpenLoginForm()">请登陆</button>
   </div>
 </div>
