@@ -1,0 +1,17 @@
+.login_form_area {
+  display: flex;
+  justify-content: center;
+  padding: 15px 20px;
+  flex-direction: column;
+}
+
+.button-area {
+  display: flex;
+  justify-content: flex-start;
+  max-height: 36px;
+}
+
+.button {
+  margin-left: 10px;
+  margin-right: 10px;
+}

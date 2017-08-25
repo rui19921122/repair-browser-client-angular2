@@ -1,0 +1,35 @@
+<md-dialog-content>
+  <div class="login_form_area">
+    <md-input-container>
+      <input type="text"
+             mdInput
+             placeholder="用户名"
+             [mdAutocomplete]="auto"
+             #username
+             (keyup)="input_change(username.value)"
+      >
+    </md-input-container>
+    <md-autocomplete #auto="mdAutocomplete">
+      <md-option *ngFor="let username of filterUsernames" [value]="username">
+        {{username}}
+      </md-option>
+    </md-autocomplete>
+    <md-input-container>
+      <input type="password" mdInput placeholder="密码" #password>
+    </md-input-container>
+  </div>
+</md-dialog-content>
+<div class="button-area">
+  <button md-raised-button class="button" (click)="login(username.value,password.value)" (load)="UserService.pending"
+          *ngIf="!UserService.pending"
+  >
+    登陆
+  </button>
+  <button md-raised-button class="button"
+          [disabled]="true"
+          *ngIf="UserService.pending"
+  >
+    登陆中...
+  </button>
+  <button md-raised-button class="button" md-dialog-close>取消</button>
+</div>

@@ -1,0 +1,19 @@
+<div *ngIf="!user_service.is_login">
+  此页面仅登陆用户才可查看
+</div>
+<div *ngIf="user_service.is_login" class="container">
+  <md-sidenav-container class="navbar-sidenav" [ngStyle]="{'height':page_height+'px'}" #container>
+    <md-sidenav mode="over" #sidenav>
+      <div class="sidenav-content">
+        <md-input-container>
+          <input mdInput [mdDatepicker]="picker" placeholder="Choose a date">
+          <button mdSuffix [mdDatepickerToggle]="picker"></button>
+        </md-input-container>
+        <md-datepicker #picker></md-datepicker>
+      </div>
+    </md-sidenav>
+    <button (click)="sidenav.open()">test</button>
+    <!-- primary content -->
+  </md-sidenav-container>
+
+</div>
