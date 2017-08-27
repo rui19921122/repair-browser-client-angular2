@@ -22,6 +22,7 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit() {
+    console.log('header updated');
   }
 
   public OpenLoginForm() {

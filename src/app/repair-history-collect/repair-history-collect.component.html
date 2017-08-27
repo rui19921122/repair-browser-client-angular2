@@ -5,15 +5,48 @@
   <md-sidenav-container class="navbar-sidenav" [ngStyle]="{'height':page_height+'px'}" #container>
     <md-sidenav mode="over" #sidenav>
       <div class="sidenav-content">
-        <md-input-container>
-          <input mdInput [mdDatepicker]="picker" placeholder="Choose a date">
-          <button mdSuffix [mdDatepickerToggle]="picker"></button>
-        </md-input-container>
-        <md-datepicker #picker></md-datepicker>
+        <form [formGroup]="DatePickerForm">
+          <md-input-container class="sidenav-panel">
+            <input mdInput [mdDatepicker]="start_date"
+                   placeholder="选择开始日期"
+                   [formControl]="DatePickerForm.controls['start_date']"
+            >
+
+            <button mdSuffix [mdDatepickerToggle]="start_date"></button>
+          </md-input-container>
+          <md-datepicker #start_date></md-datepicker>
+          <md-input-container class="sidenav-panel">
+            <input mdInput [mdDatepicker]="end_date" placeholder="选择结束日期"
+                   [formControl]="DatePickerForm.controls['end_date']"
+            >
+            <button mdSuffix [mdDatepickerToggle]="end_date"></button>
+          </md-input-container>
+          <md-datepicker #end_date
+          >
+          </md-datepicker>
+        </form>
+        <div class="sidenav-panel">
+          <button md-raised-button
+                  *ngFor="let choice of length_button_choices"
+                  (click)="change_form_by_button('length',choice.value)"
+          >
+            {{choice.text}}
+          </button>
+        </div>
+        <div class="sidenav-panel">
+          <button md-raised-button
+                  *ngFor="let choice of month_button_choices">
+            {{choice.text}}
+          </button>
+        </div>
+        <div class="sidenav-panel">
+          <button md-raised-button style="background-color: #1565C0;color: white;">
+            搜索
+          </button>
+        </div>
       </div>
     </md-sidenav>
     <button (click)="sidenav.open()">test</button>
     <!-- primary content -->
   </md-sidenav-container>
-
 </div>

@@ -1,5 +1,8 @@
 import {BrowserModule} from '@angular/platform-browser';
-import {NgModule} from '@angular/core';
+import {ApplicationRef, NgModule} from '@angular/core';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+
+import {removeNgStyles, createNewHosts, bootloader} from '@angularclass/hmr';
 
 import {AppComponent} from './app.component';
 import {HeaderComponent} from './header/header.component';
@@ -38,7 +41,9 @@ export const routes: Routes = [
     RepairHistoryCollectComponent,
   ],
   imports: [
+    FormsModule,
     MdSidenavModule,
+    ReactiveFormsModule,
     BrowserModule,
     MdNativeDateModule,
     BrowserAnimationsModule,
@@ -58,4 +63,7 @@ export const routes: Routes = [
   entryComponents: [LoginFormComponent]
 })
 export class AppModule {
+  constructor() {
+  }
+
 }

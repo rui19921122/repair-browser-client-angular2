@@ -5,13 +5,20 @@
 
 .navbar-sidenav {
   background-color: inherit;
-  width: 500px;
 
 }
 
 .sidenav-content {
-  width: 100%;
+  width: 400px;
   height: 100%;
   display: flex;
   flex-direction: column;
+  align-items: center;
+}
+.sidenav-panel{
+  width: 300px;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  display: flex;
+  justify-content: space-between;
 }
