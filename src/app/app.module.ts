@@ -1,8 +1,7 @@
 import {BrowserModule} from '@angular/platform-browser';
-import {ApplicationRef, NgModule} from '@angular/core';
+import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
-import {removeNgStyles, createNewHosts, bootloader} from '@angularclass/hmr';
 
 import {AppComponent} from './app.component';
 import {HeaderComponent} from './header/header.component';
@@ -25,6 +24,7 @@ import {UserService} from './user.service';
 import {LoginFormComponent} from './header/login-form/login-form.component';
 import {HttpModule} from '@angular/http';
 import {RepairHistoryCollectComponent} from './repair-history-collect/repair-history-collect.component';
+import {HashLocationStrategy, LocationStrategy} from '@angular/common';
 
 export const routes: Routes = [
   {path: '', redirectTo: 'home', pathMatch: 'full'},
@@ -58,7 +58,9 @@ export const routes: Routes = [
     MdProgressSpinnerModule,
     RouterModule.forRoot(routes)
   ],
-  providers: [UserService],
+  providers: [UserService,
+    {provide: LocationStrategy, useClass: HashLocationStrategy}
+    ],
   bootstrap: [AppComponent],
   entryComponents: [LoginFormComponent]
 })

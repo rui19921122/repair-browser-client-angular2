@@ -1,8 +1,7 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "project": {
-    "name": "repair-browser-client-by-angular",
-    "ejected": true
+    "name": "repair-browser-client-by-angular"
   },
   "apps": [
     {
@@ -57,7 +56,6 @@
   },
   "defaults": {
     "styleExt": "css",
-    "component": {
-    }
+    "component": {}
   }
 }
