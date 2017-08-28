@@ -22,6 +22,7 @@ export class UserService {
       this.pending = false;
     });
     this.get_login_status();
+    console.log('user service reload');
   }
 
   public get_login_status() {

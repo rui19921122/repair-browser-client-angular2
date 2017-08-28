@@ -1,8 +1,9 @@
 <div class="header">
   <div class="navbar">
     <div>
-      <a md-button [routerLink]="['home']">首页</a>
+      <a md-button [routerLink]="['home']">首</a>
       <button md-button [mdMenuTriggerFor]="RepairMenu">天窗修模块</button>
+
       <md-menu #RepairMenu="mdMenu" [overlapTrigger]="false">
         <a md-menu-item [routerLink]="['repair-history-collect']">历史天窗修采集</a>
         <button md-menu-item>天窗修统计</button>

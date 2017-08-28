@@ -1,6 +1,7 @@
 import {BrowserModule} from '@angular/platform-browser';
-import {NgModule} from '@angular/core';
+import {NgModule, ApplicationRef} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {removeNgStyles, createNewHosts, bootloader, createInputTransfer} from '@angularclass/hmr';
 
 
 import {AppComponent} from './app.component';
@@ -19,6 +20,8 @@ import {
 } from '@angular/material';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {Router, RouterModule, Routes} from '@angular/router';
+import {store, metaReducers} from './store';
+import {StoreModule} from '@ngrx/store';
 import {HomeComponent} from './home/home.component';
 import {UserService} from './user.service';
 import {LoginFormComponent} from './header/login-form/login-form.component';
@@ -31,6 +34,7 @@ export const routes: Routes = [
   {path: 'home', component: HomeComponent, pathMatch: 'full'},
   {path: 'repair-history-collect', component: RepairHistoryCollectComponent, pathMatch: 'full'}
 ];
+
 
 @NgModule({
   declarations: [
@@ -56,16 +60,15 @@ export const routes: Routes = [
     MdAutocompleteModule,
     HttpModule,
     MdProgressSpinnerModule,
-    RouterModule.forRoot(routes)
+    RouterModule.forRoot(routes),
+    StoreModule.forRoot(store, {metaReducers: metaReducers as any}),
   ],
   providers: [UserService,
     {provide: LocationStrategy, useClass: HashLocationStrategy}
-    ],
+  ],
   bootstrap: [AppComponent],
   entryComponents: [LoginFormComponent]
 })
 export class AppModule {
-  constructor() {
-  }
 
 }
