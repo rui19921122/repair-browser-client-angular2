@@ -5,6 +5,7 @@
              mdInput
              placeholder="用户名"
              [mdAutocomplete]="auto"
+             autocomplete="off"
              #username
              (keyup)="input_change(username.value)"
       >
@@ -20,14 +21,15 @@
   </div>
 </md-dialog-content>
 <div class="button-area">
-  <button md-raised-button class="button" (click)="login(username.value,password.value)" (load)="UserService.pending"
-          *ngIf="!UserService.pending"
+  <button md-raised-button class="button" (click)="login(username.value,password.value)"
+          (load)="UserService.user.login_pending"
+          *ngIf="!UserService.user.login_pending"
   >
     登陆
   </button>
   <button md-raised-button class="button"
           [disabled]="true"
-          *ngIf="UserService.pending"
+          *ngIf="UserService.user.login_pending"
   >
     登陆中...
   </button>

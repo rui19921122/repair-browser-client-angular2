@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {UserService} from '../../user.service';
+import {UserService, UserStoreInterface} from '../../user.service';
 import {Observable} from 'rxjs';
 import {Http} from '@angular/http';
 import {Observer, Subject} from 'rxjs';

@@ -1,4 +1,6 @@
 import {Action, ActionReducer, Store} from '@ngrx/store';
+import {UserStoreInterface, reducer as user_reducer} from './user.service';
+import {StoreRouterConnectingModule, routerReducer} from '@ngrx/router-store';
 
 export const INCREMENT = 'INCREMENT';
 export const DECREMENT = 'DECREMENT';
@@ -8,10 +10,8 @@ export function counterReducer(state: number = 0, action: Action) {
   switch (action.type) {
     case INCREMENT:
       return state + 1;
-
     case DECREMENT:
       return state - 1;
-
     case RESET:
       return 0;
     case 'SET_ROOT_STATE':
@@ -21,8 +21,12 @@ export function counterReducer(state: number = 0, action: Action) {
   }
 }
 
-export const store = {
-  count: counterReducer
-};
+export interface AppState {
+  user: UserStoreInterface;
+  routerReducer: any;
+}
 
-declare const window: any;
+export const store = {
+  user: user_reducer,
+  routerReducer: routerReducer
+};

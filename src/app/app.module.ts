@@ -30,6 +30,7 @@ import {LoginFormComponent} from './header/login-form/login-form.component';
 import {HttpModule} from '@angular/http';
 import {RepairHistoryCollectComponent} from './repair-history-collect/repair-history-collect.component';
 import {HashLocationStrategy, LocationStrategy} from '@angular/common';
+import {StoreRouterConnectingModule} from '@ngrx/router-store';
 
 export const routes: Routes = [
   {path: '', redirectTo: 'home', pathMatch: 'full'},
@@ -61,9 +62,10 @@ export const routes: Routes = [
     MdDialogModule,
     MdAutocompleteModule,
     HttpModule,
+    StoreRouterConnectingModule,
     MdProgressSpinnerModule,
     RouterModule.forRoot(routes),
-    StoreModule.forRoot(store, {initialState: get__HMR__state()}),
+    StoreModule.forRoot(store, {initialState: get__HMR__state}),
     StoreDevtoolsModule.instrument({maxAge: 5})
   ],
   providers: [UserService,

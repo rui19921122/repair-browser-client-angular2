@@ -14,9 +14,14 @@
         <button md-menu-item>施工统计</button>
       </md-menu>
     </div>
-    <button *ngIf="UserService.is_login&&!UserService.pending" md-button>
-      来自{{UserService.department}}的{{UserService.username}},注销登陆
+    <button *ngIf="login_pending | async" md-button>
+      加载中...
     </button>
-    <button *ngIf="!UserService.is_login&&!UserService.pending" md-button (click)="OpenLoginForm()">请登陆</button>
+    <button *ngIf="(username | async)&&!(login_pending | async)" md-button>
+      来自{{department | async}}的{{username|async}},注销登陆
+    </button>
+    <button *ngIf="!(is_login|async)&&! (login_pending|async)" md-button (click)="OpenLoginForm()">
+      请登陆
+    </button>
   </div>
 </div>

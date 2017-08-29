@@ -4,35 +4,30 @@ import {MdSnackBar} from '@angular/material';
 import {HttpModule, Http} from '@angular/http';
 import {Subject} from 'rxjs/Subject';
 import {SystemUserInterface} from './api';
+import {Selector, Store, Action, State} from '@ngrx/store';
+import {AppState} from './store';
 
 @Injectable()
 export class UserService {
-  public is_login: boolean;
-  public username: string; // 用户名
-  public department: string; // 部门名称
-  public pending: boolean; // 是否正在请求
   public login_end: Subject<boolean> = new Subject();
+  public user: UserStoreInterface;
 
-  constructor(public http: Http, public snackBar: MdSnackBar) {
-    this.is_login = false;
-    this.username = '';
-    this.department = '';
-    this.login_end.subscribe(v => {
-      v ? this.is_login = true : this.is_login = false;
-      this.pending = false;
+  constructor(public http: Http, public snackBar: MdSnackBar, public store: Store<AppState>) {
+    this.store.select('user').subscribe(v => this.user = v);
+    this.login_end.subscribe(() => {
+      this.store.dispatch(new SwitchLoginPending(false));
     });
     this.get_login_status();
-    console.log('user service reload');
   }
 
   public get_login_status() {
+    this.store.dispatch(new SwitchLoginPending(true));
     this.http.get('/api/system-user/system-user/').subscribe(v => {
       this.login_end.next(true);
       const json: SystemUserInterface = v.json();
-      this.username = json.username;
-      this.department = json.department;
+      this.store.dispatch(new UpdateUserName({username: json.username, department: json.department}));
     }, () => {
-      this.login_end.next(false);
+      this.login_end.next(true);
     });
   }
 
@@ -42,15 +37,15 @@ export class UserService {
       return;
     } else {
     }
-    this.pending = true;
+    this.store.dispatch(new SwitchLoginPending(true));
     this.http.post('/api/system-user/login/',
       {
         username: username, password: password
       },
       {withCredentials: true}
     ).subscribe(v => {
-      this.username = v.json()['username'];
-      this.department = v.json()['department'];
+      const json = v.json();
+      this.store.dispatch(new UpdateUserName({username: json['username'], department: json['department']}));
       this.login_end.next(true);
     }, (err) => {
       const json = err.json();
@@ -59,3 +54,68 @@ export class UserService {
     });
   }
 }
+
+export const REPLACE_BY_USER_SERVICE = '[user]REPLACE_BY_USER_SERVICE';
+export const UPDATE_USER_NAME = '[user]UPDATE_USER_NAME';
+export const SWITCH_LOGIN_PENDING = '[user]SWITCH_LOGIN_PENDING';
+
+export class SwitchLoginPending implements Action {
+  readonly type = SWITCH_LOGIN_PENDING;
+
+  constructor(public payload: boolean) {
+  }
+}
+
+export class ReplaceByUserService implements Action {
+  readonly type = REPLACE_BY_USER_SERVICE;
+
+  constructor(public payload: UserStoreInterface) {
+
+  }
+}
+
+export class UpdateUserName implements Action {
+  readonly type = UPDATE_USER_NAME;
+
+  constructor(public payload: { username: string; department: string }) {
+  }
+}
+
+export type UserAction = ReplaceByUserService
+  | UpdateUserName
+  | SwitchLoginPending;
+const actions = {
+  ReplaceByUserService,
+  UpdateUserName,
+  SwitchLoginPending
+
+};
+
+export interface UserStoreInterface {
+  is_login: boolean;
+  username?: string;
+  department?: string;
+  should_login_modal_open?: boolean;
+  login_pending: boolean;
+}
+
+const default_state: UserStoreInterface = {
+  is_login: false,
+  login_pending: false,
+  should_login_modal_open: false
+};
+
+export function reducer(state: UserStoreInterface = default_state, action: UserAction) {
+  switch (action.type) {
+    case REPLACE_BY_USER_SERVICE:
+      return action.payload;
+    case UPDATE_USER_NAME:
+      return {...state, username: action.payload.username, department: action.payload.department, is_login: true};
+    case SWITCH_LOGIN_PENDING:
+      return {...state, login_pending: action.payload};
+    default:
+      return state;
+  }
+}
+
+export default reducer;
