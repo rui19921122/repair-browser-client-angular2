@@ -1,18 +1,8 @@
-import {Action, ActionReducer} from '@ngrx/store';
+import {Action, ActionReducer, Store} from '@ngrx/store';
 
 export const INCREMENT = 'INCREMENT';
 export const DECREMENT = 'DECREMENT';
 export const RESET = 'RESET';
-
-export function stateSetter(reducer: ActionReducer<any>): ActionReducer<any> {
-  return function (state: any, action: any) {
-    if (action.type === 'SET_ROOT_STATE') {
-      return action.payload;
-    }
-    return reducer(state, action);
-  };
-}
-
 
 export function counterReducer(state: number = 0, action: Action) {
   switch (action.type) {
@@ -36,6 +26,3 @@ export const store = {
 };
 
 declare const window: any;
-export const metaReducers: ActionReducer<any, any>[] = [
-  stateSetter
-  ]

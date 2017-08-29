@@ -21,7 +21,8 @@ import {
 } from '@angular/material';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {Router, RouterModule, Routes} from '@angular/router';
-import {store, metaReducers} from './store';
+import {store} from './store';
+import {get__HMR__state} from './../hmr';
 import {StoreModule} from '@ngrx/store';
 import {HomeComponent} from './home/home.component';
 import {UserService} from './user.service';
@@ -62,7 +63,7 @@ export const routes: Routes = [
     HttpModule,
     MdProgressSpinnerModule,
     RouterModule.forRoot(routes),
-    StoreModule.forRoot(store, {metaReducers: metaReducers as any}),
+    StoreModule.forRoot(store, {initialState: get__HMR__state()}),
     StoreDevtoolsModule.instrument({maxAge: 5})
   ],
   providers: [UserService,
@@ -74,5 +75,4 @@ export const routes: Routes = [
 export class AppModule {
   constructor() {
   }
-
 }

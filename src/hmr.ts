@@ -2,6 +2,16 @@ import {NgModuleRef, ApplicationRef} from '@angular/core';
 import {StoreModule, Store} from '@ngrx/store';
 import {createNewHosts} from '@angularclass/hmr';
 
+export function get__HMR__state() {
+  let state = {};
+  if (window['__HMR__']) {
+    const module = window['__HMR__'];
+    const store = module.injector.get(Store);
+    store.take(1).subscribe(s => state = s);
+  }
+  return state;
+}
+
 
 export const hmrBootstrap = (module: any, bootstrap: () => Promise<NgModuleRef<any>>) => {
   let ngModule: NgModuleRef<any>;
@@ -14,14 +24,10 @@ export const hmrBootstrap = (module: any, bootstrap: () => Promise<NgModuleRef<a
     const elements = appRef.components.map(c => c.location.nativeElement);
     const makeVisible = createNewHosts(elements);
     const sub = ngModule.injector.get<Store<any>>(Store).subscribe(v => {
-      let state;
-      state = v;
       ngModule.destroy();
       makeVisible();
-      console.log('I will dispatch {type:\'SET_ROOT_STATE\',payload:');
-      console.log(state);
-      ngModule.injector.get(Store).dispatch({type: 'SET_ROOT_STATE', payload: state});
     });
     sub.unsubscribe();
   });
 };
+
