@@ -13,15 +13,14 @@ export const hmrBootstrap = (module: any, bootstrap: () => Promise<NgModuleRef<a
     const appRef: ApplicationRef = ngModule.injector.get(ApplicationRef);
     const elements = appRef.components.map(c => c.location.nativeElement);
     const makeVisible = createNewHosts(elements);
-    let state;
     const sub = ngModule.injector.get<Store<any>>(Store).subscribe(v => {
+      let state;
       state = v;
       ngModule.destroy();
       makeVisible();
       console.log('I will dispatch {type:\'SET_ROOT_STATE\',payload:');
       console.log(state);
-      ngModule.injector.get<Store<any>>(Store).dispatch({type: 'SET_ROOT_STATE', payload: state});
-      ngModule.injector.get<Store<any>>(Store).subscribe(v => console.log(v));
+      ngModule.injector.get(Store).dispatch({type: 'SET_ROOT_STATE', payload: state});
     });
     sub.unsubscribe();
   });

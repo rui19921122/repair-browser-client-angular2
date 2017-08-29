@@ -1,6 +1,7 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule, ApplicationRef} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {StoreDevtoolsModule} from '@ngrx/store-devtools';
 import {removeNgStyles, createNewHosts, bootloader, createInputTransfer} from '@angularclass/hmr';
 
 
@@ -62,6 +63,7 @@ export const routes: Routes = [
     MdProgressSpinnerModule,
     RouterModule.forRoot(routes),
     StoreModule.forRoot(store, {metaReducers: metaReducers as any}),
+    StoreDevtoolsModule.instrument({maxAge: 5})
   ],
   providers: [UserService,
     {provide: LocationStrategy, useClass: HashLocationStrategy}
@@ -70,5 +72,7 @@ export const routes: Routes = [
   entryComponents: [LoginFormComponent]
 })
 export class AppModule {
+  constructor() {
+  }
 
 }
