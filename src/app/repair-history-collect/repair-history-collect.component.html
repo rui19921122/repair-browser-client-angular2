@@ -12,14 +12,14 @@
                    [formControl]="DatePickerForm.controls['start_date']"
             >
 
-            <button mdSuffix [mdDatepickerToggle]="start_date"></button>
+            <md-datepicker-toggle mdSuffix [for]="start_date"></md-datepicker-toggle>
           </md-input-container>
           <md-datepicker #start_date></md-datepicker>
           <md-input-container class="sidenav-panel">
             <input mdInput [mdDatepicker]="end_date" placeholder="选择结束日期"
                    [formControl]="DatePickerForm.controls['end_date']"
             >
-            <button mdSuffix [mdDatepickerToggle]="end_date"></button>
+            <md-datepicker-toggle mdSuffix [for]="end_date"></md-datepicker-toggle>
           </md-input-container>
           <md-datepicker #end_date
           >

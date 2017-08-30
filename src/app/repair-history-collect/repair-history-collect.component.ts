@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild, ViewChildren, AfterViewInit} from '@angular/core';
+import {Component, OnInit, ViewChild, ViewChildren, AfterViewInit, ChangeDetectionStrategy} from '@angular/core';
 import {UserService} from '../user.service';
 import {MdSidenav} from '@angular/material';
 import * as moment from 'moment';
@@ -14,7 +14,8 @@ class ButtonType {
 @Component({
   selector: 'app-repair-history-collect',
   templateUrl: './repair-history-collect.component.html',
-  styleUrls: ['./repair-history-collect.component.css']
+  styleUrls: ['./repair-history-collect.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RepairHistoryCollectComponent implements OnInit, AfterViewInit {
   public page_height: number;
