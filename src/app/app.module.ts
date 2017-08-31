@@ -1,5 +1,5 @@
 import {BrowserModule} from '@angular/platform-browser';
-import {NgModule, ApplicationRef} from '@angular/core';
+import {NgModule, ApplicationRef, LOCALE_ID} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {StoreDevtoolsModule} from '@ngrx/store-devtools';
 import {removeNgStyles, createNewHosts, bootloader, createInputTransfer} from '@angularclass/hmr';
@@ -31,6 +31,7 @@ import {HttpModule} from '@angular/http';
 import {RepairHistoryCollectComponent} from './repair-history-collect/repair-history-collect.component';
 import {HashLocationStrategy, LocationStrategy} from '@angular/common';
 import {StoreRouterConnectingModule} from '@ngrx/router-store';
+import * as moment from 'moment';
 
 export const routes: Routes = [
   {path: '', redirectTo: 'home', pathMatch: 'full'},
@@ -69,7 +70,8 @@ export const routes: Routes = [
     StoreDevtoolsModule.instrument({maxAge: 5})
   ],
   providers: [UserService,
-    {provide: LocationStrategy, useClass: HashLocationStrategy}
+    {provide: LocationStrategy, useClass: HashLocationStrategy},
+    {provide: LOCALE_ID, useValue: 'zh-hans'}
   ],
   bootstrap: [AppComponent],
   entryComponents: [LoginFormComponent]

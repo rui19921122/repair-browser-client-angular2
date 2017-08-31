@@ -1,9 +1,14 @@
 import {Component, OnInit, ViewChild, ViewChildren, AfterViewInit, ChangeDetectionStrategy} from '@angular/core';
 import {UserService} from '../user.service';
+import {RepairHistoryCollectStoreActions} from './repair-history-collect.store';
 import {MdSidenav} from '@angular/material';
 import * as moment from 'moment';
 import {Observable} from 'rxjs/Observable';
 import {FormBuilder, FormGroup} from '@angular/forms';
+import {AppState} from '../store';
+import {Store} from '@ngrx/store';
+import {environment} from '../../environments/environment';
+import {Http} from '@angular/http';
 
 class ButtonType {
   text: string;
@@ -17,17 +22,26 @@ class ButtonType {
   styleUrls: ['./repair-history-collect.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class RepairHistoryCollectComponent implements OnInit, AfterViewInit {
+export class RepairHistoryCollectComponent implements OnInit {
   public page_height: number;
-  @ViewChild('sidenav') sidenav: MdSidenav;
   public month_button_choices: [ButtonType, ButtonType];
   public length_button_choices: [ButtonType, ButtonType, ButtonType];
   public DatePickerForm: FormGroup;
+  public open_select_panel: Observable<boolean>;
+  public is_login: Observable<boolean>;
+  public start_date: moment.Moment;
+  public end_date: moment.Moment;
 
 
   constructor(public user_service: UserService,
+              public http: Http,
+              public store: Store<AppState>,
               fb: FormBuilder) {
     this.page_height = window.innerHeight - 52;
+    this.open_select_panel = this.store.select(state => state.repair_history_collect.open_select_panel);
+    this.is_login = this.store.select(state => state.user.is_login);
+    this.store.select(state => state.repair_history_collect.start_date).subscribe(v => this.start_date = v);
+    this.store.select(state => state.repair_history_collect.end_date).subscribe(v => this.end_date = v);
     this.length_button_choices = [
       {type: 'length', value: 0, text: '一天内'},
       {type: 'length', value: 7, text: '一周内'},
@@ -39,23 +53,55 @@ export class RepairHistoryCollectComponent implements OnInit, AfterViewInit {
       {type: 'month', value: 2, text: '上月'},
     ];
     this.DatePickerForm = fb.group({
-      'start_date': [],
-      'end_date': []
+      'start_date': [this.start_date ? this.start_date.toDate() : null],
+      'end_date': [this.end_date ? this.end_date.toDate() : null]
     });
-    setTimeout(() => this.sidenav.open(), 1000);
-    this.DatePickerForm.valueChanges.subscribe(v => console.log(v));
+    this.DatePickerForm.valueChanges.subscribe(v => {
+      this.store.dispatch(
+        new RepairHistoryCollectStoreActions.ChangeSelectedDate(
+          {
+            start_date: moment(v.start_date),
+            end_date: moment(v.end_date)
+          }));
+    });
   }
 
   public change_form_by_button(type: string, value: number) {
-    console.log(1234);
+    let start_date: moment.Moment;
+    let end_date: moment.Moment;
+    const today = moment().hours(0).minutes(0).seconds(0);
+    if (type === 'month') {
+      if (value === 0) { // 本周内
+        start_date = moment(today).days(1);
+        end_date = moment(today);
+      } else if (value === 1) {
+        start_date = moment(today).date(1);
+        end_date = moment(today);
+      } else if (value === 2) {
+        start_date = moment(today).month(today.month() - 1).date(1);
+        end_date = moment(today).date(1).add(-1, 'days');
+      }
+      this.DatePickerForm.setValue({start_date: start_date.toDate(), end_date: end_date.toDate()});
+
+    } else if (type === 'length') {
+      start_date = moment(today).add(-value, 'days');
+      end_date = moment(today);
+      this.DatePickerForm.setValue({start_date: start_date.toDate(), end_date: end_date.toDate()});
+    }
   }
 
 
   ngOnInit() {
-    console.log('created');
   }
 
-  ngAfterViewInit() {
+  public search_for_plan_data() {
+    const url = `/api/scrapy/plan/plan/?start_date=${this.start_date.format('YYYY-MM-DD')}&end_date=${this.end_date.format('YYYY-MM-DD')}`;
+    this.http.get(url).subscribe(v => console.log(v.json()));
+  }
+
+  public search_for_history_data() {
+    const url = `/api/scrapy/history-list/repair/?start=${this.start_date.format('YYYYMMDD')}&end=${this.end_date.format('YYYYMMDD')}`;
+    this.http.get(url).subscribe(v => console.log(v.json()));
   }
 
 }

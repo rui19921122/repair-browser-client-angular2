@@ -1,11 +1,9 @@
 .container {
-  background-color: red;
   width: 100%;
 }
 
 .navbar-sidenav {
   background-color: inherit;
-
 }
 
 .sidenav-content {
@@ -15,7 +13,8 @@
   flex-direction: column;
   align-items: center;
 }
-.sidenav-panel{
+
+.sidenav-panel {
   width: 300px;
   padding-top: 15px;
   padding-bottom: 15px;

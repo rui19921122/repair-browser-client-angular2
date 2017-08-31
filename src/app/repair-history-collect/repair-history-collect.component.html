@@ -1,9 +1,14 @@
-<div *ngIf="!user_service.user.is_login">
+<div *ngIf="!(is_login | async)">
   此页面仅登陆用户才可查看
 </div>
-<div *ngIf="user_service.user.is_login" class="container">
-  <md-sidenav-container class="navbar-sidenav" [ngStyle]="{'height':page_height+'px'}" #container>
-    <md-sidenav mode="over" #sidenav>
+<div *ngIf="is_login | async" class="container">
+  <md-sidenav-container class="navbar-sidenav"
+                        [ngStyle]="{'height':page_height+'px'}"
+                        #container>
+    <md-sidenav mode="over"
+                [opened]="open_select_panel | async"
+                [disableClose]="true"
+                #sidenav>
       <div class="sidenav-content">
         <form [formGroup]="DatePickerForm">
           <md-input-container class="sidenav-panel">
@@ -35,13 +40,26 @@
         </div>
         <div class="sidenav-panel">
           <button md-raised-button
-                  *ngFor="let choice of month_button_choices">
+                  *ngFor="let choice of month_button_choices"
+                  (click)="change_form_by_button('month',choice.value)"
+          >
             {{choice.text}}
           </button>
         </div>
         <div class="sidenav-panel">
-          <button md-raised-button style="background-color: #1565C0;color: white;">
-            搜索
+          <button md-raised-button
+                  style="background-color: #1565C0;color: white;width: 90%;"
+                  (click)="search_for_plan_data()"
+          >
+            搜索路局天窗修计划
+          </button>
+        </div>
+        <div class="sidenav-panel">
+          <button md-raised-button
+                  style="background-color: #1565C0;color: white;width: 90%;"
+                  (click)="search_for_history_data()"
+          >
+            搜索路局天窗修历史计划
           </button>
         </div>
       </div>
