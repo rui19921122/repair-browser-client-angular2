@@ -22,7 +22,7 @@ export class SwitchOpenPanel implements Action {
 export type RepairHistoryCollectStoreActionType = SwitchOpenPanel | ChangeSelectedDate;
 export const RepairHistoryCollectStoreActions = {
   SwitchOpenPanel,
-  ChangeSelectedDate
+  ChangeSelectedDate,
 };
 
 export interface RepairHistoryCollectStoreInterface {

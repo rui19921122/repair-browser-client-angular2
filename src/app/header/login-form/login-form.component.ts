@@ -1,8 +1,10 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {UserService, UserStoreInterface} from '../../user.service';
+import {UserService, UserStoreInterface, UserActions} from '../../user.service';
 import {Observable} from 'rxjs';
 import {Http} from '@angular/http';
 import {Observer, Subject} from 'rxjs';
+import {Store} from '@ngrx/store';
+import {AppState} from '../../store';
 
 @Component({
   selector: 'app-login-form',
@@ -13,7 +15,7 @@ export class LoginFormComponent implements OnInit {
   public filterUsernames: string[];
   public valueChange: Subject<string> = new Subject();
 
-  constructor(public UserService: UserService, public http: Http) {
+  constructor(public UserService: UserService, public http: Http, public store: Store<AppState>) {
     this.valueChange.debounceTime(1000).filter(v => v !== '').subscribe(v => {
       this.http.get('/api/system-user/username-autocomplete/', {params: {value: v}})
         .subscribe(json => {
@@ -23,6 +25,10 @@ export class LoginFormComponent implements OnInit {
   }
 
   ngOnInit() {
+  }
+
+  close() {
+    this.store.dispatch(new UserActions.SwitchOpenLoginPanel(false));
   }
 
   login(username: string, password: string) {

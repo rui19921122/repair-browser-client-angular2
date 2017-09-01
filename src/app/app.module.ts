@@ -2,7 +2,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {NgModule, ApplicationRef, LOCALE_ID} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {StoreDevtoolsModule} from '@ngrx/store-devtools';
-import {removeNgStyles, createNewHosts, bootloader, createInputTransfer} from '@angularclass/hmr';
+import {FlexLayoutModule} from '@angular/flex-layout';
 
 
 import {AppComponent} from './app.component';
@@ -54,6 +54,7 @@ export const routes: Routes = [
     ReactiveFormsModule,
     BrowserModule,
     MdNativeDateModule,
+    FlexLayoutModule,
     BrowserAnimationsModule,
     MdButtonModule,
     MdMenuModule,

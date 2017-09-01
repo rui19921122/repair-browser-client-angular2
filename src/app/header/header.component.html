@@ -20,7 +20,7 @@
     <button *ngIf="(username | async)&&!(login_pending | async)" md-button>
       来自{{department | async}}的{{username|async}},注销登陆
     </button>
-    <button *ngIf="!(is_login|async)&&! (login_pending|async)" md-button (click)="OpenLoginForm()">
+    <button *ngIf="!(is_login|async)&&! (login_pending|async)" md-button (click)="open()">
       请登陆
     </button>
   </div>

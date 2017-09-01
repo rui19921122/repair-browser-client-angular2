@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild, ViewChildren, AfterViewInit, ChangeDetectionStrategy} from '@angular/core';
 import {UserService} from '../user.service';
 import {RepairHistoryCollectStoreActions} from './repair-history-collect.store';
-import {MdSidenav} from '@angular/material';
+import {MdSidenav, MdSnackBar} from '@angular/material';
 import * as moment from 'moment';
 import {Observable} from 'rxjs/Observable';
 import {FormBuilder, FormGroup} from '@angular/forms';
@@ -33,9 +33,9 @@ export class RepairHistoryCollectComponent implements OnInit {
   public end_date: moment.Moment;
 
 
-  constructor(public user_service: UserService,
-              public http: Http,
+  constructor(public http: Http,
               public store: Store<AppState>,
+              public snack_bar: MdSnackBar,
               fb: FormBuilder) {
     this.page_height = window.innerHeight - 52;
     this.open_select_panel = this.store.select(state => state.repair_history_collect.open_select_panel);
@@ -64,6 +64,10 @@ export class RepairHistoryCollectComponent implements OnInit {
             end_date: moment(v.end_date)
           }));
     });
+  }
+
+  public open_panel() {
+    this.store.dispatch(new RepairHistoryCollectStoreActions.SwitchOpenPanel(true));
   }
 
   public change_form_by_button(type: string, value: number) {
@@ -95,13 +99,26 @@ export class RepairHistoryCollectComponent implements OnInit {
   }
 
   public search_for_plan_data() {
-    const url = `/api/scrapy/plan/plan/?start_date=${this.start_date.format('YYYY-MM-DD')}&end_date=${this.end_date.format('YYYY-MM-DD')}`;
-    this.http.get(url).subscribe(v => console.log(v.json()));
+    if (this.start_date.isSameOrBefore(this.end_date)) {
+      const url = `/api/scrapy/plan/plan/
+      ?start_date=${this.start_date.format('YYYY-MM-DD')}&end_date=${this.end_date.format('YYYY-MM-DD')}`;
+      this.http.get(url).subscribe(v => console.log(v.json()));
+    } else {
+      this.snack_bar.open('日期选择错误', 'X', {duration: 2000});
+    }
   }
 
   public search_for_history_data() {
-    const url = `/api/scrapy/history-list/repair/?start=${this.start_date.format('YYYYMMDD')}&end=${this.end_date.format('YYYYMMDD')}`;
-    this.http.get(url).subscribe(v => console.log(v.json()));
+    if (this.start_date.isSameOrBefore(this.end_date)) {
+      const url = `/api/scrapy/history-list/repair/?start=${this.start_date.format('YYYYMMDD')}&end=${this.end_date.format('YYYYMMDD')}`;
+      this.http.get(url).subscribe(v => console.log(v.json()));
+    } else {
+      this.snack_bar.open('日期选择错误', 'X', {duration: 2000});
+    }
+  }
+
+  public close_slide_bar() {
+    this.store.dispatch(new RepairHistoryCollectStoreActions.SwitchOpenPanel(false));
   }
 
 }

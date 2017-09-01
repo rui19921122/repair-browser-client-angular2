@@ -1,5 +1,5 @@
 import {Component, OnInit, Inject, ChangeDetectionStrategy} from '@angular/core';
-import {UserService, UserStoreInterface} from '../user.service';
+import {UserService, UserStoreInterface, UserActions} from '../user.service';
 import {MdDialog, MdDialogRef} from '@angular/material';
 import {LoginFormComponent} from './login-form/login-form.component';
 import {AppState} from '../store';
@@ -19,6 +19,7 @@ export class HeaderComponent implements OnInit {
   public is_login: Observable<boolean>;
   public username: Observable<string>;
   public department: Observable<string>;
+  public should_login_panel_open: Observable<boolean>;
 
 
   constructor(public UserService: UserService,
@@ -28,19 +29,32 @@ export class HeaderComponent implements OnInit {
     this.is_login = this.store.select(state => state.user.is_login);
     this.username = this.store.select(state => state.user.username);
     this.department = this.store.select(state => state.user.department);
-    this.UserService = UserService;
-    this.UserService.login_end.filter(v => v === true).subscribe(v => {
-      if (this.dialog_is_opend) {
-        this.dialogRef.close();
+    this.should_login_panel_open = this.store.select(state => state.user.should_login_modal_open);
+    this.should_login_panel_open.subscribe(
+      v => {
+        if (v) {
+          if (this.dialog_is_opend) {
+          } else {
+            this.OpenLoginForm();
+          }
+        } else {
+          if (this.dialog_is_opend) {
+            this.dialogRef.close();
+          }
+        }
       }
-    });
+    );
   }
 
   ngOnInit() {
   }
 
+  public open() {
+    this.store.dispatch(new UserActions.SwitchOpenLoginPanel(true));
+  }
+
   public OpenLoginForm() {
-    this.dialogRef = this.dialog.open(LoginFormComponent, {width: '600px', height: '350px'});
+    this.dialogRef = this.dialog.open(LoginFormComponent, {width: '600px', height: '350px', disableClose: true});
     this.dialog_is_opend = true;
     this.dialogRef.afterClosed().subscribe(v => this.dialog_is_opend = false);
   }

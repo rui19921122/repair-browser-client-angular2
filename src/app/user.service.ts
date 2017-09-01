@@ -16,6 +16,7 @@ export class UserService {
     this.store.select('user').subscribe(v => this.user = v);
     this.login_end.subscribe(() => {
       this.store.dispatch(new SwitchLoginPending(false));
+      this.store.dispatch(new SwitchOpenLoginPanel(false));
     });
     this.get_login_status();
   }
@@ -66,6 +67,16 @@ export class SwitchLoginPending implements Action {
   }
 }
 
+export const SWITCH_OPEN_LOGIN_PANEL = '[user]SWITCH_OPEN_LOGIN_PANEL';
+
+export class SwitchOpenLoginPanel implements Action {
+  readonly type = SWITCH_OPEN_LOGIN_PANEL;
+
+  constructor(public payload: boolean) {
+  }
+
+}
+
 export class ReplaceByUserService implements Action {
   readonly type = REPLACE_BY_USER_SERVICE;
 
@@ -81,14 +92,15 @@ export class UpdateUserName implements Action {
   }
 }
 
-export type UserAction = ReplaceByUserService
+export type UserActionType = ReplaceByUserService
   | UpdateUserName
+  | SwitchOpenLoginPanel
   | SwitchLoginPending;
-const actions = {
+export const UserActions = {
   ReplaceByUserService,
   UpdateUserName,
-  SwitchLoginPending
-
+  SwitchLoginPending,
+  SwitchOpenLoginPanel
 };
 
 export interface UserStoreInterface {
@@ -105,7 +117,7 @@ const default_state: UserStoreInterface = {
   should_login_modal_open: false
 };
 
-export function reducer(state: UserStoreInterface = default_state, action: UserAction) {
+export function reducer(state: UserStoreInterface = default_state, action: UserActionType) {
   switch (action.type) {
     case REPLACE_BY_USER_SERVICE:
       return action.payload;
@@ -113,6 +125,8 @@ export function reducer(state: UserStoreInterface = default_state, action: UserA
       return {...state, username: action.payload.username, department: action.payload.department, is_login: true};
     case SWITCH_LOGIN_PENDING:
       return {...state, login_pending: action.payload};
+    case SWITCH_OPEN_LOGIN_PANEL:
+      return {...state, should_login_modal_open: action.payload};
     default:
       return state;
   }

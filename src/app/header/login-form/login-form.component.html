@@ -5,6 +5,7 @@
              mdInput
              placeholder="用户名"
              [mdAutocomplete]="auto"
+             class="input"
              autocomplete="off"
              #username
              (keyup)="input_change(username.value)"
@@ -16,7 +17,9 @@
       </md-option>
     </md-autocomplete>
     <md-input-container>
-      <input type="password" mdInput placeholder="密码" #password>
+      <input type="password" mdInput placeholder="密码" #password
+             class="input"
+      >
     </md-input-container>
   </div>
 </md-dialog-content>
@@ -33,5 +36,7 @@
   >
     登陆中...
   </button>
-  <button md-raised-button class="button" md-dialog-close>取消</button>
+  <button md-raised-button class="button"
+          (click)="close()"
+  >取消</button>
 </div>

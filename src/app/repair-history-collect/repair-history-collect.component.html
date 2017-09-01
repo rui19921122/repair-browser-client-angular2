@@ -5,13 +5,19 @@
   <md-sidenav-container class="navbar-sidenav"
                         [ngStyle]="{'height':page_height+'px'}"
                         #container>
+    <button md-raised-button (click)="open_panel()" class="float-button">打开侧边栏</button>
     <md-sidenav mode="over"
                 [opened]="open_select_panel | async"
                 [disableClose]="true"
                 #sidenav>
-      <div class="sidenav-content">
+      <div class="sidenav-content"
+           fxLayoutAlign="start center"
+           fxLayout="column"
+      >
         <form [formGroup]="DatePickerForm">
-          <md-input-container class="sidenav-panel">
+          <md-input-container class="sidenav-panel"
+                              fxLayout
+          >
             <input mdInput [mdDatepicker]="start_date"
                    placeholder="选择开始日期"
                    [formControl]="DatePickerForm.controls['start_date']"
@@ -20,7 +26,9 @@
             <md-datepicker-toggle mdSuffix [for]="start_date"></md-datepicker-toggle>
           </md-input-container>
           <md-datepicker #start_date></md-datepicker>
-          <md-input-container class="sidenav-panel">
+          <md-input-container class="sidenav-panel"
+                              fxLayout
+          >
             <input mdInput [mdDatepicker]="end_date" placeholder="选择结束日期"
                    [formControl]="DatePickerForm.controls['end_date']"
             >
@@ -62,9 +70,15 @@
             搜索路局天窗修历史计划
           </button>
         </div>
+        <div class="sidenav-panel">
+          <button md-raised-button
+                  style="width: 90%;"
+                  (click)="close_slide_bar()"
+          >关闭侧边栏
+          </button>
+        </div>
       </div>
     </md-sidenav>
-    <button (click)="sidenav.open()">test</button>
     <!-- primary content -->
   </md-sidenav-container>
 </div>
