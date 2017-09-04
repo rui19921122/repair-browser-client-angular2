@@ -1,4 +1,4 @@
-import {Action, ActionReducer, Store} from '@ngrx/store';
+import {Action, ActionReducer, Store, ActionReducerMap} from '@ngrx/store';
 import {UserStoreInterface, reducer as user_reducer} from './user.service';
 import {StoreRouterConnectingModule, routerReducer} from '@ngrx/router-store';
 import {
@@ -17,7 +17,7 @@ export interface AppState {
   repair_history_collect: RepairHistoryCollectStoreInterface;
 }
 
-export const store = {
+export const store: ActionReducerMap<AppState> = {
   user: user_reducer,
   routerReducer: routerReducer,
   repair_history_collect: repair_history_collect_reducer,

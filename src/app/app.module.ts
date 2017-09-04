@@ -50,8 +50,8 @@ export const routes: Routes = [
   ],
   imports: [
     FormsModule,
-    MdSidenavModule,
     ReactiveFormsModule,
+    MdSidenavModule,
     BrowserModule,
     MdNativeDateModule,
     FlexLayoutModule,
