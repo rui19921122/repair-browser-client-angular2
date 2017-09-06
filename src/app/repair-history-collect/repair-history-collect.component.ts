@@ -1,6 +1,6 @@
-import {Component, OnInit, ViewChild, ViewChildren, AfterViewInit, ChangeDetectionStrategy} from '@angular/core';
+import {Component, OnInit, ViewChild, ViewChildren, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef} from '@angular/core';
 import {UserService} from '../user.service';
-import {RepairHistoryCollectStoreActions} from './repair-history-collect.store';
+import {RepairHistoryCollectStoreActions, RepairHistoryCollectStoreInterface} from './repair-history-collect.store';
 import {MdSidenav, MdSnackBar} from '@angular/material';
 import * as moment from 'moment';
 import {Observable} from 'rxjs/Observable';
@@ -9,6 +9,7 @@ import {AppState} from '../store';
 import {Store} from '@ngrx/store';
 import {environment} from '../../environments/environment';
 import {Http} from '@angular/http';
+import {RepairPlanApi} from '../api';
 
 class ButtonType {
   text: string;
@@ -23,25 +24,25 @@ class ButtonType {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RepairHistoryCollectComponent implements OnInit {
+  public state: RepairHistoryCollectStoreInterface;
   public page_height: number;
   public month_button_choices: [ButtonType, ButtonType];
   public length_button_choices: [ButtonType, ButtonType, ButtonType];
   public DatePickerForm: FormGroup;
-  public open_select_panel: Observable<boolean>;
   public is_login: Observable<boolean>;
-  public start_date: moment.Moment;
-  public end_date: moment.Moment;
 
 
   constructor(public http: Http,
               public store: Store<AppState>,
+              public ng_change: ChangeDetectorRef,
               public snack_bar: MdSnackBar,
               fb: FormBuilder) {
+    const $state = this.store.select(state2 => state2.repair_history_collect);
+    $state.subscribe(v => {
+      this.state = v;
+    });
     this.page_height = window.innerHeight - 52;
-    this.open_select_panel = this.store.select(state => state.repair_history_collect.open_select_panel);
     this.is_login = this.store.select(state => state.user.is_login);
-    this.store.select(state => state.repair_history_collect.start_date).subscribe(v => this.start_date = v);
-    this.store.select(state => state.repair_history_collect.end_date).subscribe(v => this.end_date = v);
     this.length_button_choices = [
       {type: 'length', value: 0, text: '一天内'},
       {type: 'length', value: 7, text: '一周内'},
@@ -53,8 +54,8 @@ export class RepairHistoryCollectComponent implements OnInit {
       {type: 'month', value: 2, text: '上月'},
     ];
     this.DatePickerForm = fb.group({
-      'start_date': [this.start_date ? this.start_date.toDate() : null],
-      'end_date': [this.end_date ? this.end_date.toDate() : null]
+      'start_date': [this.state.start_date ? this.state.start_date.toDate() : null],
+      'end_date': [this.state.end_date ? this.state.end_date.toDate() : null]
     });
     this.DatePickerForm.valueChanges.subscribe(v => {
       this.store.dispatch(
@@ -99,19 +100,30 @@ export class RepairHistoryCollectComponent implements OnInit {
   }
 
   public search_for_plan_data() {
-    if (this.start_date.isSameOrBefore(this.end_date)) {
-      const url = `/api/scrapy/plan/plan/
-      ?start_date=${this.start_date.format('YYYY-MM-DD')}&end_date=${this.end_date.format('YYYY-MM-DD')}`;
+    if (this.state.start_date.isSameOrBefore(this.state.end_date)) {
+      const url = `/api/scrapy/plan/plan/?start_date` +
+        `=${this.state.start_date.format('YYYY-MM-DD')}&end_date=${this.state.end_date.format('YYYY-MM-DD')}`;
       this.http.get(url).subscribe(v => console.log(v.json()));
     } else {
       this.snack_bar.open('日期选择错误', 'X', {duration: 2000});
     }
   }
 
-  public search_for_history_data() {
-    if (this.start_date.isSameOrBefore(this.end_date)) {
-      const url = `/api/scrapy/history-list/repair/?start=${this.start_date.format('YYYYMMDD')}&end=${this.end_date.format('YYYYMMDD')}`;
-      this.http.get(url).subscribe(v => console.log(v.json()));
+  public $get_repair_plan_data_from_server() {
+    // 从服务器读取天窗修统计数据
+    if (this.state.start_date.isSameOrBefore(this.state.end_date)) {
+      const url = `/api/scrapy/history-list/repair/?start` +
+        `=${this.state.start_date.format('YYYYMMDD')}&end=${this.state.end_date.format('YYYYMMDD')}`;
+      this.http.get(url).do(() => this.store.dispatch(new RepairHistoryCollectStoreActions.switchPendingRepairPlan(true)))
+        .subscribe(
+          v => {
+            const json: RepairPlanApi = v.json();
+            this.store.dispatch(new RepairHistoryCollectStoreActions.updateRepairData({data: json.data}));
+          },
+          () => {
+          },
+          () => this.store.dispatch(new RepairHistoryCollectStoreActions.switchPendingRepairPlan(false))
+        );
     } else {
       this.snack_bar.open('日期选择错误', 'X', {duration: 2000});
     }

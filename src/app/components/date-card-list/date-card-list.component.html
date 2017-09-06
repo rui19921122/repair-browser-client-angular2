@@ -1,0 +1,11 @@
+<div fxLayout="row wrap"
+     style="margin-top: 15px"
+     fxLayoutAlign="start"
+     fxLayoutGap="10px"
+>
+  <app-date-card *ngFor="let date of dates"
+                 [date]="date"
+                 fxFlex="10">
+
+  </app-date-card>
+</div>

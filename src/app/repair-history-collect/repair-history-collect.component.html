@@ -1,13 +1,21 @@
-<div *ngIf="!(is_login | async)">
+<div *ngIf="!(is_login|async)">
   此页面仅登陆用户才可查看
 </div>
-<div *ngIf="is_login | async" class="container">
+<div *ngIf="is_login|async" class="container">
   <md-sidenav-container class="navbar-sidenav"
                         [ngStyle]="{'height':page_height+'px'}"
                         #container>
+    <div
+      fxLayout="row"
+      fxLayoutAlign="center"
+    >
+      <div style="width: 900px;">
+        <app-content></app-content>
+      </div>
+    </div>
     <button md-raised-button (click)="open_panel()" class="float-button">打开侧边栏</button>
     <md-sidenav mode="over"
-                [opened]="open_select_panel | async"
+                [opened]="state.open_select_panel"
                 [disableClose]="true"
                 #sidenav>
       <div class="sidenav-content"
@@ -57,7 +65,7 @@
         <div class="sidenav-panel">
           <button md-raised-button
                   style="background-color: #1565C0;color: white;width: 90%;"
-                  (click)="search_for_plan_data()"
+                  (click)="$get_repair_plan_data_from_server()"
           >
             搜索路局天窗修计划
           </button>
@@ -65,7 +73,7 @@
         <div class="sidenav-panel">
           <button md-raised-button
                   style="background-color: #1565C0;color: white;width: 90%;"
-                  (click)="search_for_history_data()"
+                  (click)="$get_repair_plan_data_from_server()"
           >
             搜索路局天窗修历史计划
           </button>

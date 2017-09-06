@@ -3,7 +3,7 @@
 }
 
 .navbar-sidenav {
-  background-color: inherit;
+  background-color: gainsboro;
 }
 
 .sidenav-content {
@@ -18,7 +18,7 @@
 }
 
 .float-button {
-  position: relative;
+  position: absolute;
   top: 90%;
   left: 25px;
 }
