@@ -30,6 +30,7 @@ export class RepairHistoryCollectComponent implements OnInit {
   public length_button_choices: [ButtonType, ButtonType, ButtonType];
   public DatePickerForm: FormGroup;
   public is_login: Observable<boolean>;
+  public $state: Observable<RepairHistoryCollectStoreInterface>;
 
 
   constructor(public http: Http,
@@ -37,8 +38,8 @@ export class RepairHistoryCollectComponent implements OnInit {
               public ng_change: ChangeDetectorRef,
               public snack_bar: MdSnackBar,
               fb: FormBuilder) {
-    const $state = this.store.select(state2 => state2.repair_history_collect);
-    $state.subscribe(v => {
+    this.$state = this.store.select(state2 => state2.repair_history_collect);
+    this.$state.subscribe(v => {
       this.state = v;
     });
     this.page_height = window.innerHeight - 52;

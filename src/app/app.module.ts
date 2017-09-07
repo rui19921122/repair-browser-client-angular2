@@ -79,7 +79,7 @@ export const routes: Routes = [
     MdProgressSpinnerModule,
     RouterModule.forRoot(routes),
     StoreModule.forRoot(store, {initialState: get__HMR__state}),
-    StoreDevtoolsModule.instrument({maxAge: 5})
+    StoreDevtoolsModule.instrument({maxAge: 100})
   ],
   providers: [UserService,
     {provide: LocationStrategy, useClass: HashLocationStrategy},

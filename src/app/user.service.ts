@@ -18,7 +18,6 @@ export class UserService {
       this.store.dispatch(new SwitchLoginPending(false));
       this.store.dispatch(new SwitchOpenLoginPanel(false));
     });
-    this.get_login_status();
   }
 
   public get_login_status() {

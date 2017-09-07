@@ -15,7 +15,7 @@
     </div>
     <button md-raised-button (click)="open_panel()" class="float-button">打开侧边栏</button>
     <md-sidenav mode="over"
-                [opened]="state.open_select_panel"
+                [opened]="($state|async)?.open_select_panel"
                 [disableClose]="true"
                 #sidenav>
       <div class="sidenav-content"

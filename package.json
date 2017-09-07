@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "hmr": "ng serve --hmr -e=hmr --proxy-config proxy.conf.json",
+    "hmr": "ng serve --hmr -e=hmr --proxy-config proxy.conf.json --aot",
     "build": "webpack",
     "test": "ng serve",
     "lint": "ng lint",

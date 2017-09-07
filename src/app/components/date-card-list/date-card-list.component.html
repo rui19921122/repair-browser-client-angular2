@@ -3,9 +3,9 @@
      fxLayoutAlign="start"
      fxLayoutGap="10px"
 >
-  <app-date-card *ngFor="let date of dates"
-                 [date]="date"
-                 fxFlex="10">
-
+  <app-date-card
+    *ngFor="let date of (dates|async)"
+    [date]="date"
+    fxFlex="10">
   </app-date-card>
 </div>

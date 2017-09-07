@@ -1,6 +1,6 @@
 <div>
   <app-date-card-list
-    [dates]="sortedDates()"
+    [dates]="getDates(($state | async)?.repair_plan_data)"
   >
 
   </app-date-card-list>

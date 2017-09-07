@@ -15,24 +15,19 @@ import {DateCardInterface} from '../../components/date-card/date-card.component'
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContentComponent implements OnInit {
-  public state: RepairHistoryCollectStoreInterface;
   public $repair_data: Observable<RepairPlanSingleDataInterface[]>;
   public includes_dates: moment.Moment[] = [];
+  public $state: Observable<RepairHistoryCollectStoreInterface>;
 
-  constructor(public store: Store<AppState>,) {
-    const $state = store.select(state2 => state2.repair_history_collect);
-    $state.subscribe(value => {
-      this.state = value;
-    });
-    this.$repair_data = store.select(state2 => state2.repair_history_collect.repair_plan_data);
-    this.$repair_data.subscribe(v => {
-      const observable = Observable.from(v);
-      observable.pluck('date').distinct().subscribe((value: string) => this.includes_dates.push(moment(value, 'YYYYMMDD')));
-    });
+  constructor(public store: Store<AppState>) {
+    this.$state = this.store.select(state => state.repair_history_collect);
   }
 
-  sortedDates() {
-    return this.includes_dates.sort((a, b) => a.isSameOrBefore(b) ? -1 : 1);
+  getDates(repair_data: RepairPlanSingleDataInterface[]) {
+    const _data = [];
+    const observable = Observable.from(repair_data);
+    observable.pluck('date').distinct().subscribe((value: string) => _data.push(moment(value, 'YYYYMMDD')));
+    return Observable.of(_data.sort((a, b) => a.isSameOrBefore(b) ? -1 : 1));
   }
 
   ngOnInit() {

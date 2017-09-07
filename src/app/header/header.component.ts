@@ -47,6 +47,7 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.UserService.get_login_status();
   }
 
   public open() {
