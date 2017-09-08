@@ -3,6 +3,7 @@ import {NgModule, ApplicationRef, LOCALE_ID} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {StoreDevtoolsModule} from '@ngrx/store-devtools';
 import {FlexLayoutModule} from '@angular/flex-layout';
+import {NgZorroAntdModule} from 'ng-zorro-antd';
 
 
 import {AppComponent} from './app.component';
@@ -16,6 +17,7 @@ import {
   MdProgressSpinnerModule,
   MdDatepickerModule,
   MdSnackBarModule,
+  MdTableModule,
   MdNativeDateModule,
   MdProgressBarModule,
   MdCardModule,
@@ -62,6 +64,7 @@ export const routes: Routes = [
     MdSidenavModule,
     ReactiveFormsModule,
     MdProgressBarModule,
+    MdTableModule,
     BrowserModule,
     MdCardModule,
     MdNativeDateModule,

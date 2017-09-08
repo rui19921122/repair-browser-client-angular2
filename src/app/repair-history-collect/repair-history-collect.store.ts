@@ -40,8 +40,20 @@ export class SwitchPendingRepairPlan implements Action {
   }
 }
 
+
+export const SWITCH_SHOW_ALL_DATES_ON_DATES_HEADER = '[repair-history-collect]SWITCH_SHOW_ALL_DATES_ON_DATES_HEADER';  //
+
+export class SwitchShowAllDatesOnDatesHeader implements Action {
+  readonly type = SWITCH_SHOW_ALL_DATES_ON_DATES_HEADER;
+
+  constructor(public payload: boolean) {
+
+  }
+}
+
 export type RepairHistoryCollectStoreActionType = SwitchOpenPanel
   | ChangeSelectedDate
+  | SwitchShowAllDatesOnDatesHeader   // 复制此行到ActionType中
   | UpdateRepairData // 复制此行到ActionType中
   | SwitchPendingRepairPlan   // 复制此行到ActionType中
   ;
@@ -50,6 +62,7 @@ export const RepairHistoryCollectStoreActions = {
   SwitchOpenPanel,
   ChangeSelectedDate,
   updateRepairData: UpdateRepairData, // 复制此行到导出的Action中
+  SwitchShowAllDatesOnDatesHeader,  // 复制此行到导出的Action中
 };
 
 export interface RepairHistoryCollectStoreInterface {
@@ -57,6 +70,7 @@ export interface RepairHistoryCollectStoreInterface {
   start_date?: moment.Moment;
   end_date?: moment.Moment;
   repair_plan_data: RepairPlanSingleDataInterface[];
+  show_all_dates_on_dates_header: boolean;
   pending: {
     repair_plan: boolean;
   }; // 各种pending的状态
@@ -67,12 +81,15 @@ const default_state: RepairHistoryCollectStoreInterface = {
   start_date: null,
   end_date: null,
   repair_plan_data: [],
-  pending: {repair_plan: false}
+  pending: {repair_plan: false},
+  show_all_dates_on_dates_header: false
 };
 
 export function reducer(state: RepairHistoryCollectStoreInterface = default_state,
                         action: RepairHistoryCollectStoreActionType): RepairHistoryCollectStoreInterface {
   switch (action.type) {
+    case SWITCH_SHOW_ALL_DATES_ON_DATES_HEADER:
+      return {...state, show_all_dates_on_dates_header: action.payload};  // 复制此两行到reducer中
     case SWITCH_PENDING_REPAIR_PLAN:
       return {...state, pending: {...state.pending, repair_plan: action.payload}};  // 复制此两行到reducer中
     case SWITCH_OPEN_PANEL:

@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef} from '@angular/core';
 import {AppState} from '../../store';
 import {Store} from '@ngrx/store';
-import {RepairHistoryCollectStoreInterface} from '../repair-history-collect.store';
+import {RepairHistoryCollectStoreInterface, RepairHistoryCollectStoreActions as actions} from '../repair-history-collect.store';
 import {RepairPlanSingleDataInterface} from '../../api';
 import {Observable} from 'rxjs/Observable';
 import * as moment from 'moment';
@@ -27,11 +27,15 @@ export class ContentComponent implements OnInit {
     const _data = [];
     const observable = Observable.from(repair_data);
     observable.pluck('date').distinct().subscribe((value: string) => _data.push(moment(value, 'YYYYMMDD')));
-    return Observable.of(_data.sort((a, b) => a.isSameOrBefore(b) ? -1 : 1));
+    return _data.sort((a, b) => a.isSameOrBefore(b) ? -1 : 1);
   }
 
   ngOnInit() {
 
   }
 
+  handle_show_all_clicked(boolean) {
+    console.log(1111);
+    this.store.dispatch(new actions.SwitchShowAllDatesOnDatesHeader(boolean));
+  }
 }

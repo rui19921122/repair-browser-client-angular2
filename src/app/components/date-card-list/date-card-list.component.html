@@ -1,11 +1,40 @@
-<div fxLayout="row wrap"
+<div fxLayout="row"
+     fxLayoutWrap
      style="margin-top: 15px"
      fxLayoutAlign="start"
      fxLayoutGap="10px"
 >
   <app-date-card
-    *ngFor="let date of (dates|async)"
+    *ngFor="let date of dates_splice()"
     [date]="date"
     fxFlex="10">
   </app-date-card>
+  <div
+    *ngIf="should_show_hide_button"
+    fxFlex="10">
+    <md-card
+      style="margin-top: 10px"
+    >
+      <md-card-content
+        class="show_more_card_content"
+        (click)="show_all_card_on_header_is_clicked(false)"
+      >
+        折叠
+      </md-card-content>
+    </md-card>
+  </div>
+  <div
+    *ngIf="should_show_more_button"
+    fxFlex="10">
+    <md-card
+      style="margin-top: 10px"
+    >
+      <md-card-content
+        class="show_more_card_content"
+        (click)="show_all_card_on_header_is_clicked(true)"
+      >
+        更多
+      </md-card-content>
+    </md-card>
+  </div>
 </div>
