@@ -11,7 +11,7 @@ import {Subject} from 'rxjs/Subject';
   styleUrls: ['./date-card-list.component.css']
 })
 export class DateCardListComponent implements OnInit {
-  @Input('dates') dates: moment.Moment[];
+  @Input('dates') dates: { date: moment.Moment, display_message: string; }[];
   @Input('show_all') show_all = false;
   @Input('show_number') show_number = 10;
   @Output() show_all_card_on_header_is_clicked_output: EventEmitter<boolean> = new EventEmitter();

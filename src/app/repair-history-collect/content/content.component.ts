@@ -1,8 +1,11 @@
 import {ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef} from '@angular/core';
 import {AppState} from '../../store';
 import {Store} from '@ngrx/store';
-import {RepairHistoryCollectStoreInterface, RepairHistoryCollectStoreActions as actions} from '../repair-history-collect.store';
-import {RepairPlanSingleDataInterface} from '../../api';
+import {
+  RepairHistoryCollectStoreInterface, RepairHistoryCollectStoreActions as actions,
+  RepairPlanSingleDataInterface
+} from '../repair-history-collect.store';
+import {RepairPlanSingleDataApiInterface} from '../../api';
 import {Observable} from 'rxjs/Observable';
 import * as moment from 'moment';
 import {DateCardInterface} from '../../components/date-card/date-card.component';
@@ -15,7 +18,7 @@ import {DateCardInterface} from '../../components/date-card/date-card.component'
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContentComponent implements OnInit {
-  public $repair_data: Observable<RepairPlanSingleDataInterface[]>;
+  public $repair_data: Observable<RepairPlanSingleDataApiInterface[]>;
   public includes_dates: moment.Moment[] = [];
   public $state: Observable<RepairHistoryCollectStoreInterface>;
 
@@ -23,10 +26,11 @@ export class ContentComponent implements OnInit {
     this.$state = this.store.select(state => state.repair_history_collect);
   }
 
-  getDates(repair_data: RepairPlanSingleDataInterface[]) {
+  getDatesData(repair_data: RepairPlanSingleDataInterface[]): { date: moment.Moment, display_message: string }[] {
     const _data = [];
+    const _returned_data = [];
     const observable = Observable.from(repair_data);
-    observable.pluck('date').distinct().subscribe((value: string) => _data.push(moment(value, 'YYYYMMDD')));
+    observable.pluck('date').distinct().subscribe((value: string) => _data.push(moment(value)));
     return _data.sort((a, b) => a.isSameOrBefore(b) ? -1 : 1);
   }
 
@@ -35,7 +39,6 @@ export class ContentComponent implements OnInit {
   }
 
   handle_show_all_clicked(boolean) {
-    console.log(1111);
     this.store.dispatch(new actions.SwitchShowAllDatesOnDatesHeader(boolean));
   }
 }

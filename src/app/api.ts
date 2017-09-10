@@ -1,3 +1,5 @@
+import * as moment from 'moment';
+
 export interface SystemUserInterface {
   username: string;
   department: string;
@@ -20,7 +22,7 @@ export interface RepairPlanContentInterface {
   work_vehicle: string;
 }
 
-export interface RepairPlanSingleDataInterface {
+export interface RepairPlanSingleDataApiInterface {
 
   type: string;
   plan_time: string;
@@ -35,5 +37,24 @@ export interface RepairPlanSingleDataInterface {
 
 export interface RepairPlanApi {
   length: number;
-  data: RepairPlanSingleDataInterface[];
+  data: RepairPlanSingleDataApiInterface[];
 }
+
+export interface RepairHistoryDataSingleApiInterface {
+  date: string | moment.Moment;
+  repair_content: string;
+  number: string;
+  plan_type: string;
+  repair_department: string;
+  inner_id: string;
+  use_paper: boolean;
+  apply_place: string;
+  plan_time: string;
+  id?: number;
+}
+
+export interface RepairHistoryDataApiInterface {
+  data: RepairHistoryDataSingleApiInterface[];
+}
+
+
