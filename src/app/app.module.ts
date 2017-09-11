@@ -39,6 +39,7 @@ import {extendMoment} from 'moment-range';
 import {DateCardListComponent} from './components/date-card-list/date-card-list.component';
 import {DateCardComponent} from './components/date-card/date-card.component';
 import {ContentComponent} from './repair-history-collect/content/content.component';
+import { RepairPlanDetailCardComponent } from './repair-history-collect/content/repair-plan-detail-card/repair-plan-detail-card.component';
 
 export const routes: Routes = [
   {path: '', redirectTo: 'home', pathMatch: 'full'},
@@ -57,6 +58,7 @@ export const routes: Routes = [
     DateCardListComponent,
     DateCardComponent,
     ContentComponent,
+    RepairPlanDetailCardComponent,
   ],
   imports: [
     FormsModule,

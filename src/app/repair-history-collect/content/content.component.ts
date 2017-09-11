@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef} from '@angular/core';
 import {AppState} from '../../store';
-import {Store} from '@ngrx/store';
+import {Store,createFeatureSelector ,createSelector ,MemoizedSelector} from '@ngrx/store';
 import {
   RepairHistoryCollectStoreInterface, RepairHistoryCollectStoreActions as actions,
   RepairPlanSingleDataInterface
