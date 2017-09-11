@@ -189,7 +189,7 @@ export function reducer(state: RepairHistoryCollectStoreInterface = default_stat
       return {...state, repair_history_data: action.payload}; // 复制此两行到reducer中,更新天窗修历史实绩集合 reducer
 
     case UPDATE_SORTED_REPAIR_HISTORY_DATA:
-      const _ = Object.assign({}, state.repair_plan_and_history_sorted_by_date);
+      const _ = Array.from(state.repair_plan_and_history_sorted_by_date);
       for (const single_data of action.payload) {
         const index = _.findIndex(value => single_data.date.isSame(value.date));
         if (index < 0) {
@@ -206,7 +206,7 @@ export function reducer(state: RepairHistoryCollectStoreInterface = default_stat
       return {...state, pending: {...state.pending, repair_history: action.payload}}; // 复制此两行到reducer中
     case UPDATE_SORTED_REPAIR_PLAN_DATA:
       // 首先对日期进行排序
-      const repair_data_sorted = Object.assign({}, state.repair_plan_and_history_sorted_by_date);
+      const repair_data_sorted = Array.from(state.repair_plan_and_history_sorted_by_date);
       for (const single_data of action.payload) {
         const repair_data_sorted_index = repair_data_sorted.findIndex(value => single_data.date.isSame(value.date));
         if (repair_data_sorted_index < 0) {
