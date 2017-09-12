@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef,OnDestroy} from '@angular/core';
 import {AppState} from '../../store';
 import {Store, createFeatureSelector, createSelector, MemoizedSelector} from '@ngrx/store';
 import {DateCardInterface} from '../../components/date-card-list/date-card-list.component';
@@ -12,6 +12,8 @@ import {
 import {RepairPlanSingleDataApiInterface} from '../../api';
 import {Observable} from 'rxjs/Observable';
 import * as moment from 'moment';
+import {Subject} from 'rxjs/Subject';
+import {Subscription} from 'rxjs/Subscription';
 
 
 @Component({
@@ -20,37 +22,36 @@ import * as moment from 'moment';
   styleUrls: ['./content.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ContentComponent implements OnInit {
-  public $repair_data: Observable<RepairPlanSingleDataApiInterface[]>;
-  public includes_dates: moment.Moment[] = [];
+export class ContentComponent implements OnInit, OnDestroy {
   public $state: Observable<RepairHistoryCollectStoreInterface>;
-  public _date: any;
+  public $repair_plan_and_history_data: Observable<RepairPlanAndHistoryDataSorted[]>;
+  public MapOriginDataToDateCardData: Function;
 
   constructor(public store: Store<AppState>) {
-    this.$state = this.store.select(state => state.repair_history_collect);
-    this._date = {date: moment(), display_message: []};
-  }
-
-  getDatesData(data: RepairPlanAndHistoryDataSorted[]): DateCardInterface[] {
-    const _date: DateCardInterface[] = [];
-    for (const single_data of data) {
-      _date.push({
-        date: single_data.date,
-        display_message: [
-          `计划${single_data.repair_plan_data_index_on_this_day.length}条`,
-          `实际${single_data.repair_history_data_index_on_this_day.length}条`,
-          `匹配${single_data.plan_history_can_match_together.length}条`,
-        ],
-        type: (( single_data.plan_history_can_match_together.length === single_data.repair_history_data_index_on_this_day.length) &&
-          (single_data.plan_history_can_match_together.length === single_data.repair_plan_data_index_on_this_day.length))
-          ? 'normal' : 'warn'
-      });
-    }
-    return _date;
   }
 
   ngOnInit() {
-
+    this.$state = this.store.select(state => state.repair_history_collect);
+    this.$repair_plan_and_history_data = this.store.select(state => state.repair_history_collect.repair_plan_and_history_sorted_by_date);
+    this.MapOriginDataToDateCardData = (data: RepairPlanAndHistoryDataSorted[]) =>{
+      const _date: DateCardInterface[] = [];
+      for (const single_data of data) {
+        _date.push({
+          date: single_data.date,
+          display_message: [
+            `计划${single_data.repair_plan_data_index_on_this_day.length}条`,
+            `实际${single_data.repair_history_data_index_on_this_day.length}条`,
+            `匹配${single_data.plan_history_can_match_together.length}条`,
+          ],
+          type: (( single_data.plan_history_can_match_together.length === single_data.repair_history_data_index_on_this_day.length) &&
+            (single_data.plan_history_can_match_together.length === single_data.repair_plan_data_index_on_this_day.length))
+            ? 'normal' : 'warn'
+        });
+      }
+      return _date;
+    };
+  }
+  ngOnDestroy() {
   }
 
   handle_show_all_clicked(boolean) {

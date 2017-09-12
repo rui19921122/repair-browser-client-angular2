@@ -7,9 +7,9 @@
     style="padding-left: 15px"
   >
     <app-date-card-list
-      (show_all_card_on_header_is_clicked_output)="handle_show_all_clicked($event)"
       [show_all]="($state|async).show_all_dates_on_dates_header"
-      [dates]="getDatesData(($state | async)?.repair_plan_and_history_sorted_by_date)"
+      [dates]="$repair_plan_and_history_data"
+      [map_func]="MapOriginDataToDateCardData"
     >
     </app-date-card-list>
   </div>
@@ -26,9 +26,6 @@
           <md-card fxFlex="30">
           </md-card>
           <div fxFlex="30" class="card">
-            <app-date-card
-              [date]="_date"
-            ></app-date-card>
           </div>
           <md-card fxFlex="30">
           </md-card>
