@@ -1,9 +1,13 @@
 import {Component, OnInit, Input, ChangeDetectionStrategy, Output, EventEmitter} from '@angular/core';
 import * as moment from 'moment';
-import {DateCardInterface} from '../date-card/date-card.component';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 
+export interface DateCardInterface {
+  date: moment.Moment;
+  display_message: string[];
+  type: string;
+}
 
 @Component({
   selector: 'app-date-card-list',
@@ -11,7 +15,7 @@ import {Subject} from 'rxjs/Subject';
   styleUrls: ['./date-card-list.component.css']
 })
 export class DateCardListComponent implements OnInit {
-  @Input('dates') dates: { date: moment.Moment, display_message: string; }[];
+  @Input('dates') dates: DateCardInterface[];
   @Input('show_all') show_all = false;
   @Input('show_number') show_number = 10;
   @Output() show_all_card_on_header_is_clicked_output: EventEmitter<boolean> = new EventEmitter();
@@ -43,7 +47,8 @@ export class DateCardListComponent implements OnInit {
   }
 
   show_all_card_on_header_is_clicked(payload: boolean) {
-    this.show_all_card_on_header_is_clicked_output.emit(payload);
+    // 为了动画感，延迟100ms发出
+    setTimeout(() => this.show_all_card_on_header_is_clicked_output.emit(payload), 100);
   }
 
 }

@@ -18,7 +18,7 @@
 }
 
 .float-button {
-  position: absolute;
+  position: fixed;
   top: 90%;
   left: 25px;
 }

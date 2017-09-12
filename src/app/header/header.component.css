@@ -23,3 +23,11 @@
 .login_panel {
   border-radius: 17px;
 }
+
+a:hover {
+  color: inherit;
+}
+
+a:focus{
+  text-decoration: none;
+}

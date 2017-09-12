@@ -31,7 +31,7 @@ export interface RepairHistorySingleDataInterface {
   id?: number;
 }
 
-interface RepairPlanAndHistoryDataSorted {
+export interface RepairPlanAndHistoryDataSorted {
   date: moment.Moment;
   repair_plan_data_index_on_this_day: number[];
   repair_history_data_index_on_this_day: number[];

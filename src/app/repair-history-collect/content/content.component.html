@@ -1,29 +1,39 @@
 <div
-  fxLayout="column"
+  fxLayout="row"
+  fxLayoutAlign="space-between"
 >
-  <div fxLayout="row" fxLayoutAlign="center">
-      <app-date-card-list
-        style="width: 900px;float: left;"
-        (show_all_card_on_header_is_clicked_output)="handle_show_all_clicked($event)"
-        [show_all]="($state|async).show_all_dates_on_dates_header"
-        [dates]="getDatesData(($state | async)?.repair_plan_data)"
-      >
-      </app-date-card-list>
+  <div
+    fxFlex="30"
+    style="padding-left: 15px"
+  >
+    <app-date-card-list
+      (show_all_card_on_header_is_clicked_output)="handle_show_all_clicked($event)"
+      [show_all]="($state|async).show_all_dates_on_dates_header"
+      [dates]="getDatesData(($state | async)?.repair_plan_and_history_sorted_by_date)"
+    >
+    </app-date-card-list>
   </div>
-<div class="detail-card-area" fxLayout="column">
-  <div *ngFor="let detail of  ($state | async)?.repair_plan_and_history_sorted_by_date">
-    <div>
-     <h2>{{detail.date.format("YYYY年MM月DD日")}}</h2>
-    </div>
-    <div fxLayout="row" fxLayoutGap="30px" class="detail-card-single-date" >
-      <md-card fxFlex="30">
-      </md-card>
-      <md-card fxFlex="30">
-        <h1>134</h1>
-      </md-card>
-      <md-card fxFlex="30">
-      </md-card>
+  <div
+    fxFlex="60"
+    class="detail-card-area"
+  >
+    <div fxLayout="column">
+      <div *ngFor="let detail of  ($state | async)?.repair_plan_and_history_sorted_by_date">
+        <div>
+          <h2>{{detail.date.format("YYYY年MM月DD日")}}</h2>
+        </div>
+        <div fxLayout="row" fxLayoutGap="30px" class="detail-card-single-date">
+          <md-card fxFlex="30">
+          </md-card>
+          <div fxFlex="30" class="card">
+            <app-date-card
+              [date]="_date"
+            ></app-date-card>
+          </div>
+          <md-card fxFlex="30">
+          </md-card>
+        </div>
+      </div>
     </div>
   </div>
-</div>
 </div>

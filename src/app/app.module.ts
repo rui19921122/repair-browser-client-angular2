@@ -3,6 +3,7 @@ import {NgModule, ApplicationRef, LOCALE_ID} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {StoreDevtoolsModule} from '@ngrx/store-devtools';
 import {FlexLayoutModule} from '@angular/flex-layout';
+import {NgZorroAntdModule} from 'ng-zorro-antd';
 
 
 import {AppComponent} from './app.component';
@@ -10,6 +11,7 @@ import {HeaderComponent} from './header/header.component';
 import {
   MdButtonModule,
   MdDialogModule,
+  MdTooltipModule,
   MdInputModule,
   MdMenuModule,
   MdAutocompleteModule,
@@ -39,7 +41,7 @@ import {extendMoment} from 'moment-range';
 import {DateCardListComponent} from './components/date-card-list/date-card-list.component';
 import {DateCardComponent} from './components/date-card/date-card.component';
 import {ContentComponent} from './repair-history-collect/content/content.component';
-import { RepairPlanDetailCardComponent } from './repair-history-collect/content/repair-plan-detail-card/repair-plan-detail-card.component';
+import {RepairPlanDetailCardComponent} from './repair-history-collect/content/repair-plan-detail-card/repair-plan-detail-card.component';
 
 export const routes: Routes = [
   {path: '', redirectTo: 'home', pathMatch: 'full'},
@@ -62,8 +64,10 @@ export const routes: Routes = [
   ],
   imports: [
     FormsModule,
+    MdTooltipModule,
     MdSidenavModule,
     ReactiveFormsModule,
+    NgZorroAntdModule.forRoot(),
     MdProgressBarModule,
     MdTableModule,
     BrowserModule,
@@ -83,7 +87,7 @@ export const routes: Routes = [
     MdProgressSpinnerModule,
     RouterModule.forRoot(routes),
     StoreModule.forRoot(store, {initialState: get__HMR__state}),
-    StoreDevtoolsModule.instrument({maxAge: 100})
+    StoreDevtoolsModule.instrument({maxAge: 100}),
   ],
   providers: [UserService,
     {provide: LocationStrategy, useClass: HashLocationStrategy},

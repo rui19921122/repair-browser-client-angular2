@@ -5,13 +5,10 @@
   <md-sidenav-container class="navbar-sidenav"
                         [ngStyle]="{'height':page_height+'px'}"
                         #container>
-    <div
-      fxLayout="row"
-      fxLayoutAlign="center"
-    >
-      <div style="width: 1300px;">
-        <app-content></app-content>
-      </div>
+    <div>
+      <app-content>
+
+      </app-content>
     </div>
     <button md-raised-button (click)="open_panel()" class="float-button">打开侧边栏</button>
     <md-sidenav mode="over"

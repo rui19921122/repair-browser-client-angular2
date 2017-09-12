@@ -1,9 +1,5 @@
 import * as moment from 'moment';
 
-export interface DateCardInterface {
-  date: moment.Moment;
-  labels: string[];
-}
 
 import {Component, Input, OnInit} from '@angular/core';
 
@@ -13,9 +9,13 @@ import {Component, Input, OnInit} from '@angular/core';
   styleUrls: ['./date-card.component.css']
 })
 export class DateCardComponent implements OnInit {
-  @Input('date') date: moment.Moment;
+  @Input('date') date: { date: moment.Moment, display_message: string[] };
+  @Input('disabled') disabled: boolean;
+  @Input('type') type: 'normal' | 'warn';
+  public color = 'black';
 
   constructor() {
+    this.disabled = false;
   }
 
   ngOnInit() {

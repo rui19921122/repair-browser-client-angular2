@@ -1,10 +1,12 @@
-.detail-card-area{
+.detail-card-area {
 }
-.detail-card{
+
+.detail-card {
   background-color: white;
   border-radius: 7px;
 }
-.detail-card-single-date{
-  margin-top:30px;
+
+.detail-card-single-date {
+  margin-top: 30px;
   margin-bottom: 30px;
 }

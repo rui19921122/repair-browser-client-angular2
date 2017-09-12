@@ -2,39 +2,50 @@
      fxLayoutWrap
      style="margin-top: 15px"
      fxLayoutAlign="start"
-     fxLayoutGap="10px"
+     fxLayoutGap="5px"
 >
   <app-date-card
     *ngFor="let date of dates_splice()"
     [date]="date"
-    fxFlex="10">
+    [type]="date.type"
+    fxFlex="30">
   </app-date-card>
-  <div
-    *ngIf="should_show_hide_button"
-    fxFlex="10">
-    <md-card
-      style="margin-top: 10px"
-    >
-      <md-card-content
-        class="show_more_card_content"
-        (click)="show_all_card_on_header_is_clicked(false)"
-      >
-        折叠
-      </md-card-content>
-    </md-card>
-  </div>
-  <div
-    *ngIf="should_show_more_button"
-    fxFlex="10">
-    <md-card
-      style="margin-top: 10px"
-    >
-      <md-card-content
-        class="show_more_card_content"
-        (click)="show_all_card_on_header_is_clicked(true)"
-      >
-        更多
-      </md-card-content>
-    </md-card>
-  </div>
+  <!--<div-->
+    <!--*ngIf="should_show_hide_button"-->
+    <!--fxFlex="30">-->
+    <!--<md-card-->
+      <!--style="margin-top: 10px"-->
+      <!--class="show_more_card"-->
+    <!--&gt;-->
+      <!--<md-card-content-->
+        <!--class="show_more_card_content"-->
+      <!--&gt;-->
+        <!--<button md-button-->
+                <!--class="show_more_card_button"-->
+                <!--(click)="show_all_card_on_header_is_clicked(false)"-->
+        <!--&gt;-->
+          <!--折叠-->
+        <!--</button>-->
+      <!--</md-card-content>-->
+    <!--</md-card>-->
+  <!--</div>-->
+  <!--<div-->
+    <!--*ngIf="should_show_more_button"-->
+    <!--fxFlex="30">-->
+    <!--<md-card-->
+      <!--style="margin-top: 10px"-->
+      <!--class="show_more_card"-->
+    <!--&gt;-->
+      <!--<md-card-content-->
+        <!--class="show_more_card_content"-->
+      <!--&gt;-->
+        <!--<button md-button-->
+                <!--class="show_more_card_button"-->
+                <!--(click)="show_all_card_on_header_is_clicked(true)"-->
+        <!--&gt;-->
+          <!--更多-->
+        <!--</button>-->
+      <!--</md-card-content>-->
+    <!--</md-card>-->
+  <!--</div>-->
 </div>
