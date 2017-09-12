@@ -13,39 +13,31 @@
   <div
     *ngIf="should_show_hide_button"
     fxFlex="30">
-    <md-card
+    <div
       style="margin-top: 10px"
       class="show_more_card"
     >
-      <md-card-content
-        class="show_more_card_content"
+      <button md-button
+              class="show_more_card_button"
+              (click)="show_all_card_on_header_is_clicked(false)"
       >
-        <button md-button
-                class="show_more_card_button"
-                (click)="show_all_card_on_header_is_clicked(false)"
-        >
-          折叠
-        </button>
-      </md-card-content>
-    </md-card>
+        折叠
+      </button>
+    </div>
   </div>
   <div
     *ngIf="should_show_more_button"
     fxFlex="30">
-    <md-card
+    <div
       style="margin-top: 10px"
       class="show_more_card"
     >
-      <md-card-content
-        class="show_more_card_content"
-      >
         <button md-button
                 class="show_more_card_button"
                 (click)="show_all_card_on_header_is_clicked(true)"
         >
           更多
         </button>
-      </md-card-content>
-    </md-card>
+    </div>
   </div>
 </div>

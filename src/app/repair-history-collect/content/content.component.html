@@ -7,9 +7,10 @@
     style="padding-left: 15px"
   >
     <app-date-card-list
-      [show_all]="($state|async).show_all_dates_on_dates_header"
+      [show_all]="$show_all_dates_on_header"
       [dates]="$repair_plan_and_history_data"
       [map_func]="MapOriginDataToDateCardData"
+      (show_all_card_on_header_is_clicked_output)="handle_show_all_clicked($event)"
     >
     </app-date-card-list>
   </div>
@@ -18,7 +19,7 @@
     class="detail-card-area"
   >
     <div fxLayout="column">
-      <div *ngFor="let detail of  ($state | async)?.repair_plan_and_history_sorted_by_date">
+      <div *ngFor="let detail of ($repair_plan_and_history_data|async)">
         <div>
           <h2>{{detail.date.format("YYYY年MM月DD日")}}</h2>
         </div>

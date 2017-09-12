@@ -26,6 +26,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   public $state: Observable<RepairHistoryCollectStoreInterface>;
   public $repair_plan_and_history_data: Observable<RepairPlanAndHistoryDataSorted[]>;
   public MapOriginDataToDateCardData: Function;
+  public $show_all_dates_on_header: Observable<boolean>;
 
   constructor(public store: Store<AppState>) {
   }
@@ -33,6 +34,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.$state = this.store.select(state => state.repair_history_collect);
     this.$repair_plan_and_history_data = this.store.select(state => state.repair_history_collect.repair_plan_and_history_sorted_by_date);
+    this.$show_all_dates_on_header = this.store.select(state => state.repair_history_collect.show_all_dates_on_dates_header);
     this.MapOriginDataToDateCardData = (data: RepairPlanAndHistoryDataSorted[]) =>{
       const _date: DateCardInterface[] = [];
       for (const single_data of data) {

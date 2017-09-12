@@ -19,34 +19,42 @@ export interface DateCardInterface {
 export class DateCardListComponent implements OnInit, OnDestroy {
   @Input('dates') dates: Observable<any[]>;
   @Input('map_func') map_func: (v) => DateCardInterface[];
-  @Input('show_all') show_all = false;
+  @Input('show_all') show_all: Observable<boolean>;
   @Input('show_number') show_number = 10;
   @Output() show_all_card_on_header_is_clicked_output: EventEmitter<boolean> = new EventEmitter();
   public _date: DateCardInterface[];
   public un: Subscription;
   public should_show_more_button = false;
   public should_show_hide_button = false;
+  public show_all_un: Subscription;
+  public _show_all: boolean;
 
   constructor(public mark: ChangeDetectorRef) {
   }
   ngOnDestroy() {
     this.un.unsubscribe();
+    this.show_all_un.unsubscribe();
   }
 
   ngOnInit() {
-    this.un = this.dates.subscribe(v => {
-      this._date = this.dates_splice(this.map_func(v));
+    this.un = this.dates.withLatestFrom(this.show_all).subscribe(([v1, v2]) => {
+      this._date = this.dates_splice(this.map_func(v1), v2);
+      this.mark.markForCheck();
+    });
+    this.show_all_un = this.show_all.withLatestFrom(this.dates).subscribe(([v1, v2]) => {
+      this._show_all = v1;
+      this._date = this.dates_splice(this.map_func(v2), v1);
       this.mark.markForCheck();
     });
   }
 
-  dates_splice(dates: DateCardInterface[]) {
+  dates_splice(dates: DateCardInterface[], show_all: boolean) {
     if (dates.length <= this.show_number) {
       this.should_show_more_button = false;
       this.should_show_hide_button = false;
       return dates;
     } else {
-      if (this.show_all) {
+      if (this._show_all) {
         this.should_show_more_button = false;
         this.should_show_hide_button = true;
         return dates;
