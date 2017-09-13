@@ -27,3 +27,11 @@
   min-width: 100%;
   line-height: 24px;
 }
+
+.card-area::-webkit-scrollbar{
+  display: none;
+  width: 0;
+}
+.card-area{
+  overflow: hidden;
+}

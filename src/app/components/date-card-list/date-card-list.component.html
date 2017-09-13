@@ -1,18 +1,18 @@
 <div
-  fxLayout="row"
+  class="card-area"
+  fxLayout="column"
   fxLayoutWrap
-     fxLayoutAlign="start"
-     fxLayoutGap="5px"
+ fxLayoutAlign="start"
+ fxLayoutGap="5px"
 >
   <app-date-card *ngFor="let date of _date"
-                 fxFlex="30"
     [date]="date"
     [type]="date.type"
    >
   </app-date-card>
   <div
     *ngIf="should_show_hide_button"
-    fxFlex="30">
+   >
     <div
       style="margin-top: 10px"
       class="show_more_card"
@@ -27,7 +27,7 @@
   </div>
   <div
     *ngIf="should_show_more_button"
-    fxFlex="30">
+    >
     <div
       style="margin-top: 10px"
       class="show_more_card"

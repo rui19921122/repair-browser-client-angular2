@@ -20,7 +20,7 @@ export class DateCardListComponent implements OnInit, OnDestroy {
   @Input('dates') dates: Observable<any[]>;
   @Input('map_func') map_func: (v) => DateCardInterface[];
   @Input('show_all') show_all: Observable<boolean>;
-  @Input('show_number') show_number = 10;
+  @Input('show_number') show_number = 7;
   @Output() show_all_card_on_header_is_clicked_output: EventEmitter<boolean> = new EventEmitter();
   public _date: DateCardInterface[];
   public un: Subscription;

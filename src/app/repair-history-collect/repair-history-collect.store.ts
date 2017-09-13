@@ -2,8 +2,7 @@
 import {Action} from '@ngrx/store';
 import * as moment from 'moment';
 import {
-  RepairHistoryDataApiInterface, RepairHistoryDataSingleApiInterface, RepairPlanApi, RepairPlanContentInterface,
-  RepairPlanSingleDataApiInterface
+   RepairPlanContentInterface
 } from '../api';
 
 export interface RepairPlanSingleDataInterface {
@@ -39,14 +38,13 @@ export interface RepairPlanAndHistoryDataSorted {
 }
 
 export interface RepairHistoryCollectStoreInterface {
+  which_sidenav_open: 'date_select'|'date_list'|'';
   repair_history_data: RepairHistorySingleDataInterface[];
-  open_select_panel: boolean;
   start_date?: moment.Moment;
   end_date?: moment.Moment;
   repair_plan_data: RepairPlanSingleDataInterface[];
   repair_plan_and_history_sorted_by_date: RepairPlanAndHistoryDataSorted[];
   show_all_dates_on_dates_header: boolean;
-  display_dates_panel: boolean;
   pending: {
     repair_plan: boolean;
     repair_history: boolean;
@@ -54,7 +52,6 @@ export interface RepairHistoryCollectStoreInterface {
 }
 
 
-export const SWITCH_OPEN_PANEL = '[history]SWITCH_OPEN_PANEL';
 export const CHANGE_SELECTED_DATE = '[history]CHANGE_SELECTED_DATE';
 
 export class ChangeSelectedDate implements Action {
@@ -74,11 +71,12 @@ export class UpdateRepairData implements Action {
   }
 }
 
+export const SWITCH_OPEN_WHICH_SIDEBAR = '[history]SWITCH_OPEN_WHICH_SIDEBAR';
 
-export class SwitchOpenPanel implements Action {
-  readonly type = SWITCH_OPEN_PANEL;
+export class SwitchOpenWhichSidebar implements Action {
+  readonly type = SWITCH_OPEN_WHICH_SIDEBAR;
 
-  constructor(public payload: boolean) {
+  constructor(public payload: 'date_select'|''|'date_list') {
   }
 }
 
@@ -145,18 +143,8 @@ export class UpdateRepairHistoryData implements Action {
   }
 }
 
-export const SWITCH_DISPLAY_DATES_PANEL = '[repair-history-collect]SWITCH_DISPLAY_DATES_PANEL';  //
 
-export class SwitchDisplayDatesPanel implements Action {
-  readonly type = SWITCH_DISPLAY_DATES_PANEL;
-
-  constructor(public payload: boolean) {
-
-  }
-}
-
-export type RepairHistoryCollectStoreActionType = SwitchOpenPanel
-  | SwitchDisplayDatesPanel   // 复制此行到ActionType中
+export type RepairHistoryCollectStoreActionType = SwitchOpenWhichSidebar
   | UpdateRepairHistoryData // 复制此行到ActionType中,更新天窗修历史实绩集合 action type
   | UpdateSortedRepairHistoryData // 复制此行到ActionType中
   | ChangeSelectedDate
@@ -168,28 +156,26 @@ export type RepairHistoryCollectStoreActionType = SwitchOpenPanel
   ;
 export const RepairHistoryCollectStoreActions = {
   UpdateSortedRepairHistoryData,  // 复制此行到导出的Action中
-  SwitchDisplayDatesPanel,  // 复制此行到导出的Action中
   UpdateRepairHistoryData,  // 复制此行到导出的Action中,更新天窗修历史实绩集合 actions
-  switchPendingRepairPlan: SwitchPendingRepairPlan,  // 复制此行到导出的Action中
+  SwitchPendingRepairPlan,  // 复制此行到导出的Action中
   SwitchGetHistoryDataPending, // 复制此行到导出的Action中
-  SwitchOpenPanel,
-  updateSortedRepairPlanData: UpdateSortedRepairPlanData, // 复制此行到导出的Action中
+  SwitchOpenWhichSidebar,
+  UpdateSortedRepairPlanData, // 复制此行到导出的Action中
   ChangeSelectedDate,
-  updateRepairData: UpdateRepairData, // 复制此行到导出的Action中
+  UpdateRepairData, // 复制此行到导出的Action中
   SwitchShowAllDatesOnDatesHeader,  // 复制此行到导出的Action中
 };
 
 
 const default_state: RepairHistoryCollectStoreInterface = {
   repair_plan_and_history_sorted_by_date: [],
-  open_select_panel: true,
   start_date: null,
   end_date: null,
   repair_plan_data: [],
   pending: {repair_plan: false, repair_history: false},
   show_all_dates_on_dates_header: false,
   repair_history_data: [],
-  display_dates_panel: false,
+  which_sidenav_open: '',
 };
 
 function SortedDataByDate(data: RepairPlanAndHistoryDataSorted[]): RepairPlanAndHistoryDataSorted[] {
@@ -199,8 +185,6 @@ function SortedDataByDate(data: RepairPlanAndHistoryDataSorted[]): RepairPlanAnd
 export function reducer(state: RepairHistoryCollectStoreInterface = default_state,
                         action: RepairHistoryCollectStoreActionType): RepairHistoryCollectStoreInterface {
   switch (action.type) {
-    case SWITCH_DISPLAY_DATES_PANEL:
-      return {...state, display_dates_panel: action.payload};  // 复制此两行到reducer中
     case UPDATE_REPAIR_HISTORY_DATA:
       return {...state, repair_history_data: action.payload}; // 复制此两行到reducer中,更新天窗修历史实绩集合 reducer
 
@@ -241,8 +225,11 @@ export function reducer(state: RepairHistoryCollectStoreInterface = default_stat
       return {...state, show_all_dates_on_dates_header: action.payload};  // 复制此两行到reducer中
     case SWITCH_PENDING_REPAIR_PLAN:
       return {...state, pending: {...state.pending, repair_plan: action.payload}};  // 复制此两行到reducer中
-    case SWITCH_OPEN_PANEL:
-      return {...state, open_select_panel: action.payload};
+    case SWITCH_OPEN_WHICH_SIDEBAR:
+      if (state.which_sidenav_open !== action.payload) {
+        return {...state, which_sidenav_open: action.payload};
+      }
+      return {...state, which_sidenav_open: ''};
     case CHANGE_SELECTED_DATE:
       return {...state, start_date: action.payload.start_date, end_date: action.payload.end_date};
     case UPDATE_REPAIR_DATA:

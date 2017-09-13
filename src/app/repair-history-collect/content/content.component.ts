@@ -62,11 +62,8 @@ export class ContentComponent implements OnInit, OnDestroy {
     this.store.dispatch(new actions.SwitchShowAllDatesOnDatesHeader(boolean));
   }
 
-  public open_panel() {
-    this.store.dispatch(new RepairHistoryCollectStoreActions.SwitchOpenPanel(true));
+  public open_panel(string: 'date_list'|'date_select') {
+    this.store.dispatch(new RepairHistoryCollectStoreActions.SwitchOpenWhichSidebar(string));
   }
 
-  switch_dates_panel() {
-    this.store.dispatch(new RepairHistoryCollectStoreActions.SwitchDisplayDatesPanel(true));
-  }
 }

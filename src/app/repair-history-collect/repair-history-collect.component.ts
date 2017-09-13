@@ -1,4 +1,4 @@
-import {Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, ViewChild, ElementRef, AfterViewInit} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, ViewChild, ElementRef, AfterViewInit,OnDestroy} from '@angular/core';
 import {
   RepairHistoryCollectStoreActions, RepairHistoryCollectStoreInterface, RepairHistorySingleDataInterface, RepairPlanAndHistoryDataSorted,
   RepairPlanSingleDataInterface
@@ -13,6 +13,7 @@ import {Http} from '@angular/http';
 import {RepairHistoryDataApiInterface, RepairPlanApi} from '../api';
 import {Subject} from 'rxjs/Subject';
 import {DateCardInterface} from '../components/date-card-list/date-card-list.component';
+import {Subscription} from 'rxjs/Subscription';
 
 class ButtonType {
   text: string;
@@ -26,7 +27,7 @@ class ButtonType {
   styleUrls: ['./repair-history-collect.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class RepairHistoryCollectComponent implements OnInit, AfterViewInit {
+export class RepairHistoryCollectComponent implements OnInit, AfterViewInit,OnDestroy {
   public page_height: number;
   public month_button_choices: [ButtonType, ButtonType];
   public length_button_choices: [ButtonType, ButtonType, ButtonType];
@@ -38,7 +39,14 @@ export class RepairHistoryCollectComponent implements OnInit, AfterViewInit {
   public $repair_plan_and_history_data: Observable<RepairPlanAndHistoryDataSorted[]>;
   public $show_all_dates_on_header: Observable<boolean>;
   public MapOriginDataToDateCardData: Function;
+  public listen_for_keyboard_click: Observable<KeyboardEvent>;
+  public listen_for_keyboard_click_unsubscribe: Subscription;
 
+  ngOnDestroy(){
+    if(this.listen_for_keyboard_click_unsubscribe){
+      this.listen_for_keyboard_click_unsubscribe.unsubscribe()
+    }
+  }
   ngAfterViewInit() {
   }
 
@@ -74,7 +82,7 @@ export class RepairHistoryCollectComponent implements OnInit, AfterViewInit {
         if (state.start_date && state.end_date && state.start_date.isSameOrBefore(state.end_date)) {
           const url = `/api/scrapy/plan/plan/?start_date` +
             `=${state.start_date.format('YYYY-MM-DD')}&end_date=${state.end_date.format('YYYY-MM-DD')}`;
-          this.store.dispatch(new RepairHistoryCollectStoreActions.switchPendingRepairPlan(true));
+          this.store.dispatch(new RepairHistoryCollectStoreActions.SwitchPendingRepairPlan(true));
           this.http.get(url).subscribe(v => {
             const json: RepairPlanApi = v.json();
             const origin_date_map: RepairPlanSingleDataInterface[] = [];
@@ -95,9 +103,9 @@ export class RepairHistoryCollectComponent implements OnInit, AfterViewInit {
               id += 1;
             }, () => {
             }, () => {
-              this.store.dispatch(new RepairHistoryCollectStoreActions.updateSortedRepairPlanData(sorted_date_map));
-              this.store.dispatch(new RepairHistoryCollectStoreActions.updateRepairData({data: origin_date_map}));
-              this.store.dispatch(new RepairHistoryCollectStoreActions.switchPendingRepairPlan(false));
+              this.store.dispatch(new RepairHistoryCollectStoreActions.UpdateSortedRepairPlanData(sorted_date_map));
+              this.store.dispatch(new RepairHistoryCollectStoreActions.UpdateRepairData({data: origin_date_map}));
+              this.store.dispatch(new RepairHistoryCollectStoreActions.SwitchPendingRepairPlan(false));
             });
           });
         } else {
@@ -107,10 +115,10 @@ export class RepairHistoryCollectComponent implements OnInit, AfterViewInit {
     this.search_for_history_data.withLatestFrom(this.$state)
       .subscribe(([data, state]) => {
           if (state.start_date && state.end_date && state.start_date.isSameOrBefore(state.end_date)) {
-            this.store.dispatch(new RepairHistoryCollectStoreActions.switchPendingRepairPlan(true));
+            this.store.dispatch(new RepairHistoryCollectStoreActions.SwitchPendingRepairPlan(true));
             const url = `/api/scrapy/history-list/repair/?start` +
               `=${state.start_date.format('YYYYMMDD')}&end=${state.end_date.format('YYYYMMDD')}`;
-            this.http.get(url).do(() => this.store.dispatch(new RepairHistoryCollectStoreActions.switchPendingRepairPlan(true)))
+            this.http.get(url).do(() => this.store.dispatch(new RepairHistoryCollectStoreActions.SwitchPendingRepairPlan(true)))
               .subscribe(
                 v => {
                   const json: RepairHistoryDataApiInterface = v.json();
@@ -145,6 +153,19 @@ export class RepairHistoryCollectComponent implements OnInit, AfterViewInit {
           }
         }
       );
+    this.listen_for_keyboard_click_unsubscribe = Observable.fromEvent(document, 'keydown')
+      .subscribe((v: KeyboardEvent) => {
+        switch (v.key){
+          case 'q':
+            this.store.dispatch(new RepairHistoryCollectStoreActions.SwitchOpenWhichSidebar('date_select'));
+            break;
+          case 'w':
+            this.store.dispatch(new RepairHistoryCollectStoreActions.SwitchOpenWhichSidebar('date_list'));
+            break;
+          default:
+            return;
+        }
+      });
     this.page_height = window.innerHeight - 52;
     this.is_login = this.store.select(state => state.user.is_login);
     this.length_button_choices = [
@@ -217,14 +238,14 @@ export class RepairHistoryCollectComponent implements OnInit, AfterViewInit {
     if (state.start_date.isSameOrBefore(state.end_date)) {
       const url = `/api/scrapy/history-list/repair/?start` +
         `=${state.start_date.format('YYYYMMDD')}&end=${state.end_date.format('YYYYMMDD')}`;
-      this.http.get(url).do(() => this.store.dispatch(new RepairHistoryCollectStoreActions.switchPendingRepairPlan(true)))
+      this.http.get(url).do(() => this.store.dispatch(new RepairHistoryCollectStoreActions.SwitchPendingRepairPlan(true)))
         .subscribe(
           v => {
             const json: RepairPlanApi = v.json();
           },
           () => {
           },
-          () => this.store.dispatch(new RepairHistoryCollectStoreActions.switchPendingRepairPlan(false))
+          () => this.store.dispatch(new RepairHistoryCollectStoreActions.SwitchPendingRepairPlan(false))
         );
     } else {
       this.snack_bar.open('日期选择错误', 'X', {duration: 2000});
@@ -232,7 +253,7 @@ export class RepairHistoryCollectComponent implements OnInit, AfterViewInit {
   }
 
   public close_slide_bar() {
-    this.store.dispatch(new RepairHistoryCollectStoreActions.SwitchOpenPanel(false));
+    this.store.dispatch(new RepairHistoryCollectStoreActions.SwitchOpenWhichSidebar(''));
   }
 
 }

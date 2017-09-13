@@ -17,7 +17,7 @@
           class="left-slider-bar-button accent-color"
           md-raised-button
           md-icon-button
-          (click)="open_panel()"
+          (click)="open_panel('date_select')"
           md-tooltip="打开侧边栏"
           [mdTooltipPosition]="'right'"
         >
@@ -30,7 +30,7 @@
           class="left-slider-bar-button accent-color"
           md-raised-button
           md-icon-button
-          (click)="switch_dates_panel()"
+          (click)="open_panel('date_list')"
           md-tooltip="打开日期快速选择，快捷键 q"
           [mdTooltipPosition]="'right'"
         >
@@ -51,10 +51,11 @@
           <h2>{{detail.date.format("YYYY年MM月DD日")}}</h2>
         </div>
         <div fxLayout="row" fxLayoutGap="30px" class="detail-card-single-date">
-          <md-card fxFlex="30">
+          <md-card>
+            <md-card-content>
+              <app-repair-plan-detail-card [plan_data]="detail.repair_plan_data_index_on_this_day"></app-repair-plan-detail-card>
+            </md-card-content>
           </md-card>
-          <div fxFlex="30" class="card">
-          </div>
           <md-card fxFlex="30">
           </md-card>
         </div>
