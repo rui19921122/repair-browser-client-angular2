@@ -39,13 +39,14 @@ export interface RepairPlanAndHistoryDataSorted {
 }
 
 export interface RepairHistoryCollectStoreInterface {
-  repair_history_data: RepairHistorySingleDataInterface[],
+  repair_history_data: RepairHistorySingleDataInterface[];
   open_select_panel: boolean;
   start_date?: moment.Moment;
   end_date?: moment.Moment;
   repair_plan_data: RepairPlanSingleDataInterface[];
   repair_plan_and_history_sorted_by_date: RepairPlanAndHistoryDataSorted[];
   show_all_dates_on_dates_header: boolean;
+  display_dates_panel: boolean;
   pending: {
     repair_plan: boolean;
     repair_history: boolean;
@@ -144,7 +145,18 @@ export class UpdateRepairHistoryData implements Action {
   }
 }
 
+export const SWITCH_DISPLAY_DATES_PANEL = '[repair-history-collect]SWITCH_DISPLAY_DATES_PANEL';  //
+
+export class SwitchDisplayDatesPanel implements Action {
+  readonly type = SWITCH_DISPLAY_DATES_PANEL;
+
+  constructor(public payload: boolean) {
+
+  }
+}
+
 export type RepairHistoryCollectStoreActionType = SwitchOpenPanel
+  | SwitchDisplayDatesPanel   // 复制此行到ActionType中
   | UpdateRepairHistoryData // 复制此行到ActionType中,更新天窗修历史实绩集合 action type
   | UpdateSortedRepairHistoryData // 复制此行到ActionType中
   | ChangeSelectedDate
@@ -156,6 +168,7 @@ export type RepairHistoryCollectStoreActionType = SwitchOpenPanel
   ;
 export const RepairHistoryCollectStoreActions = {
   UpdateSortedRepairHistoryData,  // 复制此行到导出的Action中
+  SwitchDisplayDatesPanel,  // 复制此行到导出的Action中
   UpdateRepairHistoryData,  // 复制此行到导出的Action中,更新天窗修历史实绩集合 actions
   switchPendingRepairPlan: SwitchPendingRepairPlan,  // 复制此行到导出的Action中
   SwitchGetHistoryDataPending, // 复制此行到导出的Action中
@@ -176,6 +189,7 @@ const default_state: RepairHistoryCollectStoreInterface = {
   pending: {repair_plan: false, repair_history: false},
   show_all_dates_on_dates_header: false,
   repair_history_data: [],
+  display_dates_panel: false,
 };
 
 function SortedDataByDate(data: RepairPlanAndHistoryDataSorted[]): RepairPlanAndHistoryDataSorted[] {
@@ -185,6 +199,8 @@ function SortedDataByDate(data: RepairPlanAndHistoryDataSorted[]): RepairPlanAnd
 export function reducer(state: RepairHistoryCollectStoreInterface = default_state,
                         action: RepairHistoryCollectStoreActionType): RepairHistoryCollectStoreInterface {
   switch (action.type) {
+    case SWITCH_DISPLAY_DATES_PANEL:
+      return {...state, display_dates_panel: action.payload};  // 复制此两行到reducer中
     case UPDATE_REPAIR_HISTORY_DATA:
       return {...state, repair_history_data: action.payload}; // 复制此两行到reducer中,更新天窗修历史实绩集合 reducer
 

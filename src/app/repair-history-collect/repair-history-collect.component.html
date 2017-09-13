@@ -5,19 +5,26 @@
   <md-sidenav-container class="navbar-sidenav"
                         [ngStyle]="{'height':page_height+'px'}"
                         #container>
-    <div>
-      <app-content>
-
-      </app-content>
-    </div>
-    <button md-raised-button (click)="open_panel()" class="float-button">打开侧边栏</button>
-    <md-sidenav mode="over"
-                [opened]="($state|async)?.open_select_panel"
-                [disableClose]="true"
-                #sidenav>
+    <app-content style="overflow-y: auto"
+                 [height]="page_height"
+    >
+    </app-content>
+    <md-sidenav
+      mode="over"
+      [opened]="($state|async)?.display_dates_panel||($state|async)?.open_select_panel"
+      [disableClose]="true">
+      <app-date-card-list
+        *ngIf="($state|async)?.display_dates_panel"
+        [show_all]="$show_all_dates_on_header"
+        [dates]="$repair_plan_and_history_data"
+        [map_func]="MapOriginDataToDateCardData"
+        (show_all_card_on_header_is_clicked_output)="handle_show_all_clicked($event)"
+      >
+      </app-date-card-list>
       <div class="sidenav-content"
            fxLayoutAlign="start center"
            fxLayout="column"
+           *ngIf="($state|async)?.open_select_panel"
       >
         <form [formGroup]="DatePickerForm">
           <md-input-container class="sidenav-panel"

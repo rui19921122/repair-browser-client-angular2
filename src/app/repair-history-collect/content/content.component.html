@@ -1,22 +1,49 @@
 <div
+  #target
   fxLayout="row"
   fxLayoutAlign="space-between"
 >
   <div
-    fxFlex="30"
-    style="padding-left: 15px"
+    style="width: 50px;"
+    [ngStyle]="{'height':(height-25)+'px'}"
+    class="left-slider-bar default-primary-color"
   >
-    <app-date-card-list
-      [show_all]="$show_all_dates_on_header"
-      [dates]="$repair_plan_and_history_data"
-      [map_func]="MapOriginDataToDateCardData"
-      (show_all_card_on_header_is_clicked_output)="handle_show_all_clicked($event)"
+    <!--工具栏选项-->
+    <div fxLayout="column" fxLayoutAlign="center center"
     >
-    </app-date-card-list>
+      <!--单个选项按钮-->
+      <div>
+        <button
+          class="left-slider-bar-button accent-color"
+          md-raised-button
+          md-icon-button
+          (click)="open_panel()"
+          md-tooltip="打开侧边栏"
+          [mdTooltipPosition]="'right'"
+        >
+          <i class="anticon anticon-unlock"></i>
+        </button>
+      </div>
+      <!--单个选项按钮-->
+      <div>
+        <button
+          class="left-slider-bar-button accent-color"
+          md-raised-button
+          md-icon-button
+          (click)="switch_dates_panel()"
+          md-tooltip="打开日期快速选择，快捷键 q"
+          [mdTooltipPosition]="'right'"
+        >
+          <i class="anticon anticon-calendar"></i>
+        </button>
+      </div>
+    </div>
   </div>
   <div
-    fxFlex="60"
+    fxFlex="90"
     class="detail-card-area"
+    style="overflow-y: auto;padding-bottom: 15px;"
+    [ngStyle]="{'height':height+'px'}"
   >
     <div fxLayout="column">
       <div *ngFor="let detail of ($repair_plan_and_history_data|async)">

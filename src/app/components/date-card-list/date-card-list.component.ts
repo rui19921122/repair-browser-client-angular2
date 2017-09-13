@@ -1,4 +1,4 @@
-import {Component, OnInit, Input, ChangeDetectionStrategy, Output, EventEmitter, ChangeDetectorRef,OnDestroy} from '@angular/core';
+import {Component, OnInit, Input, ChangeDetectionStrategy, Output, EventEmitter, ChangeDetectorRef, OnDestroy} from '@angular/core';
 import * as moment from 'moment';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
@@ -31,9 +31,14 @@ export class DateCardListComponent implements OnInit, OnDestroy {
 
   constructor(public mark: ChangeDetectorRef) {
   }
+
   ngOnDestroy() {
-    this.un.unsubscribe();
-    this.show_all_un.unsubscribe();
+    if (this.un) {
+      this.un.unsubscribe();
+    }
+    if (this.show_all_un) {
+      this.show_all_un.unsubscribe();
+    }
   }
 
   ngOnInit() {

@@ -1,6 +1,6 @@
-import {Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, ViewChild, ElementRef, AfterViewInit} from '@angular/core';
 import {
-  RepairHistoryCollectStoreActions, RepairHistoryCollectStoreInterface, RepairHistorySingleDataInterface,
+  RepairHistoryCollectStoreActions, RepairHistoryCollectStoreInterface, RepairHistorySingleDataInterface, RepairPlanAndHistoryDataSorted,
   RepairPlanSingleDataInterface
 } from './repair-history-collect.store';
 import {MdSnackBar} from '@angular/material';
@@ -12,6 +12,7 @@ import {Store} from '@ngrx/store';
 import {Http} from '@angular/http';
 import {RepairHistoryDataApiInterface, RepairPlanApi} from '../api';
 import {Subject} from 'rxjs/Subject';
+import {DateCardInterface} from '../components/date-card-list/date-card-list.component';
 
 class ButtonType {
   text: string;
@@ -25,7 +26,7 @@ class ButtonType {
   styleUrls: ['./repair-history-collect.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class RepairHistoryCollectComponent implements OnInit {
+export class RepairHistoryCollectComponent implements OnInit, AfterViewInit {
   public page_height: number;
   public month_button_choices: [ButtonType, ButtonType];
   public length_button_choices: [ButtonType, ButtonType, ButtonType];
@@ -34,6 +35,12 @@ export class RepairHistoryCollectComponent implements OnInit {
   public $state: Observable<RepairHistoryCollectStoreInterface>;
   public search_for_plan_data = new Subject();
   public search_for_history_data = new Subject();
+  public $repair_plan_and_history_data: Observable<RepairPlanAndHistoryDataSorted[]>;
+  public $show_all_dates_on_header: Observable<boolean>;
+  public MapOriginDataToDateCardData: Function;
+
+  ngAfterViewInit() {
+  }
 
 
   constructor(public http: Http,
@@ -41,7 +48,26 @@ export class RepairHistoryCollectComponent implements OnInit {
               public ng_change: ChangeDetectorRef,
               public snack_bar: MdSnackBar,
               fb: FormBuilder) {
+    this.$repair_plan_and_history_data = this.store.select(state => state.repair_history_collect.repair_plan_and_history_sorted_by_date);
+    this.MapOriginDataToDateCardData = (data: RepairPlanAndHistoryDataSorted[]) => {
+      const _date: DateCardInterface[] = [];
+      for (const single_data of data) {
+        _date.push({
+          date: single_data.date,
+          display_message: [
+            `计划${single_data.repair_plan_data_index_on_this_day.length}条`,
+            `实际${single_data.repair_history_data_index_on_this_day.length}条`,
+            `匹配${single_data.plan_history_can_match_together.length}条`,
+          ],
+          type: (( single_data.plan_history_can_match_together.length === single_data.repair_history_data_index_on_this_day.length) &&
+            (single_data.plan_history_can_match_together.length === single_data.repair_plan_data_index_on_this_day.length))
+            ? 'normal' : 'warn'
+        });
+      }
+      return _date;
+    };
     this.$state = this.store.select(state2 => state2.repair_history_collect);
+    this.$show_all_dates_on_header = this.store.select(state => state.repair_history_collect.show_all_dates_on_dates_header);
     this.search_for_plan_data
       .withLatestFrom(this.$state)
       .subscribe(([data, state]) => {
@@ -151,8 +177,8 @@ export class RepairHistoryCollectComponent implements OnInit {
     });
   }
 
-  public open_panel() {
-    this.store.dispatch(new RepairHistoryCollectStoreActions.SwitchOpenPanel(true));
+  handle_show_all_clicked(boolean) {
+    this.store.dispatch(new RepairHistoryCollectStoreActions.SwitchShowAllDatesOnDatesHeader(boolean));
   }
 
   public change_form_by_button(type: string, value: number) {
