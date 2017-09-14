@@ -29,10 +29,20 @@
   left: 45%;
   width: 60px;
   height: 60px;
-  margin-top:20px;
+  margin-top: 20px;
 }
 
-.left-slider-bar-button i{
+.left-slider-bar-button i {
   font-size: 160%;
   color: #FFFFFF;
+}
+
+.date-column {
+  height: 80px;
+  margin-top: 16px;
+  width: 95%;
+  line-height: 80px;
+  text-align: center;
+  font-size: 2rem;
+  box-shadow: 0 15px 15px -12px rgba(0, 0, 0, 0.56), 0 4px 20px 0px rgba(0, 0, 0, 0.12), 0 3px 10px -5px rgba(0, 0, 0, 0.2);
 }

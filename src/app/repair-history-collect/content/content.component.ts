@@ -35,24 +35,6 @@ export class ContentComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.$state = this.store.select(state => state.repair_history_collect);
     this.$repair_plan_and_history_data = this.store.select(state => state.repair_history_collect.repair_plan_and_history_sorted_by_date);
-    // this.$show_all_dates_on_header = this.store.select(state => state.repair_history_collect.show_all_dates_on_dates_header);
-    // this.MapOriginDataToDateCardData = (data: RepairPlanAndHistoryDataSorted[]) => {
-    //   const _date: DateCardInterface[] = [];
-    //   for (const single_data of data) {
-    //     _date.push({
-    //       date: single_data.date,
-    //       display_message: [
-    //         `计划${single_data.repair_plan_data_index_on_this_day.length}条`,
-    //         `实际${single_data.repair_history_data_index_on_this_day.length}条`,
-    //         `匹配${single_data.plan_history_can_match_together.length}条`,
-    //       ],
-    //       type: (( single_data.plan_history_can_match_together.length === single_data.repair_history_data_index_on_this_day.length) &&
-    //         (single_data.plan_history_can_match_together.length === single_data.repair_plan_data_index_on_this_day.length))
-    //         ? 'normal' : 'warn'
-    //     });
-    //   }
-    //   return _date;
-    // };
   }
 
   ngOnDestroy() {
@@ -62,7 +44,7 @@ export class ContentComponent implements OnInit, OnDestroy {
     this.store.dispatch(new actions.SwitchShowAllDatesOnDatesHeader(boolean));
   }
 
-  public open_panel(string: 'date_list'|'date_select') {
+  public open_panel(string: 'date_list' | 'date_select') {
     this.store.dispatch(new RepairHistoryCollectStoreActions.SwitchOpenWhichSidebar(string));
   }
 

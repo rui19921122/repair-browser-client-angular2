@@ -2,7 +2,7 @@
 import {Action} from '@ngrx/store';
 import * as moment from 'moment';
 import {
-   RepairPlanContentInterface
+  RepairPlanContentInterface
 } from '../api';
 
 export interface RepairPlanSingleDataInterface {
@@ -17,6 +17,28 @@ export interface RepairPlanSingleDataInterface {
   id: number;
 }
 
+
+export interface RepairPlanAndHistoryDataSorted {
+  date: moment.Moment;
+  repair_plan_data_index_on_this_day: number[];
+  repair_history_data_index_on_this_day: number[];
+  plan_history_can_match_together: [number, number][];
+}
+
+export interface RepairHistoryCollectStoreInterface {
+  which_sidenav_open: 'date_select' | 'date_list' | '';
+  repair_history_data: RepairHistorySingleDataInterface[];
+  start_date?: moment.Moment;
+  end_date?: moment.Moment;
+  repair_plan_data: RepairPlanSingleDataInterface[];
+  repair_plan_and_history_sorted_by_date: RepairPlanAndHistoryDataSorted[];
+  show_all_dates_on_dates_header: boolean;
+  pending: {
+    repair_plan: boolean;
+    repair_history: boolean;
+  }; // 各种pending的状态
+}
+
 export interface RepairHistorySingleDataInterface {
   date: moment.Moment;
   repair_content: string;
@@ -28,27 +50,6 @@ export interface RepairHistorySingleDataInterface {
   apply_place: string;
   plan_time: string;
   id?: number;
-}
-
-export interface RepairPlanAndHistoryDataSorted {
-  date: moment.Moment;
-  repair_plan_data_index_on_this_day: number[];
-  repair_history_data_index_on_this_day: number[];
-  plan_history_can_match_together: [number, number][];
-}
-
-export interface RepairHistoryCollectStoreInterface {
-  which_sidenav_open: 'date_select'|'date_list'|'';
-  repair_history_data: RepairHistorySingleDataInterface[];
-  start_date?: moment.Moment;
-  end_date?: moment.Moment;
-  repair_plan_data: RepairPlanSingleDataInterface[];
-  repair_plan_and_history_sorted_by_date: RepairPlanAndHistoryDataSorted[];
-  show_all_dates_on_dates_header: boolean;
-  pending: {
-    repair_plan: boolean;
-    repair_history: boolean;
-  }; // 各种pending的状态
 }
 
 
@@ -76,7 +77,7 @@ export const SWITCH_OPEN_WHICH_SIDEBAR = '[history]SWITCH_OPEN_WHICH_SIDEBAR';
 export class SwitchOpenWhichSidebar implements Action {
   readonly type = SWITCH_OPEN_WHICH_SIDEBAR;
 
-  constructor(public payload: 'date_select'|''|'date_list') {
+  constructor(public payload: 'date_select' | '' | 'date_list') {
   }
 }
 

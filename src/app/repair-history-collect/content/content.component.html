@@ -47,16 +47,29 @@
   >
     <div fxLayout="column">
       <div *ngFor="let detail of ($repair_plan_and_history_data|async)">
-        <div>
-          <h2>{{detail.date.format("YYYY年MM月DD日")}}</h2>
+        <div class="date-column default-primary-color">
+          <h2 class="text-primary-color">{{detail.date.format("YYYY年MM月DD日")}}</h2>
         </div>
         <div fxLayout="row" fxLayoutGap="30px" class="detail-card-single-date">
-          <md-card>
-            <md-card-content>
-              <app-repair-plan-detail-card [plan_data]="detail.repair_plan_data_index_on_this_day"></app-repair-plan-detail-card>
-            </md-card-content>
-          </md-card>
-          <md-card fxFlex="30">
+          <div fxFlex="50">
+            <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="25px"
+            >
+              <app-repair-plan-detail-card
+                style="width: 100%;"
+                *ngFor="let index of detail.repair_plan_data_index_on_this_day"
+                [plan_data]="($state|async)?.repair_plan_data[index]">
+
+              </app-repair-plan-detail-card>
+
+            </div>
+          </div>
+          <md-card fxFlex="40">
+            <app-repair-history-detail-card
+              style="width: 100%;"
+              *ngFor="let index of detail.repair_history_data_index_on_this_day"
+              [history_data]="($state|async)?.repair_history_data[index]">
+
+            </app-repair-history-detail-card>
           </md-card>
         </div>
       </div>
