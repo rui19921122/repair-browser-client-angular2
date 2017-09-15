@@ -200,6 +200,8 @@ export function reducer(state: RepairHistoryCollectStoreInterface = default_stat
             repair_plan_data_index_on_this_day: [],
             plan_history_can_match_together: [],
           });
+        } else {
+          _[index].repair_history_data_index_on_this_day = single_data.repair_history_data_index_on_this_day;
         }
       }
       return {...state, repair_plan_and_history_sorted_by_date: SortedDataByDate(_)}; // 复制此两行到reducer中
