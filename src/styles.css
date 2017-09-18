@@ -55,3 +55,28 @@ a, a:visited, a:focus, a:hover {
   border-color: #BDBDBD;
 }
 
+.detail-card-collection {
+  padding: 0;
+  height: 250px;
+  width: 500px;
+}
+
+.detail-card-header {
+  padding: 0;
+  margin: 0;
+  height: 50px;
+  width: 100%;
+}
+
+.detail-card-avatar {
+}
+
+.detail-card-title {
+}
+
+.detail-card-content p {
+  font-size: 1.15rem;
+  width: 87%;
+  padding: 5px;
+}
+

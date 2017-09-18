@@ -15,6 +15,7 @@ export interface RepairPlanSingleDataInterface {
   direction: string;
   post_date: moment.Moment;
   id: number;
+  is_time: boolean;
 }
 
 

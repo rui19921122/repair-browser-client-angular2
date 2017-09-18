@@ -103,7 +103,16 @@ export class RepairHistoryCollectComponent implements OnInit, AfterViewInit, OnD
             Observable.from(json.data)
               .map(e => {
                 // 这一步将字符串格式的日期转换成了moment格式,其他的内容暂时不做转换
-                return {...e, post_date: moment(e.post_date), id: id};
+                const split_time = e.plan_time.split('-');
+                if (split_time.length === 2) {
+                  const start_is_time: boolean = moment(split_time[0], 'hh-MM').isValid();
+                  const end_is_time: boolean = moment(split_time[1], 'hh-MM').isValid();
+                  if (start_is_time && end_is_time) {
+                    return {...e, post_date: moment(e.post_date), id: id, is_time: true};
+                  }
+                } else {
+                }
+                return {...e, post_date: moment(e.post_date), id: id, is_time: false};
               }).subscribe(value => {
               const _sorted_date_index = sorted_date_map.findIndex(value2 => value.post_date.isSame(value2.date));
               if (_sorted_date_index < 0) {
