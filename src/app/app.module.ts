@@ -44,6 +44,7 @@ import {DateCardComponent} from './repair-history-collect/repair-collect-date-ca
 import {ContentComponent} from './repair-history-collect/content/content.component';
 import {RepairPlanDetailCardComponent} from './repair-history-collect/repair-plan-detail-card/repair-plan-detail-card.component';
 import {RepairHistoryDetailCardComponent} from './repair-history-collect/repair-history-detail-card/repair-history-detail-card.component';
+import { MomentPipe } from './moment.pipe';
 
 export const routes: Routes = [
   {path: '', redirectTo: 'home', pathMatch: 'full'},
@@ -64,6 +65,7 @@ export const routes: Routes = [
     ContentComponent,
     RepairPlanDetailCardComponent,
     RepairHistoryDetailCardComponent,
+    MomentPipe,
   ],
   imports: [
     FormsModule,

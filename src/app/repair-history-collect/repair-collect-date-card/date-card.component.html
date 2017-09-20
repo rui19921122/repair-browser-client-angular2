@@ -1,6 +1,6 @@
 <md-expansion-panel [expanded]="true" [hideToggle]="false">
   <md-expansion-panel-header>
-    <md-panel-title>{{date.date.format('YYYY年MM月DD日')}}</md-panel-title>
+    <md-panel-title>{{date.date | moment}}</md-panel-title>
     <md-panel-description>
       1234
     </md-panel-description>
