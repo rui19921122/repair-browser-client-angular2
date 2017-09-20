@@ -21,7 +21,6 @@ import {Store} from '@ngrx/store';
 import {Http} from '@angular/http';
 import {RepairHistoryDataApiInterface, RepairPlanApi} from '../api';
 import {Subject} from 'rxjs/Subject';
-import {DateCardInterface} from '../components/date-card-list/date-card-list.component';
 import {Subscription} from 'rxjs/Subscription';
 
 class ButtonType {
@@ -47,7 +46,6 @@ export class RepairHistoryCollectComponent implements OnInit, AfterViewInit, OnD
   public search_for_history_data = new Subject();
   public $repair_plan_and_history_data: Observable<RepairPlanAndHistoryDataSorted[]>;
   public $show_all_dates_on_header: Observable<boolean>;
-  public MapOriginDataToDateCardData: Function;
   public listen_for_keyboard_click: Observable<KeyboardEvent>;
   public listen_for_keyboard_click_unsubscribe: Subscription;
 
@@ -67,23 +65,6 @@ export class RepairHistoryCollectComponent implements OnInit, AfterViewInit, OnD
               public snack_bar: MdSnackBar,
               fb: FormBuilder) {
     this.$repair_plan_and_history_data = this.store.select(state => state.repair_history_collect.repair_plan_and_history_sorted_by_date);
-    this.MapOriginDataToDateCardData = (data: RepairPlanAndHistoryDataSorted[]) => {
-      const _date: DateCardInterface[] = [];
-      for (const single_data of data) {
-        _date.push({
-          date: single_data.date,
-          display_message: [
-            `计划${single_data.repair_plan_data_index_on_this_day.length}条`,
-            `实际${single_data.repair_history_data_index_on_this_day.length}条`,
-            `匹配${single_data.plan_history_can_match_together.length}条`,
-          ],
-          type: (( single_data.plan_history_can_match_together.length === single_data.repair_history_data_index_on_this_day.length) &&
-            (single_data.plan_history_can_match_together.length === single_data.repair_plan_data_index_on_this_day.length))
-            ? 'normal' : 'warn'
-        });
-      }
-      return _date;
-    };
     this.$state = this.store.select(state2 => state2.repair_history_collect);
     this.$show_all_dates_on_header = this.store.select(state => state.repair_history_collect.show_all_dates_on_dates_header);
     this.search_for_plan_data

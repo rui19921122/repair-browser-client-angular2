@@ -23,7 +23,8 @@ import {
   MdProgressBarModule,
   MdCardModule,
   MdSidenavModule,
-  MdToolbarModule
+  MdToolbarModule,
+  MdExpansionModule
 } from '@angular/material';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {Router, RouterModule, Routes} from '@angular/router';
@@ -37,13 +38,12 @@ import {HttpModule} from '@angular/http';
 import {RepairHistoryCollectComponent} from './repair-history-collect/repair-history-collect.component';
 import {HashLocationStrategy, LocationStrategy} from '@angular/common';
 import {StoreRouterConnectingModule} from '@ngrx/router-store';
-import {extendMoment} from 'moment-range';
 
-import {DateCardListComponent} from './components/date-card-list/date-card-list.component';
-import {DateCardComponent} from './components/date-card/date-card.component';
+import {DateCardListComponent} from './repair-history-collect/repair-collect-date-card-list/date-card-list.component';
+import {DateCardComponent} from './repair-history-collect/repair-collect-date-card/date-card.component';
 import {ContentComponent} from './repair-history-collect/content/content.component';
 import {RepairPlanDetailCardComponent} from './repair-history-collect/repair-plan-detail-card/repair-plan-detail-card.component';
-import { RepairHistoryDetailCardComponent } from './repair-history-collect/repair-history-detail-card/repair-history-detail-card.component';
+import {RepairHistoryDetailCardComponent} from './repair-history-collect/repair-history-detail-card/repair-history-detail-card.component';
 
 export const routes: Routes = [
   {path: '', redirectTo: 'home', pathMatch: 'full'},
@@ -78,6 +78,7 @@ export const routes: Routes = [
     MdCardModule,
     MdNativeDateModule,
     FlexLayoutModule,
+    MdExpansionModule,
     BrowserAnimationsModule,
     MdButtonModule,
     MdMenuModule,

@@ -18,13 +18,9 @@
       <div class="sidenav-content"
            *ngIf="($state|async)?.which_sidenav_open === 'date_list'"
       >
-          <app-date-card-list
-        [show_all]="$show_all_dates_on_header"
-        [dates]="$repair_plan_and_history_data"
-        [map_func]="MapOriginDataToDateCardData"
-        (show_all_card_on_header_is_clicked_output)="handle_show_all_clicked($event)"
-      >
-      </app-date-card-list>
+        <app-repair-collect-date-card-list
+        >
+        </app-repair-collect-date-card-list>
       </div>
       <div class="sidenav-content"
            fxLayoutAlign="start center"
