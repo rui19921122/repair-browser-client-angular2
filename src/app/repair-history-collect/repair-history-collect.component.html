@@ -13,10 +13,10 @@
       mode="side"
       class="sidenav-container card"
       [ngStyle]="{'height':(page_height-25)+'px'}"
-      [opened]="($state|async)?.which_sidenav_open!==''"
+      [opened]="($state|async)?.side_nav_settings.which_sidenav_open!==''"
       [disableClose]="true">
       <div class="sidenav-content"
-           *ngIf="($state|async)?.which_sidenav_open === 'date_list'"
+           *ngIf="($state|async)?.side_nav_settings.which_sidenav_open === 'date_list'"
       >
         <app-repair-collect-date-card-list
         >
@@ -25,7 +25,7 @@
       <div class="sidenav-content"
            fxLayoutAlign="start center"
            fxLayout="column"
-           *ngIf="($state|async)?.which_sidenav_open === 'date_select'"
+           *ngIf="($state|async)?.side_nav_settings.which_sidenav_open === 'date_select'"
       >
         <form [formGroup]="DatePickerForm">
           <md-input-container class="sidenav-panel"

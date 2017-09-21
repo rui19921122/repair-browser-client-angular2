@@ -5,11 +5,38 @@
   fxLayoutAlign="start"
   fxLayoutGap="5px"
 >
-  <md-accordion>
-    <app-repair-collect-date-card
+  <md-accordion multi="true">
+    <md-expansion-panel
       *ngFor="let date of dates_collection|async"
-      [date]="date"
+      [expanded]="dates_opened_panel|async "
     >
-    </app-repair-collect-date-card>
+      <md-expansion-panel-header
+      >
+        <md-panel-title>{{date.date | moment}}</md-panel-title>
+        <md-panel-description>
+          <span
+            *ngIf="date.repair_history_data_index_on_this_day.length==date.repair_plan_data_index_on_this_day.length">
+            正常</span>
+          <span
+            *ngIf="date.repair_history_data_index_on_this_day.length!==date.repair_plan_data_index_on_this_day.length"
+            style="color: red;"
+          >
+            对数不匹配</span>
+        </md-panel-description>
+      </md-expansion-panel-header>
+      <p>
+        天窗修计划:{{date.repair_plan_data_index_on_this_day.length}} 个
+      </p>
+      <p>
+        天窗修实绩: {{date.repair_history_data_index_on_this_day.length}} 个
+      </p>
+      <p>
+        匹配对数: {{date.plan_history_can_match_together.length}} 对
+      </p>
+      <md-action-row>
+        <button md-button>删除</button>
+        <button md-button>跳转到</button>
+      </md-action-row>
+    </md-expansion-panel>
   </md-accordion>
 </div>

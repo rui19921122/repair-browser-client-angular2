@@ -27,7 +27,6 @@ export interface RepairPlanAndHistoryDataSorted {
 }
 
 export interface RepairHistoryCollectStoreInterface {
-  which_sidenav_open: 'date_select' | 'date_list' | '';
   repair_history_data: RepairHistorySingleDataInterface[];
   start_date?: moment.Moment;
   end_date?: moment.Moment;
@@ -38,6 +37,10 @@ export interface RepairHistoryCollectStoreInterface {
     repair_plan: boolean;
     repair_history: boolean;
   }; // 各种pending的状态
+  side_nav_settings: {
+    opened_date_index: moment.Moment[];
+    which_sidenav_open: 'date_select' | 'date_list' | '';
+  };
 }
 
 export interface RepairHistorySingleDataInterface {
@@ -177,7 +180,10 @@ const default_state: RepairHistoryCollectStoreInterface = {
   pending: {repair_plan: false, repair_history: false},
   show_all_dates_on_dates_header: false,
   repair_history_data: [],
-  which_sidenav_open: '',
+  side_nav_settings: {
+    opened_date_index: [],
+    which_sidenav_open: '',
+  }
 };
 
 function SortedDataByDate(data: RepairPlanAndHistoryDataSorted[]): RepairPlanAndHistoryDataSorted[] {
@@ -230,10 +236,15 @@ export function reducer(state: RepairHistoryCollectStoreInterface = default_stat
     case SWITCH_PENDING_REPAIR_PLAN:
       return {...state, pending: {...state.pending, repair_plan: action.payload}};  // 复制此两行到reducer中
     case SWITCH_OPEN_WHICH_SIDEBAR:
-      if (state.which_sidenav_open !== action.payload) {
-        return {...state, which_sidenav_open: action.payload};
+      if (state.side_nav_settings.which_sidenav_open !== action.payload) {
+        return {
+          ...state, side_nav_settings: {
+            ...state.side_nav_settings,
+            which_sidenav_open: action.payload
+          }
+        };
       }
-      return {...state, which_sidenav_open: ''};
+      return {...state, side_nav_settings: {...state.side_nav_settings, which_sidenav_open: ''}};
     case CHANGE_SELECTED_DATE:
       return {...state, start_date: action.payload.start_date, end_date: action.payload.end_date};
     case UPDATE_REPAIR_DATA:
