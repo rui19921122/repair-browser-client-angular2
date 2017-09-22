@@ -8,7 +8,9 @@
   <md-accordion multi="true">
     <md-expansion-panel
       *ngFor="let date of dates_collection|async"
-      [expanded]="dates_opened_panel|async "
+      [expanded]="date.date| inTheMomentList: (dates_opened_panel|async) "
+      (opened)="addOrRemoveDateToDatesOpenedPanel(date.date, true)"
+      (closed)="addOrRemoveDateToDatesOpenedPanel(date.date, false)"
     >
       <md-expansion-panel-header
       >
@@ -31,7 +33,7 @@
         天窗修实绩: {{date.repair_history_data_index_on_this_day.length}} 个
       </p>
       <p>
-        匹配对数: {{date.plan_history_can_match_together.length}} 对
+        <!--匹配对数: {{date.plan_history_can_match_together.length}} 对-->
       </p>
       <md-action-row>
         <button md-button>删除</button>

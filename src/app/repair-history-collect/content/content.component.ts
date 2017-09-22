@@ -15,7 +15,6 @@ import {Subject} from 'rxjs/Subject';
 import {Subscription} from 'rxjs/Subscription';
 
 
-
 @Component({
   selector: 'app-content',
   templateUrl: './content.component.html',
@@ -25,6 +24,8 @@ import {Subscription} from 'rxjs/Subscription';
 export class ContentComponent implements OnInit, OnDestroy {
   public $state: Observable<RepairHistoryCollectStoreInterface>;
   public $repair_plan_and_history_data: Observable<RepairPlanAndHistoryDataSorted[]>;
+  public $repair_plan_data: Observable<RepairPlanSingleDataInterface[]>;
+  public $repair_history_data: Observable<RepairHistorySingleDataInterface[]>;
   @Input('height') height: number;
 
   constructor(public store: Store<AppState>) {
@@ -33,6 +34,8 @@ export class ContentComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.$state = this.store.select(state => state.repair_history_collect);
     this.$repair_plan_and_history_data = this.store.select(state => state.repair_history_collect.repair_plan_and_history_sorted_by_date);
+    this.$repair_history_data = this.store.select(state => state.repair_history_collect.repair_history_data);
+    this.$repair_plan_data = this.store.select(state => state.repair_history_collect.repair_plan_data);
   }
 
   ngOnDestroy() {

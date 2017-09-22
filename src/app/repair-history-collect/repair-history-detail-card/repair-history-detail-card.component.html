@@ -2,14 +2,12 @@
          style="padding: 0;
   box-shadow: 0 15px 15px -12px rgba(0, 0, 0, 0.56), 0 4px 20px 0px rgba(0, 0, 0, 0.12), 0 3px 10px -5px rgba(0, 0, 0, 0.2);
 "
+         *ngIf="history_data"
 >
   <md-card-header class="detail-card-header light-primary-color text-primary-color">
-    <div md-card-avatar class="detail-card-avatar">
-      站
-    </div>
-    <md-card-title class="detail-card-title">
-      编号:{{history_data.number}}
-    </md-card-title>
+    <span class="md-card-header-title">
+    编号:{{history_data.number}}({{history_data.used_number}})
+    </span>
   </md-card-header>
   <md-card-content class="detail-card-content">
     <p>

@@ -5,14 +5,9 @@
 >
   <md-card-header class="detail-card-header light-primary-color text-primary-color"
   >
-    <div md-card-avatar class="detail-card-avatar">
-      <span *ngIf="plan_data.type=='Ⅰ'||plan_data.type=='Ⅱ'">
-        站
-      </span>
-    </div>
-    <md-card-title class="detail-card-title">
-      编号:{{plan_data.number}}
-    </md-card-title>
+    <span class="md-card-header-title">
+    编号:{{plan_data.number}}
+    </span>
   </md-card-header>
   <md-card-content class="detail-card-content">
     <p>
@@ -24,5 +19,11 @@
     <p>
       行别:{{plan_data.direction}}
     </p>
+    <md-card-actions
+      class="detail-card-actions"
+    >
+      <button md-raised-button>修改</button>
+      <button md-raised-button>详细</button>
+    </md-card-actions>
   </md-card-content>
 </md-card>

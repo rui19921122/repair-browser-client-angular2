@@ -68,10 +68,13 @@ a, a:visited, a:focus, a:hover {
   width: 100%;
 }
 
-.detail-card-avatar {
+.md-card-header-title {
+  font-size: 1.5rem;
+  line-height: 50px;
 }
 
-.detail-card-title {
+.detail-card-content {
+  padding: 14px;
 }
 
 .detail-card-content p {
@@ -80,3 +83,7 @@ a, a:visited, a:focus, a:hover {
   padding: 5px;
 }
 
+.detail-card-actions {
+  float: right;
+  margin-right: 10px !important;
+}

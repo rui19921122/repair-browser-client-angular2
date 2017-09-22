@@ -30,6 +30,10 @@ export class DateCardListComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
   }
 
+  addOrRemoveDateToDatesOpenedPanel(value: moment.Moment, boolean: boolean) {
+    this.store.dispatch(new actions.AddOrRemoveDateToOpenedDatePanel({date: value, boolean: boolean}));
+  }
+
   ngOnInit() {
   }
 

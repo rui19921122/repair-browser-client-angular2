@@ -4,6 +4,7 @@ import * as moment from 'moment';
 import {
   RepairPlanContentInterface
 } from '../api';
+import {Observable} from 'rxjs/Observable';
 
 export interface RepairPlanSingleDataInterface {
   type: string;
@@ -21,9 +22,8 @@ export interface RepairPlanSingleDataInterface {
 
 export interface RepairPlanAndHistoryDataSorted {
   date: moment.Moment;
-  repair_plan_data_index_on_this_day: number[];
+  repair_plan_data_index_on_this_day: { plan_number_id: number, history_number_id: number | null, is_manual: boolean }[];
   repair_history_data_index_on_this_day: number[];
-  plan_history_can_match_together: [number, number][];
 }
 
 export interface RepairHistoryCollectStoreInterface {
@@ -54,6 +54,7 @@ export interface RepairHistorySingleDataInterface {
   apply_place: string;
   plan_time: string;
   id?: number;
+  used_number: string;
 }
 
 
@@ -106,15 +107,6 @@ export class SwitchShowAllDatesOnDatesHeader implements Action {
   }
 }
 
-export const UPDATE_SORTED_REPAIR_PLAN_DATA = '[repair-history-collect]UPDATE_SORTED_REPAIR_PLAN_DATA';
-
-export class UpdateSortedRepairPlanData implements Action {
-  readonly type = UPDATE_SORTED_REPAIR_PLAN_DATA;
-
-  constructor(public payload: { date: moment.Moment, repair_plan_data_index_on_this_day: number[] }[]) {
-
-  }
-}
 
 export const SWITCH_GET_HISTORY_DATA_PENDING = '[repair-history-collect]SWITCH_GET_HISTORY_DATA_PENDING';
 
@@ -123,17 +115,6 @@ export class SwitchGetHistoryDataPending implements Action {
 
   constructor(public payload: boolean) {
 
-  }
-}
-
-export const UPDATE_SORTED_REPAIR_HISTORY_DATA = '[repair-history-collect]UPDATE_SORTED_REPAIR_HISTORY_DATA';
-
-export class UpdateSortedRepairHistoryData implements Action {
-  readonly type = UPDATE_SORTED_REPAIR_HISTORY_DATA;
-
-  constructor(public payload: {
-    date: moment.Moment, repair_history_data_index_on_this_day: number[]
-  }[]) {
   }
 }
 
@@ -149,26 +130,48 @@ export class UpdateRepairHistoryData implements Action {
 }
 
 
+export const ADD_OR_REMOVE_DATE_TO_OPENED_DATE_PANEL = '[repair-history-collect]ADD_OR_REMOVE_DATE_TO_OPENED_DATE_PANEL';  //
+
+export class AddOrRemoveDateToOpenedDatePanel implements Action {
+  readonly type = ADD_OR_REMOVE_DATE_TO_OPENED_DATE_PANEL;
+
+  constructor(public payload: { date: moment.Moment, boolean: boolean }) {
+
+  }
+}
+
+export const MAP_PLAN_AND_HISTORY_NUMBER = '[repair-history-collect]MAP_PLAN_AND_HISTORY_NUMBER';  //
+
+export class MapPlanAndHistoryNumber implements Action {
+  // 此计算将根据state现有的plan和history状态构建排序后的数据，计算量可能较大，需要想办法优化的话就优化。
+  readonly type = MAP_PLAN_AND_HISTORY_NUMBER;
+
+  constructor() {
+
+  }
+}
+
+
 export type RepairHistoryCollectStoreActionType = SwitchOpenWhichSidebar
+  | MapPlanAndHistoryNumber   // 复制此行到ActionType中
+  | AddOrRemoveDateToOpenedDatePanel   // 复制此行到ActionType中
   | UpdateRepairHistoryData // 复制此行到ActionType中,更新天窗修历史实绩集合 action type
-  | UpdateSortedRepairHistoryData // 复制此行到ActionType中
   | ChangeSelectedDate
   | SwitchGetHistoryDataPending // 复制此行到ActionType中
   | SwitchShowAllDatesOnDatesHeader   // 复制此行到ActionType中
   | UpdateRepairData // 复制此行到ActionType中
-  | UpdateSortedRepairPlanData // 复制此行到ActionType中
   | SwitchPendingRepairPlan   // 复制此行到ActionType中
   ;
 export const RepairHistoryCollectStoreActions = {
-  UpdateSortedRepairHistoryData,  // 复制此行到导出的Action中
+  MapPlanAndHistoryNumber,  // 复制此行到导出的Action中
   UpdateRepairHistoryData,  // 复制此行到导出的Action中,更新天窗修历史实绩集合 actions
   SwitchPendingRepairPlan,  // 复制此行到导出的Action中
   SwitchGetHistoryDataPending, // 复制此行到导出的Action中
   SwitchOpenWhichSidebar,
-  UpdateSortedRepairPlanData, // 复制此行到导出的Action中
   ChangeSelectedDate,
   UpdateRepairData, // 复制此行到导出的Action中
   SwitchShowAllDatesOnDatesHeader,  // 复制此行到导出的Action中
+  AddOrRemoveDateToOpenedDatePanel,  // 复制此行到导出的Action中
 };
 
 
@@ -190,47 +193,87 @@ function SortedDataByDate(data: RepairPlanAndHistoryDataSorted[]): RepairPlanAnd
   return data.sort((a, b) => a.date.isSameOrBefore(b.date) ? -1 : 1);
 }
 
+const add_a_value_to_sorted_object = (date: moment.Moment,
+                                      origin: RepairPlanAndHistoryDataSorted[],
+                                      value: number,
+                                      type: 'plan' | 'history') => {
+  let index = origin.findIndex(value2 => value2.date.isSame(date));
+  if (index < 0) {
+    let splice_index = 0; // 设置插入新日期的位置
+    if (origin.length === 0 || origin[origin.length - 1].date.isBefore(date)) {
+      origin.push({date: date, repair_history_data_index_on_this_day: [], repair_plan_data_index_on_this_day: []}
+      );
+      splice_index = origin.length - 1;
+    } else {
+      for (const i of origin) {
+        if (i.date.isAfter(date)) {
+          origin.splice(splice_index, 0, {date: date, repair_history_data_index_on_this_day: [], repair_plan_data_index_on_this_day: []});
+          break;
+        }
+        splice_index += 1;
+      }
+    }
+    index = splice_index;
+    // 将index设为新增的最后一个日期
+  }
+
+  if (type === 'plan') {
+    origin[index].repair_plan_data_index_on_this_day.push({plan_number_id: value, is_manual: false, history_number_id: null});
+  } else {
+    origin[index].repair_history_data_index_on_this_day.push(value);
+  }
+};
+
 export function reducer(state: RepairHistoryCollectStoreInterface = default_state,
                         action: RepairHistoryCollectStoreActionType): RepairHistoryCollectStoreInterface {
   switch (action.type) {
+    case MAP_PLAN_AND_HISTORY_NUMBER:
+      const date_array: RepairPlanAndHistoryDataSorted[] = [];
+      state.repair_plan_data.forEach(v => {
+        add_a_value_to_sorted_object(v.post_date, date_array, v.id, 'plan');
+      });
+      state.repair_history_data.forEach(v => {
+        add_a_value_to_sorted_object(v.date, date_array, v.id, 'history');
+      });
+      // 提取所有需要的date对象
+      for (const single_date of date_array) {
+        for (const i of single_date.repair_plan_data_index_on_this_day) {
+          if (i.is_manual) {
+            // 对人工匹配的项目不进行干预
+          } else {
+            const plan_number = state.repair_plan_data.find(index => index.id === i.plan_number_id).number;
+            for (const history_id of single_date.repair_history_data_index_on_this_day) {
+              const history_index = state.repair_history_data.findIndex(value => value.id === history_id);
+              if (state.repair_history_data[history_index].used_number === plan_number) {
+                i.history_number_id = history_id;
+                break;
+              }
+            }
+          }
+        }
+      }
+      return {...state, repair_plan_and_history_sorted_by_date: date_array};  // 复制此两行到reducer中
+    case ADD_OR_REMOVE_DATE_TO_OPENED_DATE_PANEL:
+      const opened_date_panel = [
+        ...state.side_nav_settings.opened_date_index
+      ];
+      const opened_date_panel_index = opened_date_panel.findIndex(value => value.isSame(action.payload.date));
+      if (action.payload.boolean) {
+        if (opened_date_panel_index >= 0) {
+        } else {
+          opened_date_panel.push(action.payload.date);
+        }
+      } else {
+        if (opened_date_panel_index >= 0) {
+          opened_date_panel.splice(opened_date_panel_index, 1);
+        }
+      }
+      return {...state, side_nav_settings: {...state.side_nav_settings, opened_date_index: opened_date_panel}};  // 复制此两行到reducer中
     case UPDATE_REPAIR_HISTORY_DATA:
       return {...state, repair_history_data: action.payload}; // 复制此两行到reducer中,更新天窗修历史实绩集合 reducer
 
-    case UPDATE_SORTED_REPAIR_HISTORY_DATA:
-      const _ = Array.from(state.repair_plan_and_history_sorted_by_date);
-      for (const single_data of action.payload) {
-        const index = _.findIndex(value => single_data.date.isSame(value.date));
-        if (index < 0) {
-          _.push({
-            date: single_data.date,
-            repair_history_data_index_on_this_day: single_data.repair_history_data_index_on_this_day,
-            repair_plan_data_index_on_this_day: [],
-            plan_history_can_match_together: [],
-          });
-        } else {
-          _[index].repair_history_data_index_on_this_day = single_data.repair_history_data_index_on_this_day;
-        }
-      }
-      return {...state, repair_plan_and_history_sorted_by_date: SortedDataByDate(_)}; // 复制此两行到reducer中
     case SWITCH_GET_HISTORY_DATA_PENDING:
       return {...state, pending: {...state.pending, repair_history: action.payload}}; // 复制此两行到reducer中
-    case UPDATE_SORTED_REPAIR_PLAN_DATA:
-      // 首先对日期进行排序
-      const repair_data_sorted = Array.from(state.repair_plan_and_history_sorted_by_date);
-      for (const single_data of action.payload) {
-        const repair_data_sorted_index = repair_data_sorted.findIndex(value => single_data.date.isSame(value.date));
-        if (repair_data_sorted_index < 0) {
-          repair_data_sorted.push({
-            date: single_data.date,
-            repair_plan_data_index_on_this_day: single_data.repair_plan_data_index_on_this_day,
-            plan_history_can_match_together: [],
-            repair_history_data_index_on_this_day: []
-          });
-        } else {
-          repair_data_sorted[repair_data_sorted_index].repair_plan_data_index_on_this_day = single_data.repair_plan_data_index_on_this_day;
-        }
-      }
-      return {...state, repair_plan_and_history_sorted_by_date: SortedDataByDate(repair_data_sorted)};  // 复制此两行到reducer中
     case SWITCH_SHOW_ALL_DATES_ON_DATES_HEADER:
       return {...state, show_all_dates_on_dates_header: action.payload};  // 复制此两行到reducer中
     case SWITCH_PENDING_REPAIR_PLAN:
