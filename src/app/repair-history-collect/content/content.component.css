@@ -2,49 +2,49 @@
 }
 
 .detail-card {
-  background-color: white;
-  border-radius: 7px;
+    background-color: white;
+    border-radius: 7px;
 }
 
 .detail-card-single-date {
-  margin-top: 30px;
-  margin-bottom: 30px;
+    margin-top: 30px;
+    margin-bottom: 30px;
 }
 
 .scroll_without_bar {
-  overflow-y: auto;
+    overflow-y: auto;
 }
 
 .scroll_without_bar::-webkit-scrollbar {
-  width: 0;
+    width: 0;
 }
 
 .left-slider-bar {
-  box-shadow: 0 3px 1px -2px rgba(0, 0, 0, .2), 0 2px 2px 0 rgba(0, 0, 0, .14), 0 1px 5px 0 rgba(0, 0, 0, .12);
-  margin-top: 15px;
-  margin-left: 15px;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, .2), 0 2px 2px 0 rgba(0, 0, 0, .14), 0 1px 5px 0 rgba(0, 0, 0, .12);
+    margin-top: 15px;
+    margin-left: 15px;
 }
 
 .left-slider-bar-button {
-  left: 45%;
-  width: 60px;
-  height: 60px;
-  margin-top: 20px;
+    left: 45%;
+    width: 60px;
+    height: 60px;
+    margin-top: 20px;
 }
 
 .left-slider-bar-button i {
-  font-size: 160%;
-  color: #FFFFFF;
+    font-size: 160%;
+    color: #FFFFFF;
 }
 
 .date-column {
-  height: 80px;
-  margin-top: 16px;
-  width: 95%;
-  line-height: 80px;
-  text-align: center;
-  font-size: 2rem;
-  box-shadow: 0 15px 15px -12px rgba(0, 0, 0, 0.56), 0 4px 20px 0px rgba(0, 0, 0, 0.12), 0 3px 10px -5px rgba(0, 0, 0, 0.2);
-  background-image: url('./../../../assets/pic.png');
-  background-repeat: round;
+    height: 80px;
+    margin-top: 16px;
+    width: 95%;
+    line-height: 80px;
+    text-align: center;
+    font-size: 2rem;
+    box-shadow: 0 15px 15px -12px rgba(0, 0, 0, 0.56), 0 4px 20px 0px rgba(0, 0, 0, 0.12), 0 3px 10px -5px rgba(0, 0, 0, 0.2);
+    background-image: url('./../../../assets/pic.png');
+    background-size: cover;
 }

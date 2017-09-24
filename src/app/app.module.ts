@@ -47,6 +47,7 @@ import {RepairHistoryDetailCardComponent} from './repair-history-collect/repair-
 import { MomentPipe } from './moment.pipe';
 import { InTheMomentListPipe } from './in-the-moment-list.pipe';
 import { GetDataByIdPipe } from './get-data-by-id.pipe';
+import { MapMomentToRepairPlanAndHistoryDataPipe } from './map-moment-to-repair-plan-and-history-data.pipe';
 
 export const routes: Routes = [
   {path: '', redirectTo: 'home', pathMatch: 'full'},
@@ -70,6 +71,7 @@ export const routes: Routes = [
     MomentPipe,
     InTheMomentListPipe,
     GetDataByIdPipe,
+    MapMomentToRepairPlanAndHistoryDataPipe,
   ],
   imports: [
     FormsModule,
