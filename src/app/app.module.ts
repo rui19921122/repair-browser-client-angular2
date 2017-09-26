@@ -9,22 +9,22 @@ import {NgZorroAntdModule} from 'ng-zorro-antd';
 import {AppComponent} from './app.component';
 import {HeaderComponent} from './header/header.component';
 import {
-  MdButtonModule,
-  MdDialogModule,
-  MdTooltipModule,
-  MdInputModule,
-  MdMenuModule,
-  MdAutocompleteModule,
-  MdProgressSpinnerModule,
-  MdDatepickerModule,
-  MdSnackBarModule,
-  MdTableModule,
-  MdNativeDateModule,
-  MdProgressBarModule,
-  MdCardModule,
-  MdSidenavModule,
-  MdToolbarModule,
-  MdExpansionModule
+    MdButtonModule,
+    MdDialogModule,
+    MdTooltipModule,
+    MdInputModule,
+    MdMenuModule,
+    MdAutocompleteModule,
+    MdProgressSpinnerModule,
+    MdDatepickerModule,
+    MdSnackBarModule,
+    MdTableModule,
+    MdNativeDateModule,
+    MdProgressBarModule,
+    MdCardModule,
+    MdSidenavModule,
+    MdToolbarModule,
+    MdExpansionModule
 } from '@angular/material';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {Router, RouterModule, Routes} from '@angular/router';
@@ -44,72 +44,79 @@ import {DateCardComponent} from './repair-history-collect/repair-collect-date-ca
 import {ContentComponent} from './repair-history-collect/content/content.component';
 import {RepairPlanDetailCardComponent} from './repair-history-collect/repair-plan-detail-card/repair-plan-detail-card.component';
 import {RepairHistoryDetailCardComponent} from './repair-history-collect/repair-history-detail-card/repair-history-detail-card.component';
-import { MomentPipe } from './moment.pipe';
-import { InTheMomentListPipe } from './in-the-moment-list.pipe';
-import { GetDataByIdPipe } from './get-data-by-id.pipe';
-import { MapMomentToRepairPlanAndHistoryDataPipe } from './map-moment-to-repair-plan-and-history-data.pipe';
+import {MomentPipe} from './moment.pipe';
+import {InTheMomentListPipe} from './in-the-moment-list.pipe';
+import {GetDataByIdPipe} from './get-data-by-id.pipe';
+import {MapMomentToRepairPlanAndHistoryDataPipe} from './map-moment-to-repair-plan-and-history-data.pipe';
+
+import {RepairPlanDialogComponent} from './repair-history-collect/repair-plan-dialog/repair-plan-dialog.component';
 
 export const routes: Routes = [
-  {path: '', redirectTo: 'home', pathMatch: 'full'},
-  {path: 'home', component: HomeComponent, pathMatch: 'full'},
-  {path: 'repair-history-collect', component: RepairHistoryCollectComponent, pathMatch: 'full'}
+    {path: '', redirectTo: 'home', pathMatch: 'full'},
+    {path: 'home', component: HomeComponent, pathMatch: 'full'},
+    {path: 'repair-history-collect', component: RepairHistoryCollectComponent, pathMatch: 'full'}
 ];
 
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    LoginFormComponent,
-    HeaderComponent,
-    HomeComponent,
-    RepairHistoryCollectComponent,
-    DateCardListComponent,
-    DateCardComponent,
-    ContentComponent,
-    RepairPlanDetailCardComponent,
-    RepairHistoryDetailCardComponent,
-    MomentPipe,
-    InTheMomentListPipe,
-    GetDataByIdPipe,
-    MapMomentToRepairPlanAndHistoryDataPipe,
-  ],
-  imports: [
-    FormsModule,
-    MdTooltipModule,
-    MdSidenavModule,
-    ReactiveFormsModule,
-    MdToolbarModule,
-    NgZorroAntdModule.forRoot(),
-    MdProgressBarModule,
-    MdTableModule,
-    BrowserModule,
-    MdCardModule,
-    MdNativeDateModule,
-    FlexLayoutModule,
-    MdExpansionModule,
-    BrowserAnimationsModule,
-    MdButtonModule,
-    MdMenuModule,
-    MdInputModule,
-    MdSnackBarModule,
-    MdDatepickerModule,
-    MdDialogModule,
-    MdAutocompleteModule,
-    HttpModule,
-    StoreRouterConnectingModule,
-    MdProgressSpinnerModule,
-    RouterModule.forRoot(routes),
-    StoreModule.forRoot(store, {initialState: get__HMR__state}),
-    StoreDevtoolsModule.instrument({maxAge: 100}),
-  ],
-  providers: [UserService,
-    {provide: LocationStrategy, useClass: HashLocationStrategy},
-    {provide: LOCALE_ID, useValue: 'zh-hans'}
-  ],
-  bootstrap: [AppComponent],
-  entryComponents: [LoginFormComponent]
+    declarations: [
+        AppComponent,
+        LoginFormComponent,
+        HeaderComponent,
+        HomeComponent,
+        RepairHistoryCollectComponent,
+        DateCardListComponent,
+        DateCardComponent,
+        ContentComponent,
+        RepairPlanDetailCardComponent,
+        RepairHistoryDetailCardComponent,
+        MomentPipe,
+        InTheMomentListPipe,
+        GetDataByIdPipe,
+        MapMomentToRepairPlanAndHistoryDataPipe,
+        RepairPlanDialogComponent,
+    ],
+    imports: [
+        FormsModule,
+        MdTooltipModule,
+        MdSidenavModule,
+        ReactiveFormsModule,
+        MdToolbarModule,
+        NgZorroAntdModule.forRoot(),
+        MdProgressBarModule,
+        MdTableModule,
+        BrowserModule,
+        MdCardModule,
+        MdNativeDateModule,
+        FlexLayoutModule,
+        MdExpansionModule,
+        BrowserAnimationsModule,
+        MdButtonModule,
+        MdMenuModule,
+        MdInputModule,
+        MdSnackBarModule,
+        MdDatepickerModule,
+        MdDialogModule,
+        MdAutocompleteModule,
+        HttpModule,
+        StoreRouterConnectingModule,
+        MdProgressSpinnerModule,
+        RouterModule.forRoot(routes),
+        StoreModule.forRoot(store, {initialState: get__HMR__state}),
+        StoreDevtoolsModule.instrument({maxAge: 100}),
+    ],
+    providers: [UserService,
+        {provide: LocationStrategy, useClass: HashLocationStrategy},
+        {provide: LOCALE_ID, useValue: 'zh-hans'}
+    ],
+    bootstrap: [AppComponent],
+    entryComponents: [
+        LoginFormComponent,
+
+        RepairPlanDialogComponent,
+    ]
 })
 export class AppModule {
-  constructor() {
-  }
+    constructor() {
+    }
 }
