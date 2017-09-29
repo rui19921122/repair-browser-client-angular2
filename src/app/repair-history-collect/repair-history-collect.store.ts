@@ -266,7 +266,7 @@ const default_state: RepairHistoryCollectStoreInterface = {
     },
     content_settings: {
         not_displayed_data: [],
-        only_show_on_day_on_content: false,
+        only_show_on_day_on_content: true,
         displayed_data: null,
     }
 };

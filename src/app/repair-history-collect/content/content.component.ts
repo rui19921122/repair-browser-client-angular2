@@ -2,11 +2,11 @@ import {ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef, OnDestroy
 import {AppState} from '../../store';
 import {Store, createFeatureSelector, createSelector, MemoizedSelector} from '@ngrx/store';
 import {
-    RepairHistoryCollectStoreInterface,
-    RepairHistoryCollectStoreActions as actions,
-    RepairPlanSingleDataInterface,
-    RepairHistorySingleDataInterface,
-    RepairPlanAndHistoryDataSorted, RepairHistoryCollectStoreActions
+  RepairHistoryCollectStoreInterface,
+  RepairHistoryCollectStoreActions as actions,
+  RepairPlanSingleDataInterface,
+  RepairHistorySingleDataInterface,
+  RepairPlanAndHistoryDataSorted, RepairHistoryCollectStoreActions
 } from '../repair-history-collect.store';
 import {RepairPlanSingleDataApiInterface} from '../../api';
 import {Observable} from 'rxjs/Observable';
@@ -16,62 +16,67 @@ import {Subscription} from 'rxjs/Subscription';
 
 
 @Component({
-    selector: 'app-content',
-    templateUrl: './content.component.html',
-    styleUrls: ['./content.component.css'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'app-content',
+  templateUrl: './content.component.html',
+  styleUrls: ['./content.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContentComponent implements OnInit, OnDestroy {
-    public $state: Observable<RepairHistoryCollectStoreInterface>;
-    public $repair_plan_and_history_data: Observable<RepairPlanAndHistoryDataSorted[]>;
-    public $repair_plan_data: Observable<RepairPlanSingleDataInterface[]>;
-    public $repair_history_data: Observable<RepairHistorySingleDataInterface[]>;
-    public $not_showed_dates_on_content: Observable<moment.Moment[]>;
-    public $showed_date_on_content: Observable<moment.Moment>;
-    public $only_show_one_date_on_content: Observable<boolean>;
-    @Input('height') height: number;
+  public $state: Observable<RepairHistoryCollectStoreInterface>;
+  public $repair_plan_and_history_data: Observable<RepairPlanAndHistoryDataSorted[]>;
+  public $repair_plan_data: Observable<RepairPlanSingleDataInterface[]>;
+  public $repair_history_data: Observable<RepairHistorySingleDataInterface[]>;
+  public $not_showed_dates_on_content: Observable<moment.Moment[]>;
+  public $showed_date_on_content: Observable<moment.Moment>;
+  public $only_show_one_date_on_content: Observable<boolean>;
+  @Input('height') height: number;
 
-    constructor(public store: Store<AppState>) {
-    }
+  constructor(public store: Store<AppState>) {
+  }
 
-    ngOnInit() {
-        this.$state = this.store.select(state => state.repair_history_collect);
-        this.$repair_plan_and_history_data = this.store.select(
-            state => state.repair_history_collect.repair_plan_and_history_sorted_by_date);
-        this.$repair_history_data = this.store.select(state => state.repair_history_collect.repair_history_data);
-        this.$repair_plan_data = this.store.select(state => state.repair_history_collect.repair_plan_data);
-        this.$not_showed_dates_on_content = this.store.select(state => state.repair_history_collect.content_settings.not_displayed_data);
-        this.$showed_date_on_content = this.store.select(state => state.repair_history_collect.content_settings.displayed_data);
-        this.$only_show_one_date_on_content = this.store.select(
-            state => state.repair_history_collect.content_settings.only_show_on_day_on_content);
-    }
+  ngOnInit() {
+    this.$state = this.store.select(state => state.repair_history_collect);
+    this.$repair_plan_and_history_data = this.store.select(
+      state => state.repair_history_collect.repair_plan_and_history_sorted_by_date);
+    this.$repair_history_data = this.store.select(state => state.repair_history_collect.repair_history_data);
+    this.$repair_plan_data = this.store.select(state => state.repair_history_collect.repair_plan_data);
+    this.$not_showed_dates_on_content = this.store.select(state => state.repair_history_collect.content_settings.not_displayed_data);
+    this.$showed_date_on_content = this.store.select(state => state.repair_history_collect.content_settings.displayed_data);
+    this.$only_show_one_date_on_content = this.store.select(
+      state => state.repair_history_collect.content_settings.only_show_on_day_on_content);
+  }
 
-    ngOnDestroy() {
-    }
+  ngOnDestroy() {
+  }
 
-    handle_show_all_clicked(boolean) {
-        this.store.dispatch(new actions.SwitchShowAllDatesOnDatesHeader(boolean));
-    }
+  handle_show_all_clicked(boolean) {
+    this.store.dispatch(new actions.SwitchShowAllDatesOnDatesHeader(boolean));
+  }
 
-    public open_panel(string: 'date_list' | 'date_select') {
-        this.store.dispatch(new RepairHistoryCollectStoreActions.SwitchOpenWhichSidebar(string));
-    }
+  public open_panel(string: 'date_list' | 'date_select') {
+    this.store.dispatch(new RepairHistoryCollectStoreActions.SwitchOpenWhichSidebar(string));
+  }
 
-    public switch_only_show_one_date_on_content() {
-        this.store.dispatch(new RepairHistoryCollectStoreActions.SwitchOnlyShowOneDateOnContent());
-    }
+  public switch_only_show_one_date_on_content() {
+    this.store.dispatch(new RepairHistoryCollectStoreActions.SwitchOnlyShowOneDateOnContent());
+  }
 
-    public which_dates_data_displayed_on_the_content(a: moment.Moment[] | moment.Moment,
-                                                     b: RepairPlanAndHistoryDataSorted[], display_one: boolean) {
-        if (display_one) {
-            if (a) {
-                return b.filter(value => value.date.isSame(a as moment.Moment));
-            } else {
-                return [b[0]];
-            }
+  public which_dates_data_displayed_on_the_content(a: moment.Moment[] | moment.Moment,
+                                                   b: RepairPlanAndHistoryDataSorted[],
+                                                   display_one: boolean) {
+    if (display_one) {
+      if (a) {
+        return b.filter(value => value.date.isSame(a as moment.Moment));
+      } else {
+        if (b.length >= 1) {
+          return [b[0]];
         } else {
-            return b.filter(value => (a as moment.Moment[]).findIndex(value2 => value2.isSame(value.date)) < 0);
+          return [];
         }
+      }
+    } else {
+      return b.filter(value => (a as moment.Moment[]).findIndex(value2 => value2.isSame(value.date)) < 0);
     }
+  }
 
 }
