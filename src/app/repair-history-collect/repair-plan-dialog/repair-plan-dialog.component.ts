@@ -9,7 +9,6 @@ import {MdDialogRef} from '@angular/material';
 export class RepairPlanDialogComponent implements OnInit, OnDestroy {
 
     constructor(public mdDialogRef: MdDialogRef<RepairPlanDialogComponent>) {
-        console.log(this.mdDialogRef);
     }
 
     ngOnInit() {

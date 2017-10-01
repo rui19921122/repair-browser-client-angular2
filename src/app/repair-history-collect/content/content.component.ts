@@ -62,12 +62,13 @@ export class ContentComponent implements OnInit, OnDestroy {
     }
 
     public which_dates_data_displayed_on_the_content(a: moment.Moment[] | moment.Moment,
-                                                     b: RepairPlanAndHistoryDataSorted[], display_one: boolean) {
+                                                     b: RepairPlanAndHistoryDataSorted[],
+                                                     display_one: boolean) {
         if (display_one) {
             if (a) {
                 return b.filter(value => value.date.isSame(a as moment.Moment));
             } else {
-                return [b[0]];
+                return b[0] ? [b[0]] : [];
             }
         } else {
             return b.filter(value => (a as moment.Moment[]).findIndex(value2 => value2.isSame(value.date)) < 0);
