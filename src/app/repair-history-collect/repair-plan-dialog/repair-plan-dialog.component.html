@@ -1,8 +1,8 @@
-<h2>天窗修计划详情修改了</h2>
+<h2 *ngIf="$dialog_plan_number">天窗修计划详情修改</h2>
+<h2 *ngIf="!$dialog_plan_number">天窗修计划详情增加</h2>
 <div md-dialog-content>
-
 </div>
 <div md-dialog-actions>
-    <button md-button>保存</button>
-    <button [mdDialogClose]="true">取消</button>
+  <button md-button>保存</button>
+  <button md-button (click)="close()">取消</button>
 </div>

@@ -74,5 +74,4 @@ export class ContentComponent implements OnInit, OnDestroy {
             return b.filter(value => (a as moment.Moment[]).findIndex(value2 => value2.isSame(value.date)) < 0);
         }
     }
-
 }
