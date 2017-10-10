@@ -1,7 +1,7 @@
 import {NgModuleRef, ApplicationRef} from '@angular/core';
 import {StoreModule, Store} from '@ngrx/store';
 import {createNewHosts} from '@angularclass/hmr';
-import {MdDialog, MdDialogRef, OverlayRef} from '@angular/material';
+import {MatDialog, MatDialogRef} from '@angular/material';
 import {OverlayContainer} from '@angular/cdk/overlay';
 
 export function get__HMR__state() {
@@ -23,7 +23,7 @@ export const hmrBootstrap = (module: any, bootstrap: () => Promise<NgModuleRef<a
     });
     module.hot.dispose(() => {
         const appRef: ApplicationRef = ngModule.injector.get(ApplicationRef);
-        const dialogRef: MdDialog = ngModule.injector.get(MdDialog);
+        const dialogRef: MatDialog = ngModule.injector.get(MatDialog);
         const overlayRef: OverlayContainer = ngModule.injector.get(OverlayContainer);
         const elements = appRef.components.map(c => c.location.nativeElement);
         elements.push(overlayRef.getContainerElement());

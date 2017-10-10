@@ -1,42 +1,42 @@
-<md-dialog-content>
+<mat-dialog-content>
   <div class="login_form_area">
-    <md-input-container>
+    <mat-input-container>
       <input type="text"
-             mdInput
+             matInput
              placeholder="用户名"
-             [mdAutocomplete]="auto"
+             [matAutocomplete]="auto"
              class="input"
              autocomplete="off"
              #username
              (keyup)="input_change(username.value)"
       >
-    </md-input-container>
-    <md-autocomplete #auto="mdAutocomplete">
-      <md-option *ngFor="let username of filterUsernames" [value]="username">
+    </mat-input-container>
+    <mat-autocomplete #auto="matAutocomplete">
+      <mat-option *ngFor="let username of filterUsernames" [value]="username">
         {{username}}
-      </md-option>
-    </md-autocomplete>
-    <md-input-container>
-      <input type="password" mdInput placeholder="密码" #password
+      </mat-option>
+    </mat-autocomplete>
+    <mat-input-container>
+      <input type="password" matInput placeholder="密码" #password
              class="input"
       >
-    </md-input-container>
+    </mat-input-container>
   </div>
-</md-dialog-content>
+</mat-dialog-content>
 <div class="button-area">
-  <button md-raised-button class="button" (click)="login(username.value,password.value)"
+  <button mat-raised-button class="button" (click)="login(username.value,password.value)"
           (load)="UserService.user.login_pending"
           *ngIf="!UserService.user.login_pending"
   >
     登陆
   </button>
-  <button md-raised-button class="button"
+  <button mat-raised-button class="button"
           [disabled]="true"
           *ngIf="UserService.user.login_pending"
   >
     登陆中...
   </button>
-  <button md-raised-button class="button"
+  <button mat-raised-button class="button"
           (click)="close()"
   >取消</button>
 </div>

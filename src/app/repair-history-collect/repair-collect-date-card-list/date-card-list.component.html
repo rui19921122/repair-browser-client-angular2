@@ -5,17 +5,17 @@
         fxLayoutAlign="start"
         fxLayoutGap="5px"
 >
-    <md-accordion multi="true">
-        <md-expansion-panel
+    <mat-accordion multi="true">
+        <mat-expansion-panel
                 *ngFor="let date of dates_collection|async"
                 [expanded]="date.date| inTheMomentList: (dates_opened_panel|async) "
                 (opened)="addOrRemoveDateToDatesOpenedPanel(date.date, true)"
                 (closed)="addOrRemoveDateToDatesOpenedPanel(date.date, false)"
         >
-            <md-expansion-panel-header
+            <mat-expansion-panel-header
             >
-                <md-panel-title>{{date.date | moment}}</md-panel-title>
-                <md-panel-description>
+                <mat-panel-title>{{date.date | moment}}</mat-panel-title>
+                <mat-panel-description>
           <span
                   *ngIf="date.repair_history_data_index_on_this_day.length==date.repair_plan_data_index_on_this_day.length">
             正常</span>
@@ -24,25 +24,25 @@
                             style="color: red;"
                     >
             对数不匹配</span>
-                </md-panel-description>
-            </md-expansion-panel-header>
+                </mat-panel-description>
+            </mat-expansion-panel-header>
             <p>
                 天窗修计划:{{date.repair_plan_data_index_on_this_day.length}} 个
             </p>
             <p>
                 天窗修实绩: {{date.repair_history_data_index_on_this_day.length}} 个
             </p>
-            <md-action-row>
-                <button md-button>删除</button>
-                <button md-button *ngIf="$only_show_one_date_on_content|async"
+            <mat-action-row>
+                <button mat-button>删除</button>
+                <button mat-button *ngIf="$only_show_one_date_on_content|async"
                         (click)="SwitchWhichDateShouldDisplayOnContent(date.date)"
                 >跳转到
                 </button>
-                <button md-button *ngIf="!($only_show_one_date_on_content|async)"
+                <button mat-button *ngIf="!($only_show_one_date_on_content|async)"
                         (click)="SwitchWhichDateShouldDisplayOnContent(date.date)"
                 >切换显示
                 </button>
-            </md-action-row>
-        </md-expansion-panel>
-    </md-accordion>
+            </mat-action-row>
+        </mat-expansion-panel>
+    </mat-accordion>
 </div>

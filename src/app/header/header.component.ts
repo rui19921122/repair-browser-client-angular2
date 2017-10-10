@@ -1,6 +1,6 @@
 import {Component, OnInit, Inject, ChangeDetectionStrategy} from '@angular/core';
 import {UserService, UserStoreInterface, UserActions} from '../user.service';
-import {MdDialog, MdDialogRef} from '@angular/material';
+import {MatDialog, MatDialogRef} from '@angular/material';
 import {LoginFormComponent} from './login-form/login-form.component';
 import {AppState} from '../store';
 import {Store} from '@ngrx/store';
@@ -13,7 +13,7 @@ import {Observable} from 'rxjs/Observable';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HeaderComponent implements OnInit {
-  public dialogRef: MdDialogRef<LoginFormComponent>;
+  public dialogRef: MatDialogRef<LoginFormComponent>;
   public dialog_is_opend: boolean;
   public login_pending: Observable<boolean>;
   public is_login: Observable<boolean>;
@@ -23,7 +23,7 @@ export class HeaderComponent implements OnInit {
 
 
   constructor(public UserService: UserService,
-              public dialog: MdDialog,
+              public dialog: MatDialog,
               public store: Store<AppState>) {
     this.login_pending = this.store.select(state => state.user.login_pending);
     this.is_login = this.store.select(state => state.user.is_login);

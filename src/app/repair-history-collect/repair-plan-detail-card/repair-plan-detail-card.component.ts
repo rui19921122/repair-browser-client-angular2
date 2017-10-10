@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {RepairPlanSingleDataInterface, RepairHistoryCollectStoreActions} from '../repair-history-collect.store';
-import {MdDialog} from '@angular/material';
+import {MatDialog} from '@angular/material';
 import {RepairPlanDialogComponent} from '../repair-plan-dialog/repair-plan-dialog.component';
 import {AppState} from '../../store';
 import {Store} from '@ngrx/store';

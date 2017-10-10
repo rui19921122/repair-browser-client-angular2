@@ -6,7 +6,7 @@ import {
   RepairPlanAndHistoryDataSorted,
   RepairPlanSingleDataInterface
 } from './repair-history-collect.store';
-import {MdDialog, MdDialogRef, MdSnackBar} from '@angular/material';
+import {MatDialog, MatDialogRef, MatSnackBar} from '@angular/material';
 import * as moment from 'moment';
 import {Observable} from 'rxjs/Observable';
 import {FormBuilder, FormGroup} from '@angular/forms';
@@ -17,6 +17,7 @@ import {RepairHistoryDataApiInterface, RepairHistoryDataSingleApiInterface, Repa
 import {Subject} from 'rxjs/Subject';
 import {Subscription} from 'rxjs/Subscription';
 import {RepairPlanDialogComponent} from './repair-plan-dialog/repair-plan-dialog.component';
+import {dialogConfig} from '../dialog-config';
 
 class ButtonType {
   text: string;
@@ -63,8 +64,8 @@ export class RepairHistoryCollectComponent implements OnInit, AfterViewInit, OnD
   constructor(public http: Http,
               public store: Store<AppState>,
               public ng_change: ChangeDetectorRef,
-              public snack_bar: MdSnackBar,
-              public dialog: MdDialog,
+              public snack_bar: MatSnackBar,
+              public dialog: MatDialog,
               fb: FormBuilder) {
     // 对话框相关
     this.$open_or_close_plan_data_dialog = this.store.select(state => state.repair_history_collect.dialog_settings.which_dialog_open);
@@ -75,7 +76,7 @@ export class RepairHistoryCollectComponent implements OnInit, AfterViewInit, OnD
           const dialog_type = value[0];
           switch (dialog_type) {
             case 'repair_plan':
-              this.dialog.open(RepairPlanDialogComponent, {disableClose: true});
+              this.dialog.open(RepairPlanDialogComponent, dialogConfig);
               break;
             case 'repair_history':
               break;

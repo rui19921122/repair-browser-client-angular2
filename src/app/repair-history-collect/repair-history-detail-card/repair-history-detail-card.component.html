@@ -1,18 +1,18 @@
-<md-card class="detail-card-collection"
+<mat-card class="detail-card-collection"
          style="padding: 0;
   box-shadow: 0 15px 15px -12px rgba(0, 0, 0, 0.56), 0 4px 20px 0px rgba(0, 0, 0, 0.12), 0 3px 10px -5px rgba(0, 0, 0, 0.2);
 "
          *ngIf="history_data"
 >
-    <md-card-header
+    <mat-card-header
             class="detail-card-header text-primary-color"
             [ngClass]="{'light-primary-color': !single_dog_card,'alert-color': single_dog_card}"
     >
-    <span class="md-card-header-title">
+    <span class="mat-card-header-title">
     编号:{{history_data.number}}({{history_data.used_number}})
     </span>
-    </md-card-header>
-    <md-card-content class="detail-card-content">
+    </mat-card-header>
+    <mat-card-content class="detail-card-content">
         <p>
             时间:{{history_data.plan_time}}
         </p>
@@ -22,13 +22,13 @@
         <p>
             区域:{{history_data.apply_place}}
         </p>
-        <md-card-actions
+        <mat-card-actions
                 class="detail-card-actions"
         >
-            <button md-raised-button>修改</button>
-            <button md-raised-button>删除</button>
-            <button md-raised-button>详细</button>
-            <button md-raised-button>计划</button>
-        </md-card-actions>
-    </md-card-content>
-</md-card>
+            <button mat-raised-button>修改</button>
+            <button mat-raised-button>删除</button>
+            <button mat-raised-button>详细</button>
+            <button mat-raised-button>计划</button>
+        </mat-card-actions>
+    </mat-card-content>
+</mat-card>

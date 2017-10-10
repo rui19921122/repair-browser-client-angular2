@@ -2,14 +2,14 @@
   此页面仅登陆用户才可查看
 </div>
 <div *ngIf="is_login|async" class="container">
-  <md-sidenav-container class="navbar-sidenav"
+  <mat-sidenav-container class="navbar-sidenav"
                         [ngStyle]="{'height':(page_height)+'px'}"
                         #container>
     <app-content style="overflow-y: auto"
                  [height]="page_height"
     >
     </app-content>
-    <md-sidenav
+    <mat-sidenav
       mode="side"
       class="sidenav-container card"
       [ngStyle]="{'height':(page_height-25)+'px'}"
@@ -28,31 +28,31 @@
            *ngIf="($state|async)?.side_nav_settings.which_sidenav_open === 'date_select'"
       >
         <form [formGroup]="DatePickerForm">
-          <md-input-container class="sidenav-panel"
+          <mat-input-container class="sidenav-panel"
                               fxLayout
           >
-            <input mdInput [mdDatepicker]="start_date"
+            <input matInput [matDatepicker]="start_date"
                    placeholder="选择开始日期"
                    [formControl]="DatePickerForm.controls['start_date']"
             >
 
-            <md-datepicker-toggle mdSuffix [for]="start_date"></md-datepicker-toggle>
-          </md-input-container>
-          <md-datepicker #start_date></md-datepicker>
-          <md-input-container class="sidenav-panel"
+            <mat-datepicker-toggle matSuffix [for]="start_date"></mat-datepicker-toggle>
+          </mat-input-container>
+          <mat-datepicker #start_date></mat-datepicker>
+          <mat-input-container class="sidenav-panel"
                               fxLayout
           >
-            <input mdInput [mdDatepicker]="end_date" placeholder="选择结束日期"
+            <input matInput [matDatepicker]="end_date" placeholder="选择结束日期"
                    [formControl]="DatePickerForm.controls['end_date']"
             >
-            <md-datepicker-toggle mdSuffix [for]="end_date"></md-datepicker-toggle>
-          </md-input-container>
-          <md-datepicker #end_date
+            <mat-datepicker-toggle matSuffix [for]="end_date"></mat-datepicker-toggle>
+          </mat-input-container>
+          <mat-datepicker #end_date
           >
-          </md-datepicker>
+          </mat-datepicker>
         </form>
         <div class="sidenav-panel">
-          <button md-raised-button
+          <button mat-raised-button
                   *ngFor="let choice of length_button_choices"
                   (click)="change_form_by_button('length',choice.value)"
           >
@@ -60,7 +60,7 @@
           </button>
         </div>
         <div class="sidenav-panel">
-          <button md-raised-button
+          <button mat-raised-button
                   *ngFor="let choice of month_button_choices"
                   (click)="change_form_by_button('month',choice.value)"
           >
@@ -68,7 +68,7 @@
           </button>
         </div>
         <div class="sidenav-panel">
-          <button md-raised-button
+          <button mat-raised-button
                   style="background-color: #1565C0;color: white;width: 90%;"
                   (click)="search_for_plan_data.next()"
           >
@@ -76,7 +76,7 @@
           </button>
         </div>
         <div class="sidenav-panel">
-          <button md-raised-button
+          <button mat-raised-button
                   style="background-color: #1565C0;color: white;width: 90%;"
                   (click)="search_for_history_data.next()"
           >
@@ -84,7 +84,7 @@
           </button>
         </div>
       </div>
-    </md-sidenav>
+    </mat-sidenav>
     <!-- primary content -->
-  </md-sidenav-container>
+  </mat-sidenav-container>
 </div>

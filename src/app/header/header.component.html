@@ -1,26 +1,26 @@
 <div class="header">
   <div class="navbar dark-primary-color">
     <div>
-      <a md-button [routerLink]="['home']">首页</a>
-      <button md-button [mdMenuTriggerFor]="RepairMenu">天窗修模块</button>
+      <a mat-button [routerLink]="['home']">首页</a>
+      <button mat-button [matMenuTriggerFor]="RepairMenu">天窗修模块</button>
 
-      <md-menu #RepairMenu="mdMenu" [overlapTrigger]="false">
-        <a md-menu-item [routerLink]="['repair-history-collect']">历史天窗修采集</a>
-        <button md-menu-item>天窗修统计</button>
-      </md-menu>
-      <button md-button [mdMenuTriggerFor]="WorkMenu">施工模块</button>
-      <md-menu #WorkMenu="mdMenu" [overlapTrigger]="false">
-        <button md-menu-item>历史施工统计</button>
-        <button md-menu-item>施工统计</button>
-      </md-menu>
+      <mat-menu #RepairMenu="matMenu" [overlapTrigger]="false">
+        <a mat-menu-item [routerLink]="['repair-history-collect']">历史天窗修采集</a>
+        <button mat-menu-item>天窗修统计</button>
+      </mat-menu>
+      <button mat-button [matMenuTriggerFor]="WorkMenu">施工模块</button>
+      <mat-menu #WorkMenu="matMenu" [overlapTrigger]="false">
+        <button mat-menu-item>历史施工统计</button>
+        <button mat-menu-item>施工统计</button>
+      </mat-menu>
     </div>
-    <button *ngIf="login_pending | async" md-button>
+    <button *ngIf="login_pending | async" mat-button>
       加载中...
     </button>
-    <button *ngIf="(username | async)&&!(login_pending | async)" md-button>
+    <button *ngIf="(username | async)&&!(login_pending | async)" mat-button>
       来自{{department | async}}的{{username|async}},注销登陆
     </button>
-    <button *ngIf="!(is_login|async)&&! (login_pending|async)" md-button (click)="open()">
+    <button *ngIf="!(is_login|async)&&! (login_pending|async)" mat-button (click)="open()">
       请登陆
     </button>
   </div>

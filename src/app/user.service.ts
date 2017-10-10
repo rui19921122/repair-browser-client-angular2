@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Observable, Observer} from 'rxjs';
-import {MdSnackBar} from '@angular/material';
+import {MatSnackBar} from '@angular/material';
 import {HttpModule, Http} from '@angular/http';
 import {Subject} from 'rxjs/Subject';
 import {SystemUserInterface} from './api';
@@ -12,7 +12,7 @@ export class UserService {
   public login_end: Subject<boolean> = new Subject();
   public user: UserStoreInterface;
 
-  constructor(public http: Http, public snackBar: MdSnackBar, public store: Store<AppState>) {
+  constructor(public http: Http, public snackBar: MatSnackBar, public store: Store<AppState>) {
     this.store.select('user').subscribe(v => this.user = v);
     this.login_end.subscribe(() => {
       this.store.dispatch(new SwitchLoginPending(false));

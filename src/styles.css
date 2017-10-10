@@ -72,7 +72,7 @@ a, a:visited, a:focus, a:hover {
     width: 100%;
 }
 
-.md-card-header-title {
+.mat-card-header-title {
     font-size: 1.5rem;
     line-height: 50px;
 }
