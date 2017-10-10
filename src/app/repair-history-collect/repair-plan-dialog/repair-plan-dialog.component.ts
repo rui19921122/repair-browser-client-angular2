@@ -23,7 +23,7 @@ export class RepairPlanDialogComponent implements OnInit, OnDestroy {
     this.$plan_data = this.store.select(
       state => state.repair_history_collect.repair_plan_data[state.repair_history_collect.dialog_settings.dialog_number]);
     this.form = this.fb.group(
-      {type: ['', Validators.required]},
+      {'type': ['', [Validators.required]]},
     );
   }
 
