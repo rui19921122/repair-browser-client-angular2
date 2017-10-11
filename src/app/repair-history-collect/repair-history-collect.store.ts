@@ -94,8 +94,8 @@ export interface RepairHistoryCollectStoreInterface {
   };
   dialog_settings: {
     which_dialog_open: 'repair_plan' | 'repair_history' | '';
-    dialog_number: number | null;
-  }
+    dialog_id: number | null;
+  };
 }
 
 export interface RepairHistorySingleDataInterface {
@@ -235,7 +235,7 @@ export class OpenOrCloseADialog implements Action {
 
   constructor(public payload: {
     dialog_type: '' | 'repair_plan' | 'repair_history',
-    dialog_number?: number
+    dialog_id?: number
   }) {
 
   }
@@ -290,7 +290,7 @@ const default_state: RepairHistoryCollectStoreInterface = {
   },
   dialog_settings: {
     which_dialog_open: null,
-    dialog_number: null,
+    dialog_id: null,
   }
 };
 
@@ -304,7 +304,7 @@ export function reducer(state: RepairHistoryCollectStoreInterface = default_stat
         dialog_settings: {
           ...state.dialog_settings,
           which_dialog_open: action.payload.dialog_type,
-          dialog_number: action.payload.dialog_type === '' ? null : action.payload.dialog_number
+          dialog_id: action.payload.dialog_type === '' ? null : action.payload.dialog_id
         }
       };  // 复制此两行到reducer中
     case UPDATE_WHICH_DATE_SHOULD_DISPLAY_ON_CONTENT:

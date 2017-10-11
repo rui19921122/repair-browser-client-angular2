@@ -69,7 +69,7 @@ export class RepairHistoryCollectComponent implements OnInit, AfterViewInit, OnD
               fb: FormBuilder) {
     // 对话框相关
     this.$open_or_close_plan_data_dialog = this.store.select(state => state.repair_history_collect.dialog_settings.which_dialog_open);
-    this.$plan_data_dialog_number = this.store.select(state => state.repair_history_collect.dialog_settings.dialog_number);
+    this.$plan_data_dialog_number = this.store.select(state => state.repair_history_collect.dialog_settings.dialog_id);
     this.open_or_close_plan_data_dialog_unsubscribe = this.$open_or_close_plan_data_dialog.withLatestFrom(this.$plan_data_dialog_number)
       .subscribe(
         (value: [string, number]) => {
