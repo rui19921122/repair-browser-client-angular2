@@ -9,6 +9,7 @@ import {NgZorroAntdModule} from 'ng-zorro-antd';
 import {AppComponent} from './app.component';
 import {HeaderComponent} from './header/header.component';
 import {
+  MatChipsModule,
   MatSelectModule,
   MatButtonModule,
   MatDialogModule,
@@ -25,7 +26,8 @@ import {
   MatCardModule,
   MatSidenavModule,
   MatToolbarModule,
-  MatExpansionModule
+  MatExpansionModule,
+  MatCheckboxModule
 } from '@angular/material';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {Router, RouterModule, Routes} from '@angular/router';
@@ -55,7 +57,7 @@ import {RepairPlanDialogComponent} from './repair-history-collect/repair-plan-di
 export const routes: Routes = [
   {path: '', redirectTo: 'home', pathMatch: 'full'},
   {path: 'home', component: HomeComponent, pathMatch: 'full'},
-  {path: 'repair-history-collect', component: RepairHistoryCollectComponent, pathMatch: 'full'}
+  {path: 'repair-history-collect', component: RepairHistoryCollectComponent, pathMatch: 'full'},
 ];
 
 
@@ -100,12 +102,14 @@ export const routes: Routes = [
     MatDatepickerModule,
     MatDialogModule,
     MatAutocompleteModule,
+    MatCheckboxModule,
     HttpModule,
     StoreRouterConnectingModule,
     MatProgressSpinnerModule,
     RouterModule.forRoot(routes),
     StoreModule.forRoot(store, {initialState: get__HMR__state}),
     StoreDevtoolsModule.instrument({maxAge: 100}),
+    MatChipsModule,
   ],
   providers: [UserService,
     {provide: LocationStrategy, useClass: HashLocationStrategy},

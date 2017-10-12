@@ -71,6 +71,7 @@ export class RepairHistoryCollectComponent implements OnInit, AfterViewInit, OnD
     this.$open_or_close_plan_data_dialog = this.store.select(state => state.repair_history_collect.dialog_settings.which_dialog_open);
     this.$plan_data_dialog_number = this.store.select(state => state.repair_history_collect.dialog_settings.dialog_id);
     this.open_or_close_plan_data_dialog_unsubscribe = this.$open_or_close_plan_data_dialog.withLatestFrom(this.$plan_data_dialog_number)
+      .delay(100)
       .subscribe(
         (value: [string, number]) => {
           const dialog_type = value[0];
@@ -113,11 +114,11 @@ export class RepairHistoryCollectComponent implements OnInit, AfterViewInit, OnD
                   const start_is_time: boolean = moment(split_time[0], 'hh-MM').isValid();
                   const end_is_time: boolean = moment(split_time[1], 'hh-MM').isValid();
                   if (start_is_time && end_is_time) {
-                    return {...e, post_date: moment(e.post_date), id: id, is_time: true};
+                    return {...e, post_date: moment(e.post_date), id: id, calc_time: true};
                   }
                 } else {
                 }
-                return {...e, post_date: moment(e.post_date), id: id, is_time: false};
+                return {...e, post_date: moment(e.post_date), id: id, calc_time: false};
               }).subscribe(value => {
               const _sorted_date_index = sorted_date_map.findIndex(value2 => value.post_date.isSame(value2.date));
               if (_sorted_date_index < 0) {

@@ -61,7 +61,7 @@ export interface RepairPlanSingleDataInterface {
   direction: string;
   post_date: moment.Moment;
   id: number;
-  is_time: boolean;
+  calc_time: boolean;
 }
 
 
@@ -241,8 +241,19 @@ export class OpenOrCloseADialog implements Action {
   }
 }
 
+export const UPDATE_REPAIR_PLAN_DATA = '[repair-history-collect]UPDATE_REPAIR_PLAN_DATA';  //
+
+export class UpdateRepairPlanData implements Action {
+  readonly type = UPDATE_REPAIR_PLAN_DATA;
+
+  constructor(public payload: RepairPlanSingleDataInterface) {
+
+  }
+}
+
 
 export type RepairHistoryCollectStoreActionType = SwitchOpenWhichSidebar
+  | UpdateRepairPlanData   // 复制此行到ActionType中
   | UpdateWhichDateShouldDisplayOnContent // 复制此行到ActionType中,更新哪些日期可以在页面中显示 action type
   | SwitchOnlyShowOneDateOnContent // 复制此行到ActionType中,切换是否仅在内容框中显示一个日期 action type
   | MapPlanAndHistoryNumber   // 复制此行到ActionType中
@@ -258,6 +269,7 @@ export type RepairHistoryCollectStoreActionType = SwitchOpenWhichSidebar
 export const RepairHistoryCollectStoreActions = {
   OpenOrCloseADialog,  // 复制此行到导出的Action中
   UpdateWhichDateShouldDisplayOnContent,  // 复制此行到导出的Action中,更新哪些日期可以在页面中显示 actions
+  UpdateRepairPlanData,  // 复制此行到导出的Action中
   SwitchOnlyShowOneDateOnContent,  // 复制此行到导出的Action中,切换是否仅在内容框中显示一个日期 actions
   MapPlanAndHistoryNumber,  // 复制此行到导出的Action中
   UpdateRepairHistoryData,  // 复制此行到导出的Action中,更新天窗修历史实绩集合 actions
@@ -298,6 +310,8 @@ const default_state: RepairHistoryCollectStoreInterface = {
 export function reducer(state: RepairHistoryCollectStoreInterface = default_state,
                         action: RepairHistoryCollectStoreActionType): RepairHistoryCollectStoreInterface {
   switch (action.type) {
+    case UPDATE_REPAIR_PLAN_DATA:
+      return {...state,};  // 复制此两行到reducer中
     case OPEN_OR_CLOSE_A_DIALOG:
       return {
         ...state,
