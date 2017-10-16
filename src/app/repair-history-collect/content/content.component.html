@@ -1,103 +1,60 @@
-<div
-        #target
-        fxLayout="row"
-        fxLayoutAlign="space-between"
->
-    <div
-            style="width: 50px;"
-            [ngStyle]="{'height':(height-25)+'px'}"
-            class="left-slider-bar default-primary-color"
-    >
-        <!--工具栏选项-->
-        <div fxLayout="column" fxLayoutAlign="center center"
-        >
-            <!--单个选项按钮-->
-            <div>
-                <button
-                        class="left-slider-bar-button accent-color"
-                        mat-raised-button
-                        mat-icon-button
-                        (click)="open_panel('date_select')"
-                        mat-tooltip="打开侧边栏"
-                        [matTooltipPosition]="'right'"
-                >
-                    <i class="anticon anticon-unlock"></i>
-                </button>
-            </div>
-            <!--单个选项按钮-->
-            <div>
-                <button
-                        class="left-slider-bar-button accent-color"
-                        mat-raised-button
-                        mat-icon-button
-                        (click)="open_panel('date_list')"
-                        mat-tooltip="打开日期快速选择，快捷键 q"
-                        [matTooltipPosition]="'right'"
-                >
-                    <i class="anticon anticon-calendar"></i>
-                </button>
-            </div>
-            <div>
-                <button
-                        class="left-slider-bar-button accent-color"
-                        mat-raised-button
-                        mat-icon-button
-                        (click)="switch_only_show_one_date_on_content()"
-                        mat-tooltip="仅显示单日期(仅显示单日期有助于性能提升)"
-                        [matTooltipPosition]="'right'"
-                >
-                    <i class="anticon anticon-link"></i>
-                </button>
-            </div>
-        </div>
+<div #target fxLayout="row" fxLayoutAlign="space-between">
+  <div style="width: 50px;" [ngStyle]="{'height':(height-25)+'px'}" class="left-slider-bar default-primary-color">
+    <!--工具栏选项-->
+    <div fxLayout="column" fxLayoutAlign="center center">
+      <!--单个选项按钮-->
+      <div>
+        <button class="left-slider-bar-button accent-color" mat-raised-button mat-icon-button (click)="open_panel('date_select')"
+          mat-tooltip="打开侧边栏" [matTooltipPosition]="'right'">
+          <i class="anticon anticon-unlock"></i>
+        </button>
+      </div>
+      <!--单个选项按钮-->
+      <div>
+        <button class="left-slider-bar-button accent-color" mat-raised-button mat-icon-button (click)="open_panel('date_list')" mat-tooltip="打开日期快速选择，快捷键 q"
+          [matTooltipPosition]="'right'">
+          <i class="anticon anticon-calendar"></i>
+        </button>
+      </div>
+      <div>
+        <button class="left-slider-bar-button accent-color" mat-raised-button mat-icon-button (click)="switch_only_show_one_date_on_content()"
+          mat-tooltip="仅显示单日期(仅显示单日期有助于性能提升)" [matTooltipPosition]="'right'">
+          <i class="anticon anticon-link"></i>
+        </button>
+      </div>
     </div>
-    <div
-            fxFlex="90"
-            class="detail-card-area"
-            style="overflow-y: auto;padding-bottom: 15px;"
-            [ngStyle]="{'height':height+'px'}"
-    >
-        <div fxLayout="column">
-            <div *ngFor="let detail of which_dates_data_displayed_on_the_content(
+  </div>
+  <div fxFlex="90" class="detail-card-area" style="overflow-y: auto;padding-bottom: 15px;" [ngStyle]="{'height':height+'px'}">
+    <div fxLayout="column">
+      <div *ngFor="let detail of which_dates_data_displayed_on_the_content(
             ($only_show_one_date_on_content|async)? ($showed_date_on_content|async): ($not_showed_dates_on_content|async),
             $repair_plan_and_history_data|async,
             $only_show_one_date_on_content|async
              )">
-                <div class="date-column default-primary-color"
-                >
-                    <h2
-                            class="text-primary-color">{{detail.date.format("YYYY年MM月DD日")}}</h2>
-                </div>
-                <div fxLayout="column" fxLayoutGap="25px" class="detail-card-single-date">
-                    <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="25px"
-                         *ngFor="let plan_date of detail.repair_plan_data_index_on_this_day"
-                    >
-                        <div fxFlex="40">
-                            <app-repair-plan-detail-card
-                                    [plan_data]="$repair_plan_data|async|getDataById: plan_date.plan_number_id">
-                            </app-repair-plan-detail-card>
-                        </div>
-                        <div fxFlex="40">
-                            <app-repair-history-detail-card
-                                    [history_data]="$repair_history_data|async|getDataById: plan_date.history_number_id">
-                            </app-repair-history-detail-card>
-                        </div>
-                    </div>
-                    <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="25px"
-                         *ngFor="let plan_date of detail.repair_history_data_not_map_in_plan"
-                    >
-                        <div fxFlex="40">
-                        </div>
-                        <div fxFlex="40">
-                            <app-repair-history-detail-card
-                                    [history_data]="$repair_history_data|async|getDataById: plan_date"
-                                    [single_dog_card]="true"
-                            >
-                            </app-repair-history-detail-card>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="date-column default-primary-color">
+          <h2 class="text-primary-color">{{detail.date.format("YYYY年MM月DD日")}}</h2>
         </div>
+        <div fxLayout="column" fxLayoutGap="25px" class="detail-card-single-date">
+          <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="25px" *ngFor="let plan_date of detail.repair_plan_data_index_on_this_day">
+            <div fxFlex="40">
+              <app-repair-plan-detail-card [plan_data]="$repair_plan_data|async|getDataById: plan_date.plan_number_id">
+              </app-repair-plan-detail-card>
+            </div>
+            <div fxFlex="40">
+              <app-repair-history-detail-card [history_data]="$repair_history_data|async|getDataById: plan_date.history_number_id">
+              </app-repair-history-detail-card>
+            </div>
+          </div>
+          <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="25px" *ngFor="let plan_date of detail.repair_history_data_not_map_in_plan">
+            <div fxFlex="40">
+            </div>
+            <div fxFlex="40">
+              <app-repair-history-detail-card [history_data]="$repair_history_data|async|getDataById: plan_date" [single_dog_card]="true">
+              </app-repair-history-detail-card>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
