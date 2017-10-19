@@ -144,8 +144,22 @@ export class RepairPlanDialogComponent implements OnInit, OnDestroy {
 
   handle_submit() {
     if (this.form.valid) {
-      if (this.origin_data.number && this.form.controls['number'].value !== this.origin_data.number) {
-      }
+      this.store.dispatch(new RepairHistoryCollectStoreActions.UpdateRepairPlanData({
+          number: this.form.controls['number'].value,
+          post_date: moment(this.form.controls['date'].value),
+          calc_time: !this.form.controls['calc_time'],
+          plan_time:
+            this.form.controls['calc_time'] ?
+              `${this.form.controls['start_time'].value}-${this.form.controls['end_time'].value}` : '',
+          apply_place: this.form.controls['apply_place'].value,
+          direction: this.form.controls['direction'].value,
+          type: this.form.controls['type'].value,
+          area: this.form.controls['area'].value,
+          content: [],
+          id: null,
+        }),
+      );
+      this.store.dispatch(new RepairHistoryCollectStoreActions.MapPlanAndHistoryNumber());
       this.store.dispatch(new RepairHistoryCollectStoreActions.OpenOrCloseADialog({dialog_type: ''}));
     } else {
       console.log(this.form.errors);

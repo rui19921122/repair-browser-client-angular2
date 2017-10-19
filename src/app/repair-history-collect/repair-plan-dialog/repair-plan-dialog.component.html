@@ -55,16 +55,31 @@
       <textarea matInput formControlName="area" placeholder="维修区域" type="text"></textarea>
     </mat-form-field>
   </form>
-  <mat-chip-list>
-    <mat-chip *ngIf="form.controls['end_time'].hasError('time')" color="accent">
+  <mat-chip-list fxLayout="column">
+    <mat-chip
+      *ngIf="form.controls['end_time'].hasError('time')"
+      color="accent"
+      selected="true"
+    >
       统计时间时，结束时间不应小于开始时间
     </mat-chip>
-    <mat-chip *ngFor="let warn of warns['number']" color="warn">
+    <mat-chip
+      *ngIf="form.controls['end_time'].hasError('time')"
+      color="accent"
+      selected="true"
+    >
+      统计时间时，结束时间不应小于开始时间
+    </mat-chip>
+    <mat-chip
+      *ngFor="let warn of warns['number']"
+      color="accent"
+      selected="true"
+    >
       {{warn}}
     </mat-chip>
   </mat-chip-list>
 </div>
 <div mat-dialog-actions>
-  <button mat-button [disabled]="form.invalid">保存</button>
+  <button mat-button [disabled]="form.invalid" (click)="handle_submit()">保存</button>
   <button mat-button (click)="close()">取消</button>
 </div>

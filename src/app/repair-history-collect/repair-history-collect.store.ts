@@ -6,6 +6,16 @@ import {
 } from '../api';
 import {Observable} from 'rxjs/Observable';
 
+export function generate_a_id(values: { id: number }[]): number {
+  let id = 0;
+  values.forEach(value => {
+    if (value.id > id) {
+      id = value.id;
+    }
+  });
+  return id + 1;
+}
+
 function SortedDataByDate(data: RepairPlanAndHistoryDataSorted[]): RepairPlanAndHistoryDataSorted[] {
   return data.sort((a, b) => a.date.isSameOrBefore(b.date) ? -1 : 1);
 }
@@ -62,6 +72,8 @@ export interface RepairPlanSingleDataInterface {
   post_date: moment.Moment;
   id: number;
   calc_time: boolean;
+  start_time?: string;
+  end_time?: string
 }
 
 
@@ -311,7 +323,26 @@ export function reducer(state: RepairHistoryCollectStoreInterface = default_stat
                         action: RepairHistoryCollectStoreActionType): RepairHistoryCollectStoreInterface {
   switch (action.type) {
     case UPDATE_REPAIR_PLAN_DATA:
-      return {...state,};  // 复制此两行到reducer中
+      const payload: RepairPlanSingleDataInterface = action.payload;
+      let index: number;
+      let new_repair_plan_data: RepairPlanSingleDataInterface[];
+      // 按照天窗修编号及日期索引
+      index = state.repair_plan_data.findIndex(value => value.number === payload.number && value.post_date.isSame(payload.post_date));
+      if (index >= 0) {
+        new_repair_plan_data = [...state.repair_plan_data.slice(0, index),
+          action.payload,
+          ...state.repair_plan_data.slice(index + 1, state.repair_plan_data.length)];
+      } else {
+        new_repair_plan_data = Array.from(state.repair_plan_data);
+        new_repair_plan_data.push(
+          {
+            ...payload, id: generate_a_id(new_repair_plan_data)
+          }
+        );
+      }
+      return {
+        ...state, repair_plan_data: new_repair_plan_data
+      };  // 复制此两行到reducer中
     case OPEN_OR_CLOSE_A_DIALOG:
       return {
         ...state,

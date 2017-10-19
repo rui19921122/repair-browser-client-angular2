@@ -25,6 +25,12 @@ class ButtonType {
   value: number;
 }
 
+const re = new RegExp('^(\d{1,2}:\d{1,2})\-(\d{1,2}:\d{1,2})');
+
+export function string_is_a_valid_time_range(string: string) {
+  return string.match(re);
+}
+
 @Component({
   selector: 'app-repair-history-collect',
   templateUrl: './repair-history-collect.component.html',
@@ -47,6 +53,9 @@ export class RepairHistoryCollectComponent implements OnInit, AfterViewInit, OnD
   public $open_or_close_plan_data_dialog: Observable<string>;
   public $plan_data_dialog_number: Observable<number>;
   public open_or_close_plan_data_dialog_unsubscribe: Subscription;
+  public $repair_plan_data: Observable<RepairPlanSingleDataInterface[]>;
+  public repair_plan_data_unsubscribe: Subscription;
+  public $repair_history_data: Observable<RepairHistorySingleDataInterface[]>;
 
   ngOnDestroy() {
     if (this.listen_for_keyboard_click_unsubscribe) {
@@ -54,6 +63,9 @@ export class RepairHistoryCollectComponent implements OnInit, AfterViewInit, OnD
     }
     if (this.open_or_close_plan_data_dialog_unsubscribe) {
       this.open_or_close_plan_data_dialog_unsubscribe.unsubscribe();
+    }
+    if (this.repair_plan_data_unsubscribe) {
+      this.repair_plan_data_unsubscribe.unsubscribe();
     }
   }
 
@@ -70,6 +82,11 @@ export class RepairHistoryCollectComponent implements OnInit, AfterViewInit, OnD
     // 对话框相关
     this.$open_or_close_plan_data_dialog = this.store.select(state => state.repair_history_collect.dialog_settings.which_dialog_open);
     this.$plan_data_dialog_number = this.store.select(state => state.repair_history_collect.dialog_settings.dialog_id);
+    this.$repair_plan_data = this.store.select(state => state.repair_history_collect.repair_plan_data);
+    this.$repair_history_data = this.store.select(state => state.repair_history_collect.repair_history_data);
+    this.repair_plan_data_unsubscribe = this.$repair_plan_data.merge(this.$repair_history_data).subscribe(value => {
+      this.store.dispatch(new RepairHistoryCollectStoreActions.MapPlanAndHistoryNumber());
+    });
     this.open_or_close_plan_data_dialog_unsubscribe = this.$open_or_close_plan_data_dialog.withLatestFrom(this.$plan_data_dialog_number)
       .delay(100)
       .subscribe(
@@ -109,16 +126,15 @@ export class RepairHistoryCollectComponent implements OnInit, AfterViewInit, OnD
             Observable.from(json.data)
               .map(e => {
                 // 这一步将字符串格式的日期转换成了moment格式,其他的内容暂时不做转换
-                const split_time = e.plan_time.split('-');
-                if (split_time.length === 2) {
-                  const start_is_time: boolean = moment(split_time[0], 'hh-MM').isValid();
-                  const end_is_time: boolean = moment(split_time[1], 'hh-MM').isValid();
-                  if (start_is_time && end_is_time) {
-                    return {...e, post_date: moment(e.post_date), id: id, calc_time: true};
-                  }
-                } else {
-                }
-                return {...e, post_date: moment(e.post_date), id: id, calc_time: false};
+                const split_time = string_is_a_valid_time_range(e.plan_time);
+                return {
+                  ...e,
+                  post_date: moment(e.post_date),
+                  id: id,
+                  calc_time: !!split_time,
+                  start_time: split_time ? split_time[1] : null,
+                  end_time: split_time ? split_time[2] : null,
+                };
               }).subscribe(value => {
               const _sorted_date_index = sorted_date_map.findIndex(value2 => value.post_date.isSame(value2.date));
               if (_sorted_date_index < 0) {
@@ -156,6 +172,7 @@ export class RepairHistoryCollectComponent implements OnInit, AfterViewInit, OnD
                   Observable.from(json.data)
                     .map((e: RepairHistoryDataSingleApiInterface) => {
                       // 这一步将字符串格式的日期转换成了moment格式, 将编号转为了简写格式
+                      const split_time = string_is_a_valid_time_range(e.plan_time);
                       const origin_number_spited = e.number.split('-');
                       let used_number: string;
                       if (origin_number_spited.length === 2) {
@@ -163,7 +180,14 @@ export class RepairHistoryCollectComponent implements OnInit, AfterViewInit, OnD
                       } else {
                         used_number = '解析失败';
                       }
-                      return {...e, date: moment(e.date), id: id, used_number: used_number};
+                      return {
+                        ...e,
+                        date: moment(e.date),
+                        id: id, used_number: used_number,
+                        calc_time: !!split_time,
+                        start_time: split_time ? split_time[1] : null,
+                        end_time: split_time ? split_time[2] : null
+                      };
                     }).subscribe(value => {
                       const _sorted_date_index = sorted_date_map.findIndex(value2 => value.date.isSame(value2.date));
                       if (_sorted_date_index < 0) {
@@ -179,11 +203,9 @@ export class RepairHistoryCollectComponent implements OnInit, AfterViewInit, OnD
                     () => {
                       this.store.dispatch(new RepairHistoryCollectStoreActions.UpdateRepairHistoryData(origin_date_map));
                       this.store.dispatch(new RepairHistoryCollectStoreActions.SwitchGetHistoryDataPending(false));
-                      this.store.dispatch(new RepairHistoryCollectStoreActions.MapPlanAndHistoryNumber());
                     });
                 });
-          }
-          else {
+          } else {
             this.snack_bar.open('日期选择错误', 'X', {duration: 2000});
           }
         }

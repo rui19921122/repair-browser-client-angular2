@@ -1,5 +1,5 @@
 import {BrowserModule} from '@angular/platform-browser';
-import {NgModule, ApplicationRef, LOCALE_ID} from '@angular/core';
+import {LOCALE_ID, NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {StoreDevtoolsModule} from '@ngrx/store-devtools';
 import {FlexLayoutModule} from '@angular/flex-layout';
@@ -9,31 +9,31 @@ import {NgZorroAntdModule} from 'ng-zorro-antd';
 import {AppComponent} from './app.component';
 import {HeaderComponent} from './header/header.component';
 import {
-  MatChipsModule,
-  MatSelectModule,
+  MatAutocompleteModule,
   MatButtonModule,
+  MatCardModule,
+  MatCheckboxModule,
+  MatChipsModule,
+  MatDatepickerModule,
   MatDialogModule,
-  MatTooltipModule,
+  MatExpansionModule,
   MatInputModule,
   MatMenuModule,
-  MatAutocompleteModule,
-  MatProgressSpinnerModule,
-  MatDatepickerModule,
-  MatSnackBarModule,
-  MatTableModule,
   MatNativeDateModule,
   MatProgressBarModule,
-  MatCardModule,
+  MatProgressSpinnerModule,
+  MatSelectModule,
   MatSidenavModule,
+  MatSnackBarModule,
+  MatTableModule,
   MatToolbarModule,
-  MatExpansionModule,
-  MatCheckboxModule
+  MatTooltipModule
 } from '@angular/material';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {Router, RouterModule, Routes} from '@angular/router';
-import {store} from './store';
+import {RouterModule, Routes} from '@angular/router';
+import {AppState, store} from './store';
 import {get__HMR__state} from '../hmr';
-import {StoreModule} from '@ngrx/store';
+import {Store, StoreModule} from '@ngrx/store';
 import {HomeComponent} from './home/home.component';
 import {UserService} from './user.service';
 import {LoginFormComponent} from './header/login-form/login-form.component';
@@ -122,6 +122,11 @@ export const routes: Routes = [
   ]
 })
 export class AppModule {
-  constructor() {
+  constructor(public store: Store<AppState>) {
+    store.subscribe(value => {
+        window.localStorage['repair_history_collect'] = JSON.stringify(value.repair_history_collect);
+        window.localStorage['user'] = JSON.stringify(value.user);
+      }
+    );
   }
 }
