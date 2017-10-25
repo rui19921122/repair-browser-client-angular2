@@ -339,6 +339,7 @@ export function reducer(state: RepairHistoryCollectStoreInterface = default_stat
             }; // 复制此两行到reducer中,切换是否仅在内容框中显示一个日期 reducer
         case
         MAP_PLAN_AND_HISTORY_NUMBER:
+            console.log(state);
             const date_array: RepairPlanAndHistoryDataSorted[] = [];
             for (const v of Object.keys(state.repair_plan_data)) {
                 add_a_value_to_sorted_object(state[v].date, date_array, state[v].id, 'plan');
@@ -440,7 +441,27 @@ export function reducer(state: RepairHistoryCollectStoreInterface = default_stat
             });
             return {...state, repair_plan_data: new_repair_plan_list}; // 复制此两行到reducer中,从服务器的数据中更新数据，会对数据进行处理 reducer
         case UPDATE_ALL_REPAIR_HISTORY_DATA_FROM_SERVER:
-            return {...state,}; // 复制此两行到reducer中,从服务器的数据中更新数据，会对数据进行处理 reducer
+            const new_repair_history_list: { [id: string]: RepairHistorySingleDataInterface } = {};
+            action.payload.data.forEach(
+                v => {
+                    new_repair_history_list[generate_a_id(v)] = {
+                        date: moment(v.date),
+                        number: v.number,
+                        plan_time: v.plan_time,
+                        used_number: null,
+                        id: generate_a_id(v),
+                        apply_place: v.apply_place,
+                        inner_id: v.inner_id,
+                        plan_type: v.plan_type,
+                        repair_content: v.repair_content,
+                        repair_department: v.repair_department,
+                        use_paper: v.use_paper
+                    };
+                }
+            );
+            return {
+                ...state, repair_history_data: new_repair_history_list
+            }; // 复制此两行到reducer中,从服务器的数据中更新数据，会对数据进行处理 reducer
         default:
             return state;
     }
