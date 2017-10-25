@@ -24,8 +24,8 @@ import {Subscription} from 'rxjs/Subscription';
 export class ContentComponent implements OnInit, OnDestroy {
     public $state: Observable<RepairHistoryCollectStoreInterface>;
     public $repair_plan_and_history_data: Observable<RepairPlanAndHistoryDataSorted[]>;
-    public $repair_plan_data: Observable<RepairPlanSingleDataInterface[]>;
-    public $repair_history_data: Observable<RepairHistorySingleDataInterface[]>;
+    public $repair_plan_data: Observable<{ [id: string]: RepairPlanSingleDataInterface }>;
+    public $repair_history_data: Observable<{ [id: string]: RepairHistorySingleDataInterface }>;
     public $not_showed_dates_on_content: Observable<moment.Moment[]>;
     public $showed_date_on_content: Observable<moment.Moment>;
     public $only_show_one_date_on_content: Observable<boolean>;

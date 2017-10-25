@@ -1,29 +1,34 @@
 <mat-card class="detail-card-collection"
-         style="padding: 0;
+          style="padding: 0;
   box-shadow: 0 15px 15px -12px rgba(0, 0, 0, 0.56), 0 4px 20px 0px rgba(0, 0, 0, 0.12), 0 3px 10px -5px rgba(0, 0, 0, 0.2);
 "
 >
-  <mat-card-header class="detail-card-header light-primary-color text-primary-color"
-  >
-    <span class="mat-card-header-title">
-    编号:{{plan_data.number}}
-    </span>
-  </mat-card-header>
-  <mat-card-content class="detail-card-content">
-    <p>
-      时间:{{plan_data.plan_time}}
-    </p>
-    <p>
-      类型: {{plan_data.type}} 类
-    </p>
-    <p>
-      行别:{{plan_data.direction}}
-    </p>
-    <mat-card-actions
-      class="detail-card-actions"
+    <mat-card-header class="detail-card-header light-primary-color text-primary-color"
     >
-      <button mat-raised-button (click)="open_change_dialog(plan_data.id)">修改</button>
-      <button mat-raised-button>详细</button>
-    </mat-card-actions>
-  </mat-card-content>
+    <span class="mat-card-header-title">
+    编号: {{plan_data.number}}
+    </span>
+    </mat-card-header>
+    <mat-card-content class="detail-card-content">
+        <div fxLayout="row center">
+            <div fxFlex="33">
+                {{plan_data.plan_time}}
+            </div>
+            <div fxFlex="33">
+                {{plan_data.calc_time?plan_data.start_time+plan_data.end_time:'无具体时间'}}
+            </div>
+            <div fxFlex="33">
+                {{plan_data.type}} 类
+            </div>
+            <div fxFlex="33">
+                {{plan_data.direction}}
+            </div>
+        </div>
+        <mat-card-actions
+                class="detail-card-actions"
+        >
+            <button mat-raised-button (click)="open_change_dialog(plan_data.id)">修改</button>
+            <button mat-raised-button>详细</button>
+        </mat-card-actions>
+    </mat-card-content>
 </mat-card>

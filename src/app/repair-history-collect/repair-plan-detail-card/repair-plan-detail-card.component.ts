@@ -19,7 +19,7 @@ export class RepairPlanDetailCardComponent implements OnInit {
   ngOnInit() {
   }
 
-  open_change_dialog(id: number) {
+  open_change_dialog(id: string) {
     this.store.dispatch(new RepairHistoryCollectStoreActions.OpenOrCloseADialog(
       {dialog_type: 'repair_plan', dialog_id: id}
     ));
