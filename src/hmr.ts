@@ -11,12 +11,6 @@ export function get__HMR__state() {
     const store = module.injector.get(Store);
     store.take(1).subscribe(s => state = s);
   } else {
-    state = {
-      user: window.localStorage['user'],
-      repair_history_collect: window.localStorage['repair_history_collect']
-    };
-    console.log('从本地存储中获得数据');
-    console.log(state);
   }
   return state;
 }
