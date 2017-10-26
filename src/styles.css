@@ -69,6 +69,11 @@ a, a:visited, a:focus, a:hover {
   width: 450px;
 }
 
+.detail-card-collection > div {
+  /* card分为两行，此为第一行*/
+  height: 125px;
+}
+
 .detail-card-header {
   padding: 0;
   margin: 0;
@@ -85,10 +90,13 @@ a, a:visited, a:focus, a:hover {
   padding: 14px;
 }
 
-.detail-card-content p {
+.detail-card-content-line {
   font-size: 1.15rem;
-  width: 87%;
   padding: 5px;
+  line-height: 50px;
+}
+
+.detail-card-content-line p {
 }
 
 .detail-card-actions {
