@@ -1,0 +1,14 @@
+@font-face {
+    font-family: "MF-FangHei-Noncommercial-Regular";
+    src: url("MF-FangHei-Noncommercial-Regular.eot"); /* IE9 */
+    src: url("MF-FangHei-Noncommercial-Regular.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+    
+    url("MF-FangHei-Noncommercial-Regular.woff") format("woff"), /* chrome、firefox */
+    url("MF-FangHei-Noncommercial-Regular.ttf") format("truetype"), /* chrome、firefox、opera、Safari, Android, iOS 4.2+ */
+    
+    url("MF-FangHei-Noncommercial-Regular.svg#MF-FangHei-Noncommercial-Regular") format("svg"); /* iOS 4.1- */
+    font-style: normal;
+    font-weight: normal;
+}
+
+

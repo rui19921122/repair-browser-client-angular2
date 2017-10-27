@@ -1,5 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
 @import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
+@import "assets/font/MF-FangHei-Noncommercial-Regular.css";
+@import "assets/font/UnidreamLED.css";
+@import "assets/font/MFYueHei_Noncommercial-Regular.css";
 
 body {
   margin: 0;
@@ -109,3 +112,37 @@ a, a:visited, a:focus, a:hover {
   line-height: 1.15;
   margin-bottom: 20.5px;
 }
+
+.card-time-area {
+  font-size: 45px;
+  font-family: UnidreamLED, serif;
+}
+
+.card-warn {
+  color: red;
+}
+
+.card-title {
+  position: relative;
+  width: 0;
+  height: 0;
+
+}
+
+.card-title > div {
+  height: 120px;
+  width: 120px;
+  border-radius: 60px;
+  background-color: #673ab7;
+  margin-top: -60px;
+  box-shadow: 0 15px 15px -12px rgba(0, 0, 0, 0.56), 0 4px 20px 0px rgba(0, 0, 0, 0.12), 0 3px 10px -5px rgba(0, 0, 0, 0.2);
+}
+
+.card-title > div > p {
+  font-size: 57px;
+  text-align: center;
+  line-height: 120px;
+  font-family: MFYueHei_Noncommercial-Regular, sans-serif;
+  color: #FFFFFF;
+}
+
