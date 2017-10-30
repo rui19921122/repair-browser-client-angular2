@@ -51,6 +51,7 @@ import {RepairHistoryDetailCardComponent} from './repair-history-collect/repair-
 import {MomentPipe} from './moment.pipe';
 import {InTheMomentListPipe} from './in-the-moment-list.pipe';
 import {GetDataByIdPipe} from './get-data-by-id.pipe';
+import {SplitLongSentenceWithColon} from './split-long-sentence-with-colon.pipe';
 import {MapMomentToRepairPlanAndHistoryDataPipe} from './map-moment-to-repair-plan-and-history-data.pipe';
 
 import {RepairPlanDialogComponent} from './repair-history-collect/repair-plan-dialog/repair-plan-dialog.component';
@@ -79,6 +80,7 @@ export const routes: Routes = [
         GetDataByIdPipe,
         MapMomentToRepairPlanAndHistoryDataPipe,
         RepairPlanDialogComponent,
+        SplitLongSentenceWithColon,
     ],
     imports: [
         FormsModule,

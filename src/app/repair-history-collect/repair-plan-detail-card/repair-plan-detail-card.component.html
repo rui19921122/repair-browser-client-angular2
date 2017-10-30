@@ -3,32 +3,45 @@
   box-shadow: 0 15px 15px -12px rgba(0, 0, 0, 0.56), 0 4px 20px 0px rgba(0, 0, 0, 0.12), 0 3px 10px -5px rgba(0, 0, 0, 0.2);
 "
 >
-  <div style="background-color: #5677fc">
-  </div>
-  <div>
-    <div style="width: 55%;float: left;">
-      <div fxLayout="column" fxLayoutAlign="center center">
-        <div>
+    <div style="background-color: #5677fc">
+        <div style="width: 55%;float: left;height: 100%;">
+            <div fxLayout="column" fxLayoutAlign="center center" style="height: 100%;" class="card-content-area">
+                <div>
+                    编号：{{plan_data.number}}
+                </div>
+                <div>
+                    解析编号：{{plan_data.used_number}}
+                </div>
+                <div>
+                    区域：{{plan_data.area|split_long_sentence_with_colon}}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <div style="width: 55%;float: left;">
+            <div fxLayout="column" fxLayoutAlign="center center">
+                <div>
           <span *ngIf="plan_data.calc_time" class="card-time-area">
             {{plan_data.start_time}}-{{plan_data.end_time}}
           </span>
-          <span *ngIf="!plan_data.calc_time" class="card-time-area card-warn">
+                    <span *ngIf="!plan_data.calc_time" class="card-time-area card-warn">
             {{plan_data.plan_time}}
           </span>
+                </div>
+                <div>
+                    <span>test</span>
+                </div>
+            </div>
         </div>
-        <div>
-          <span>test</span>
+        <div style="width: 30%;float: left;">
+            <div class="card-title">
+                <div>
+                    <p>
+                        局
+                    </p>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-    <div style="width: 30%;float: left;">
-      <div class="card-title">
-        <div>
-          <p>
-            局
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
 </div>
