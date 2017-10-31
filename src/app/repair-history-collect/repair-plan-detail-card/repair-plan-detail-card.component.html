@@ -5,7 +5,8 @@
 >
   <div style="background-color: #5677fc">
     <div style="width: 55%;float: left;height: 100%;">
-      <div fxLayout="column" fxLayoutAlign="center center" style="height: 100%;" class="card-content-area">
+      <div fxLayout="column" fxLayoutAlign="center center" style="height: 100%;" class="card-content-area"
+           *ngIf="plan_data">
         <div>
           编号：{{plan_data.number}}
         </div>
@@ -16,11 +17,21 @@
           区域：{{plan_data.area|split_long_sentence_with_colon}}
         </div>
       </div>
+      <div fxLayout="column" fxLayoutAlign="center center" style="height: 100%;" class="card-content-area"
+           *ngIf="!plan_data">
+        <div>
+          没有数据
+        </div>
+        <div>
+          点击右侧+号
+        </div>
+      </div>
+
     </div>
   </div>
-  <div>
-    <div style="width: 55%;float: left;">
-      <div fxLayout="column" fxLayoutAlign="center center">
+  <div fxLayout="row">
+    <div fxFlex="55">
+      <div fxLayout="column" fxLayoutAlign="center center" *ngIf="plan_data">
         <div>
           <span *ngIf="plan_data.calc_time" class="card-time-area">
             {{plan_data.start_time}}-{{plan_data.end_time}}
@@ -38,14 +49,30 @@
         </div>
       </div>
     </div>
-    <div style="width: 30%;float: left;">
+    <div fxFlex="1">
       <div class="card-title">
-        <div>
+        <div *ngIf="plan_data">
           <p>
             局
           </p>
         </div>
+        <div *ngIf="!plan_data">
+          <button mat-icon-button (click)="create_repair_plan_from_history()">
+            <i class="iconfont icon-add" matTooltip="从历史计划导入基础信息">
+            </i>
+          </button>
+        </div>
       </div>
+    </div>
+    <div fxFlex="25" class="card-title-button-group">
+      <mat-button-toggle-group>
+        <button mat-icon-button (click)="open_change_dialog(plan_data.id)" matTooltip="修改">
+          <i class="iconfont icon-xiugai"></i>
+        </button>
+        <button mat-icon-button (click)="open_change_dialog(plan_data.id)" matTooltip="删除！">
+          <i class="iconfont icon-delete"></i>
+        </button>
+      </mat-button-toggle-group>
     </div>
   </div>
 </div>

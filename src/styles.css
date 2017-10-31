@@ -3,6 +3,7 @@
 @import "assets/font/MF-FangHei-Noncommercial-Regular.css";
 @import "assets/font/UnidreamLED.css";
 @import "assets/font/MFYueHei_Noncommercial-Regular.css";
+@import "assets/font_eyg4l5qajjl6usor/iconfont.css";
 
 body {
   margin: 0;
@@ -131,6 +132,7 @@ a, a:visited, a:focus, a:hover {
   position: relative;
   width: 0;
   height: 0;
+  left: 19px;
 
 }
 
@@ -151,5 +153,27 @@ a, a:visited, a:focus, a:hover {
   color: #FFFFFF;
 }
 
+.card-title > div > button {
+  color: white;
+  text-align: center;
+  width: 120px;
+  border-radius: 60px;
+  height: 120px;
+}
+
+.card-title > div i {
+  font-size: 75px !important;
+  color: white;
+  text-align: center;
+}
+
 .card-time-extra-text-area {
+}
+
+.card-title-button-group {
+  margin-top: 65px;
+}
+
+.card-title-button-group i {
+  font-size: 25px;
 }

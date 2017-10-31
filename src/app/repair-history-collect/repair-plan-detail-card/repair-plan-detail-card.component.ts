@@ -12,6 +12,7 @@ import {Store} from '@ngrx/store';
 })
 export class RepairPlanDetailCardComponent implements OnInit {
   @Input() plan_data = <RepairPlanSingleDataInterface>null;
+  @Input() history_data_id: string;
 
   constructor(public store: Store<AppState>) {
   }
@@ -23,5 +24,9 @@ export class RepairPlanDetailCardComponent implements OnInit {
     this.store.dispatch(new RepairHistoryCollectStoreActions.OpenOrCloseADialog(
       {dialog_type: 'repair_plan', dialog_id: id}
     ));
+  }
+
+  create_repair_plan_from_history() {
+    console.log(this.history_data_id);
   }
 }
