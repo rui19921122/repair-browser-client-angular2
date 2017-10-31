@@ -7,6 +7,39 @@ import {
 } from '../api';
 import {sort_data_by_date, add_a_value_to_sorted_object, generate_a_id, string_is_a_valid_time_range} from '../util_func';
 
+function convert_a_origin_repair_plan_data_to_easy_understand(v: RepairPlanSingleDataApiInterface): RepairPlanSingleDataInterface {
+  // 处理从服务器端返回的天窗修计划数据
+  const is_a_time = string_is_a_valid_time_range(v.plan_time);
+  console.log(is_a_time);
+  let type;
+  switch (v.type) {
+    case 'Ⅱ':
+      type = v.type;
+      break;
+    case 'Ⅰ':
+      type = v.type;
+      break;
+    default:
+      type = '站';
+  }
+  return {
+    type: type,
+    number: v.number,
+    date: moment(v.post_date),
+    apply_place: v.apply_place,
+    id: generate_a_id(v),
+    calc_time: !!is_a_time,
+    start_time: is_a_time ? is_a_time[1] : null,
+    end_time: is_a_time ? is_a_time[2] : null,
+    plan_time: v.plan_time,
+    area: v.area,
+    content: [],
+    direction: v.direction,
+    used_number: `${v.type === '站' ? 'Z' : (v.type === '垂' ? 'D' : 'J')}${v.number}`
+  };
+
+}
+
 
 export interface RepairPlanSingleDataInterface {
   type: 'Ⅰ' | 'Ⅱ' | '站' | '垂';
@@ -430,33 +463,8 @@ export function reducer(state: RepairHistoryCollectStoreInterface = default_stat
       // 处理服务器返回的数据
       const new_repair_plan_list: { [id: string]: RepairPlanSingleDataInterface } = {};
       action.payload.data.forEach(v => {
-        const is_a_time = string_is_a_valid_time_range(v.plan_time);
-        let type;
-        switch (v.type) {
-          case 'Ⅱ':
-            type = v.type;
-            break;
-          case 'Ⅰ':
-            type = v.type;
-            break;
-          default:
-            type = '站';
-        }
-        new_repair_plan_list[generate_a_id(v)] = {
-          type: type,
-          number: v.number,
-          date: moment(v.post_date),
-          apply_place: v.apply_place,
-          id: generate_a_id(v),
-          calc_time: !!is_a_time,
-          start_time: is_a_time ? is_a_time[1] : null,
-          end_time: is_a_time ? is_a_time[2] : null,
-          plan_time: v.plan_time,
-          area: v.area,
-          content: [],
-          direction: v.direction,
-          used_number: `${v.type === '站' ? 'Z' : (v.type === '垂' ? 'D' : 'J')}${v.number}`
-        };
+        const data = convert_a_origin_repair_plan_data_to_easy_understand(v);
+        new_repair_plan_list[data.id] = data;
       });
       return {...state, repair_plan_data: new_repair_plan_list}; // 复制此两行到reducer中,从服务器的数据中更新数据，会对数据进行处理 reducer
     case UPDATE_ALL_REPAIR_HISTORY_DATA_FROM_SERVER:

@@ -24,7 +24,7 @@ export interface RepairPlanContentInterface {
 
 export interface RepairPlanSingleDataApiInterface {
 
-  type: string;
+  type: 'Ⅰ' | 'Ⅱ' | '站' | '垂';
   plan_time: string;
   apply_place: string;
   area: string;
