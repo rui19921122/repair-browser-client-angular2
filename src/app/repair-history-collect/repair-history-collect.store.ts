@@ -91,6 +91,16 @@ export interface RepairHistoryCollectStoreInterface {
   };
 }
 
+export interface RepairHistoryDataDetailInterface {
+  update_time: moment.Moment;
+  actual_start_time: moment.Moment | null;
+  actual_end_time: string | null;
+  actual_start_number: moment.Moment | null;
+  actual_end_number: string | null;
+  actual_watcher: string; // 把关人
+  canceled: boolean;
+}
+
 export interface RepairHistorySingleDataInterface {
   date: moment.Moment;
   repair_content: string;
@@ -103,6 +113,9 @@ export interface RepairHistorySingleDataInterface {
   plan_time: string;
   id?: string;
   used_number: string;
+  detail_data: RepairHistoryDataDetailInterface;
+  cached: 0 | 1 | 2 | 3;
+  // 0 未从服务器获得数据 1 已从服务器获得数据 2 未从服务器获得数据且已被手动修改 3 已从服务器获得数据且被手动修改
 }
 
 
@@ -257,8 +270,19 @@ export class UpdateAllRepairHistoryDataFromServer implements Action {
   }
 }
 
+export const UPDATE_SINGLE_REPAIR_HISTORY_DETAIL_DATA = '[repair-history-collect]UPDATE_SINGLE_REPAIR_HISTORY_DETAIL_DATA';  //
+
+export class UpdateSingleRepairHistoryDetailData implements Action {
+  readonly type = UPDATE_SINGLE_REPAIR_HISTORY_DETAIL_DATA;
+
+  constructor(public payload: { value: RepairHistoryDataDetailInterface, id: string }) {
+
+  }
+}
+
 
 export type RepairHistoryCollectStoreActionType = SwitchOpenWhichSidebar
+  | UpdateSingleRepairHistoryDetailData  // 复制此行到ActionType中
   | UpdateAllRepairPlanDataFromServer // 复制此行到ActionType中,从服务器的数据中更新数据，会对数据进行处理 action type
   | UpdateAllRepairHistoryDataFromServer // 复制此行到ActionType中,从服务器的数据中更新数据，会对数据进行处理 action type
   | UpdateRepairPlanData   // 复制此行到ActionType中
@@ -277,6 +301,7 @@ export const RepairHistoryCollectStoreActions = {
   OpenOrCloseADialog,  // 复制此行到导出的Action中
   UpdateAllRepairPlanDataFromServer,  // 复制此行到导出的Action中,从服务器的数据中更新数据，会对数据进行处理 actions
   UpdateWhichDateShouldDisplayOnContent,  // 复制此行到导出的Action中,更新哪些日期可以在页面中显示 actions
+  UpdateSingleRepairHistoryDetailData,  // 复制此行到导出的Action中
   UpdateRepairPlanData,  // 复制此行到导出的Action中
   SwitchOnlyShowOneDateOnContent,  // 复制此行到导出的Action中,切换是否仅在内容框中显示一个日期 actions
   MapPlanAndHistoryNumber,  // 复制此行到导出的Action中
@@ -318,6 +343,22 @@ const default_state: RepairHistoryCollectStoreInterface = {
 export function reducer(state: RepairHistoryCollectStoreInterface = default_state,
                         action: RepairHistoryCollectStoreActionType): RepairHistoryCollectStoreInterface {
   switch (action.type) {
+    case UPDATE_SINGLE_REPAIR_HISTORY_DETAIL_DATA:
+      const id = action.payload.id;
+      if (state.repair_history_data[id]) {
+        return {
+          ...state, repair_history_data: {
+            ...state.repair_history_data,
+            [id]: {
+              ...state.repair_history_data[id],
+              detail_data: action.payload.value,
+              cached: 1
+            }
+          }
+        };  // 复制此两行到reducer中
+      } else {
+        return state;
+      }
     case UPDATE_REPAIR_PLAN_DATA:
       // 更新单个天窗修计划内容
       const index: string = generate_a_id(action.payload);
@@ -483,7 +524,9 @@ export function reducer(state: RepairHistoryCollectStoreInterface = default_stat
             repair_content: v.repair_content,
             repair_department: v.repair_department,
             use_paper: v.use_paper,
-            used_number: used_number
+            used_number: used_number,
+            detail_data: null,
+            cached: 0
           };
         }
       );

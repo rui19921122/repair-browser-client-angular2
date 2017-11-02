@@ -7,7 +7,7 @@
         <button class="left-slider-bar-button accent-color" mat-raised-button mat-icon-button
                 (click)="open_panel('date_select')"
                 mat-tooltip="打开侧边栏" [matTooltipPosition]="'right'">
-          <i class="anticon anticon-unlock"></i>
+          <i class="iconfont icon-lock"></i>
         </button>
       </div>
       <!--单个选项按钮-->
@@ -22,8 +22,16 @@
         <button class="left-slider-bar-button accent-color" mat-raised-button mat-icon-button
                 (click)="switch_only_show_one_date_on_content()"
                 mat-tooltip="仅显示单日期(仅显示单日期有助于性能提升)" [matTooltipPosition]="'right'">
-          <i class="anticon anticon-link"></i>
+          <i class="iconfont anticon-link"></i>
         </button>
+      </div>
+      <div>
+        <button class="left-slider-bar-button accent-color" mat-raised-button mat-icon-button
+                (click)="get_all_history_detail_data()"
+        >
+          <i class="anticon anticon-fork"></i>
+        </button>
+
       </div>
     </div>
   </div>
