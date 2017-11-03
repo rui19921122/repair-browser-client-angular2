@@ -10,7 +10,6 @@ import {sort_data_by_date, add_a_value_to_sorted_object, generate_a_id, string_i
 function convert_a_origin_repair_plan_data_to_easy_understand(v: RepairPlanSingleDataApiInterface): RepairPlanSingleDataInterface {
   // 处理从服务器端返回的天窗修计划数据
   const is_a_time = string_is_a_valid_time_range(v.plan_time);
-  console.log(is_a_time);
   let type;
   switch (v.type) {
     case 'Ⅱ':
@@ -71,6 +70,7 @@ export interface RepairHistoryCollectStoreInterface {
   end_date?: moment.Moment;
   repair_plan_data: { [id: string]: RepairPlanSingleDataInterface };
   repair_plan_and_history_sorted_by_date: RepairPlanAndHistoryDataSorted[];
+  repair_detail_data: { [id: string]: RepairHistoryDataDetailInterface };
   show_all_dates_on_dates_header: boolean;
   pending: {
     repair_plan: boolean;
@@ -113,9 +113,9 @@ export interface RepairHistorySingleDataInterface {
   plan_time: string;
   id?: string;
   used_number: string;
-  detail_data: RepairHistoryDataDetailInterface;
   cached: 0 | 1 | 2 | 3;
   // 0 未从服务器获得数据 1 已从服务器获得数据 2 未从服务器获得数据且已被手动修改 3 已从服务器获得数据且被手动修改
+  pending: boolean;
 }
 
 
@@ -281,8 +281,21 @@ export class UpdateSingleRepairHistoryDetailData implements Action {
 }
 
 
+export const UPDATE_GET_REPAIR_DETAIL_PENDING = '[repair-history-collect]UPDATE_GET_REPAIR_DETAIL_PENDING';
+
+// 更新天窗修实际查询的pending
+export class UpdateGetRepairDetailPending implements Action {
+  readonly type = UPDATE_GET_REPAIR_DETAIL_PENDING;
+
+  constructor(public payload: { id: string, value: boolean }) {
+
+  }
+}
+
 export type RepairHistoryCollectStoreActionType = SwitchOpenWhichSidebar
+  | UpdateGetRepairDetailPending // 复制此行到ActionType中,更新天窗修实际查询的pending action type
   | UpdateSingleRepairHistoryDetailData  // 复制此行到ActionType中
+  | UpdateGetRepairDetailPending  // 复制此行到导出的Action中,更新天窗修实际查询的pending actions
   | UpdateAllRepairPlanDataFromServer // 复制此行到ActionType中,从服务器的数据中更新数据，会对数据进行处理 action type
   | UpdateAllRepairHistoryDataFromServer // 复制此行到ActionType中,从服务器的数据中更新数据，会对数据进行处理 action type
   | UpdateRepairPlanData   // 复制此行到ActionType中
@@ -336,24 +349,32 @@ const default_state: RepairHistoryCollectStoreInterface = {
   dialog_settings: {
     which_dialog_open: null,
     dialog_id: null,
-  }
+  },
+  repair_detail_data: {},
 };
 
 
 export function reducer(state: RepairHistoryCollectStoreInterface = default_state,
                         action: RepairHistoryCollectStoreActionType): RepairHistoryCollectStoreInterface {
   switch (action.type) {
+
+    case UPDATE_GET_REPAIR_DETAIL_PENDING:
+      return {
+        ...state, repair_history_data: {
+          ...state.repair_history_data,
+          [action.payload.id]: {
+            ...state.repair_history_data[action.payload.id],
+            pending: action.payload.value
+          }
+        }
+      }; // 复制此两行到reducer中,更新天窗修实际查询的pending reducer
     case UPDATE_SINGLE_REPAIR_HISTORY_DETAIL_DATA:
-      const id = action.payload.id;
-      if (state.repair_history_data[id]) {
+      if (state.repair_history_data[action.payload.id]) {
         return {
-          ...state, repair_history_data: {
-            ...state.repair_history_data,
-            [id]: {
-              ...state.repair_history_data[id],
-              detail_data: action.payload.value,
-              cached: 1
-            }
+          ...state,
+          repair_detail_data: {
+            ...state.repair_detail_data,
+            [action.payload.id]: action.payload.value
           }
         };  // 复制此两行到reducer中
       } else {
@@ -525,8 +546,8 @@ export function reducer(state: RepairHistoryCollectStoreInterface = default_stat
             repair_department: v.repair_department,
             use_paper: v.use_paper,
             used_number: used_number,
-            detail_data: null,
-            cached: 0
+            cached: 0,
+            pending: false,
           };
         }
       );

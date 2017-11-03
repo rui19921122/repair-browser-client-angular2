@@ -1,4 +1,4 @@
-<div class="detail-card-collection"
+<div class="detail-card-collection with-cycle"
      style="padding: 0;
   box-shadow: 0 15px 15px -12px rgba(0, 0, 0, 0.56), 0 4px 20px 0px rgba(0, 0, 0, 0.12), 0 3px 10px -5px rgba(0, 0, 0, 0.2);
 "
@@ -14,40 +14,33 @@
           解析编号：{{history_data.used_number}}
         </div>
       </div>
-      <div fxLayout="column" fxLayoutAlign="center center" style="height: 100%;" class="card-content-area"
-           *ngIf="!history_data">
-        <div>
-          没有数据
-        </div>
-        <div>
-          点击右侧+号
-        </div>
-      </div>
-
     </div>
   </div>
   <div fxLayout="row">
     <div fxFlex="55">
-      <div fxLayout="column" fxLayoutAlign="center center" *ngIf="history_data">
+      <div fxLayout="column" fxLayoutAlign="center center" *ngIf="!detail_data">
         <div>
-          <span *ngIf="history_data.calc_time" class="card-time-area">
-          </span>
-          <span *ngIf="!history_data.calc_time" class="card-time-area card-warn">
+          <span class="card-time-area card-warn">
+            尚未获取
           </span>
         </div>
         <div>
-          <span *ngIf="history_data.calc_time" class="card-time-extra-text-area">
-          </span>
-          <span *ngIf="!history_data.calc_time" class="card-time-extra-text-area card-warn">
+          <span class="card-time-extra-text-area">
+            点击刷新按钮获取
           </span>
         </div>
       </div>
     </div>
     <div fxFlex="1">
       <div class="card-title">
-        <div *ngIf="history_data">
+        <div *ngIf="history_data?.use_paper" class="with-cycle">
           <p>
-            局
+            纸
+          </p>
+        </div>
+        <div *ngIf="!history_data?.use_paper">
+          <p>
+            电
           </p>
         </div>
         <div *ngIf="!history_data">
@@ -58,13 +51,16 @@
         </div>
       </div>
     </div>
-    <div fxFlex="25" class="card-title-button-group">
+    <div fxFlex="35" class="card-title-button-group">
       <mat-button-toggle-group>
         <button mat-icon-button (click)="open_change_dialog(plan_data.id)" matTooltip="修改">
           <i class="iconfont icon-xiugai"></i>
         </button>
         <button mat-icon-button (click)="open_change_dialog(plan_data.id)" matTooltip="删除！">
           <i class="iconfont icon-delete"></i>
+        </button>
+        <button mat-icon-button (click)="open_change_dialog(plan_data.id)" matTooltip="刷新">
+          <i class="iconfont icon-refresh"></i>
         </button>
       </mat-button-toggle-group>
     </div>

@@ -4,6 +4,7 @@
 @import "assets/font/UnidreamLED.css";
 @import "assets/font/MFYueHei_Noncommercial-Regular.css";
 @import "assets/font_eyg4l5qajjl6usor/iconfont.css";
+@import "assets/font_office/iconfont.css";
 
 body {
   margin: 0;
@@ -139,7 +140,7 @@ a, a:visited, a:focus, a:hover {
 .card-title > div {
   height: 120px;
   width: 120px;
-  border-radius: 60px;
+  border-radius: 50%;
   background-color: #673ab7;
   margin-top: -60px;
   box-shadow: 0 15px 15px -12px rgba(0, 0, 0, 0.56), 0 4px 20px 0px rgba(0, 0, 0, 0.12), 0 3px 10px -5px rgba(0, 0, 0, 0.2);

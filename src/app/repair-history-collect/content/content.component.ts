@@ -6,7 +6,7 @@ import {
   RepairHistoryCollectStoreActions as actions,
   RepairPlanSingleDataInterface,
   RepairHistorySingleDataInterface,
-  RepairPlanAndHistoryDataSorted, RepairHistoryCollectStoreActions
+  RepairPlanAndHistoryDataSorted, RepairHistoryCollectStoreActions, RepairHistoryDataDetailInterface
 } from '../repair-history-collect.store';
 import {RepairPlanSingleDataApiInterface} from '../../api';
 import {Observable} from 'rxjs/Observable';
@@ -30,6 +30,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   public $not_showed_dates_on_content: Observable<moment.Moment[]>;
   public $showed_date_on_content: Observable<moment.Moment>;
   public $only_show_one_date_on_content: Observable<boolean>;
+  public $repair_detail_data: Observable<{ [id: string]: RepairHistoryDataDetailInterface }>;
   @Input('height') height: number;
 
   constructor(public store: Store<AppState>,
@@ -44,6 +45,7 @@ export class ContentComponent implements OnInit, OnDestroy {
     this.$repair_plan_data = this.store.select(state => state.repair_history_collect.repair_plan_data);
     this.$not_showed_dates_on_content = this.store.select(state => state.repair_history_collect.content_settings.not_displayed_data);
     this.$showed_date_on_content = this.store.select(state => state.repair_history_collect.content_settings.displayed_data);
+    this.$repair_detail_data = this.store.select(state => state.repair_history_collect.repair_detail_data);
     this.$only_show_one_date_on_content = this.store.select(
       state => state.repair_history_collect.content_settings.only_show_on_day_on_content);
   }
