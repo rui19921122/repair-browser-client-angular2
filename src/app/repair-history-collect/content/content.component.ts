@@ -14,6 +14,7 @@ import * as moment from 'moment';
 import {Subject} from 'rxjs/Subject';
 import {Subscription} from 'rxjs/Subscription';
 import {Http} from '@angular/http';
+import {RepairHistoryDetailApiService} from '../../services/repair-history-detail-api.service';
 
 
 @Component({
@@ -34,6 +35,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   @Input('height') height: number;
 
   constructor(public store: Store<AppState>,
+              public repair_history_detail_service: RepairHistoryDetailApiService,
               public http: Http) {
   }
 
@@ -80,44 +82,38 @@ export class ContentComponent implements OnInit, OnDestroy {
   }
 
   public get_all_history_detail_data() {
-    this.$repair_history_data.subscribe((v: { [id: string]: RepairHistorySingleDataInterface }) => {
-      const subject = new Subject<RepairHistorySingleDataInterface>();
-      const list = Object.keys(v).filter(v1 => v[v1].cached === 0);
-
-      function* generate_next_value() {
-        for (const i of list) {
-          yield v[i];
-        }
+    let value;
+    this.$repair_history_data.take(1).subscribe(
+      (v: { [id: string]: RepairHistorySingleDataInterface }) => {
+        value = v;
       }
+    ).unsubscribe();
+    const subject = new Subject<RepairHistorySingleDataInterface>();
+    const list = Object.keys(value).filter(v1 => value[v1].cached === 0 && (!value[v1].use_paper));
 
-      const generate_next_value_list = generate_next_value();
+    function* generate_next_value() {
+      for (const i of list) {
+        yield value[i];
+      }
+    }
 
-      subject.subscribe(
-        data => {
-          const url = '/api/scrapy/history-detail/detail/' + data.inner_id;
-          this.http.get(url, {withCredentials: true}).subscribe(
-            response => {
-              const json = response.json();
-              this.store.dispatch(new RepairHistoryCollectStoreActions.UpdateSingleRepairHistoryDetailData(
-                {
-                  id: data.id,
-                  value: json
-                }
-              ));
-            }, () => {
-            },
-            () => {
-              const next = generate_next_value_list.next();
-              if (next.done) {
-                subject.complete();
-              } else {
-                subject.next(next.value);
-              }
+    const generate_next_value_list = generate_next_value();
+
+    subject.subscribe(
+      data => {
+        this.repair_history_detail_service.get_history_detail_by_id(
+          data
+        ).subscribe(() => {
+            const next = generate_next_value_list.next();
+            if (next.done) {
+              subject.complete();
+            } else {
+              subject.next(next.value);
             }
-          );
-        }
-      );
-      subject.next(generate_next_value_list.next().value);
-    });
+          }
+        );
+      }
+    );
+    subject.next(generate_next_value_list.next().value);
   }
 }

@@ -1,6 +1,7 @@
 <div class="detail-card-collection with-cycle"
+     [ngClass]="{'shining-border': history_data?.pending}"
      style="padding: 0;
-  box-shadow: 0 15px 15px -12px rgba(0, 0, 0, 0.56), 0 4px 20px 0px rgba(0, 0, 0, 0.12), 0 3px 10px -5px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 15px 15px -12px rgba(0, 0, 0, 0.56), 0 4px 20px 0px rgba(0, 0, 0, 0.12), 0 3px 10px -5px rgba(0, 0, 0, 0.2);
 "
 >
   <div style="background-color: #5677fc">
@@ -18,6 +19,18 @@
   </div>
   <div fxLayout="row">
     <div fxFlex="55">
+      <div fxLayout="column" fxLayoutAlign="center center" *ngIf="detail_data">
+        <div>
+          <span class="card-time-area">
+            {{detail_data.actual_start_time|moment: "HH:mm"}}-{{detail_data.actual_end_time|moment: "HH:mm"}}
+          </span>
+        </div>
+        <div>
+          <span class="card-time-extra-text-area">
+            {{detail_data.actual_end_time.diff(detail_data.actual_start_time,'minutes')}}分钟
+          </span>
+        </div>
+      </div>
       <div fxLayout="column" fxLayoutAlign="center center" *ngIf="!detail_data">
         <div>
           <span class="card-time-area card-warn">
@@ -54,13 +67,16 @@
     <div fxFlex="35" class="card-title-button-group">
       <mat-button-toggle-group>
         <button mat-icon-button (click)="open_change_dialog(plan_data.id)" matTooltip="修改">
-          <i class="iconfont icon-xiugai"></i>
+          <i class="iconfont icon-edit"></i>
         </button>
         <button mat-icon-button (click)="open_change_dialog(plan_data.id)" matTooltip="删除！">
           <i class="iconfont icon-delete"></i>
         </button>
-        <button mat-icon-button (click)="open_change_dialog(plan_data.id)" matTooltip="刷新">
-          <i class="iconfont icon-refresh iconfont-loading"></i>
+        <button mat-icon-button
+                (click)="get_history_detail(history_data)"
+                [disabled]="history_data?.pending"
+                matTooltip="刷新">
+          <i class="iconfont icon-refresh"></i>
         </button>
       </mat-button-toggle-group>
     </div>

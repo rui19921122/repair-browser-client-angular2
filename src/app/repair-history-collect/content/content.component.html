@@ -55,8 +55,8 @@
             </div>
             <div fxFlex="40">
               <app-repair-history-detail-card
-                [history_data]="($repair_history_data|async)[plan_date.history_number_id]"
-                [detail_data]="($repair_detail_data|async)[plan_date]"
+                [history_data_observable]="$repair_history_data|getChildObjectInObjectById: plan_date.history_number_id"
+                [detail_data_observable]="$repair_detail_data|getChildObjectInObjectById: plan_date.history_number_id"
               >
               </app-repair-history-detail-card>
             </div>
@@ -67,13 +67,12 @@
               <app-repair-plan-detail-card
                 [history_data_id]="($repair_history_data|async)[plan_date].id"
               >
-
-
               </app-repair-plan-detail-card>
             </div>
             <div fxFlex="40">
-              <app-repair-history-detail-card [history_data]="($repair_history_data|async)[plan_date]"
-                                              [single_dog_card]="true">
+              <app-repair-history-detail-card
+                [history_data_observable]="$repair_history_data| getChildObjectInObjectById: plan_date.id"
+                [single_dog_card]="true">
               </app-repair-history-detail-card>
             </div>
           </div>

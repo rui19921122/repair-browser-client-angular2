@@ -94,8 +94,8 @@ export interface RepairHistoryCollectStoreInterface {
 export interface RepairHistoryDataDetailInterface {
   update_time: moment.Moment;
   actual_start_time: moment.Moment | null;
-  actual_end_time: string | null;
-  actual_start_number: moment.Moment | null;
+  actual_end_time: moment.Moment | null;
+  actual_start_number: string | null;
   actual_end_number: string | null;
   actual_watcher: string; // 把关人
   canceled: boolean;
@@ -292,10 +292,10 @@ export class UpdateGetRepairDetailPending implements Action {
   }
 }
 
+
 export type RepairHistoryCollectStoreActionType = SwitchOpenWhichSidebar
   | UpdateGetRepairDetailPending // 复制此行到ActionType中,更新天窗修实际查询的pending action type
   | UpdateSingleRepairHistoryDetailData  // 复制此行到ActionType中
-  | UpdateGetRepairDetailPending  // 复制此行到导出的Action中,更新天窗修实际查询的pending actions
   | UpdateAllRepairPlanDataFromServer // 复制此行到ActionType中,从服务器的数据中更新数据，会对数据进行处理 action type
   | UpdateAllRepairHistoryDataFromServer // 复制此行到ActionType中,从服务器的数据中更新数据，会对数据进行处理 action type
   | UpdateRepairPlanData   // 复制此行到ActionType中
@@ -323,6 +323,7 @@ export const RepairHistoryCollectStoreActions = {
   SwitchGetHistoryDataPending, // 复制此行到导出的Action中
   SwitchOpenWhichSidebar,
   ChangeSelectedDate,
+  UpdateGetRepairDetailPending,  // 复制此行到导出的Action中,更新天窗修实际查询的pending actions
   SwitchShowAllDatesOnDatesHeader,  // 复制此行到导出的Action中
   UpdateAllRepairHistoryDataFromServer,  // 复制此行到导出的Action中,从服务器的数据中更新数据，会对数据进行处理 actions
   AddOrRemoveDateToOpenedDatePanel,  // 复制此行到导出的Action中
