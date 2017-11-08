@@ -16,7 +16,6 @@ export function generate_a_id(values: { date?: string | moment.Moment | Date, nu
 const re = /^(\d{1,2}:\d{1,2})\-(\d{1,2}:\d{1,2})/;
 
 export function string_is_a_valid_time_range(string: string) {
-  console.log(string);
   return string.match(re);
 }
 

@@ -9,6 +9,18 @@ import {
 import {Observable} from 'rxjs/Observable';
 import * as moment from 'moment';
 
+export interface RepairHistoryDetailAPIInterface {
+  actual_host_person: string;
+  actual_start_time: string;
+  publish_start_number: string;
+  number: string;
+  actual_end_time: string;
+  effect_area: string;
+  repair_content: string;
+  actual_end_number: string;
+  publish_start_time: string;
+}
+
 @Injectable()
 export class RepairHistoryDetailApiService {
 
@@ -25,15 +37,18 @@ export class RepairHistoryDetailApiService {
     sub.connect();
     sub.subscribe(
       response => {
-        const json = response.json();
-        console.log(json);
+        const json: RepairHistoryDetailAPIInterface = response.json();
         this.store.dispatch(new actions.UpdateSingleRepairHistoryDetailData(
           {
             id: value.id,
             value: {
-              ...json,
-              actual_end_time: moment(json['actual_end_time'], 'HH:mm'),
-              actual_start_time: moment(json['actual_start_time'], 'HH:mm')
+              actual_end_time: moment(json.actual_end_time, 'HH:mm'),
+              actual_start_time: moment(json.actual_start_time, 'HH:mm'),
+              actual_start_number: json.publish_start_number,
+              actual_end_number: json.actual_end_number,
+              actual_watcher: json.actual_host_person,
+              update_time: moment(),
+              canceled: false
             }
           }
         ));

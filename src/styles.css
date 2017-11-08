@@ -179,15 +179,3 @@ a, a:visited, a:focus, a:hover {
   font-size: 25px;
 }
 
-.iconfont-loading {
-  animation: rotation 2s infinite linear;
-}
-
-@keyframes rotation {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(359deg);
-  }
-}

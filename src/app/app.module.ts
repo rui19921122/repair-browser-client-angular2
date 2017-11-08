@@ -53,9 +53,10 @@ import {GetDataByIdPipe} from './get-data-by-id.pipe';
 import {SplitLongSentenceWithColon} from './split-long-sentence-with-colon.pipe';
 import {MapMomentToRepairPlanAndHistoryDataPipe} from './map-moment-to-repair-plan-and-history-data.pipe';
 
-import {RepairPlanDialogComponent} from './repair-history-collect/repair-plan-dialog/repair-plan-dialog.component';
+import {RepairPlanEditDialogComponent} from './repair-history-collect/repair-plan-edit-dialog/repair-plan-dialog.component';
 import {RepairHistoryDetailApiService} from './services/repair-history-detail-api.service';
 import {GetChildObjectInObjectByIdPipe} from './get-child-object-in-object-by-id.pipe';
+import { RepairHistoryEditDialogComponent } from './repair-history-collect/repair-history-edit-dialog/repair-history-edit-dialog.component';
 
 export const routes: Routes = [
   {path: '', redirectTo: 'home', pathMatch: 'full'},
@@ -81,9 +82,10 @@ export const routes: Routes = [
     InTheMomentListPipe,
     GetDataByIdPipe,
     MapMomentToRepairPlanAndHistoryDataPipe,
-    RepairPlanDialogComponent,
+    RepairPlanEditDialogComponent,
     SplitLongSentenceWithColon,
     GetChildObjectInObjectByIdPipe,
+    RepairHistoryEditDialogComponent,
   ],
   imports: [
     FormsModule,
@@ -126,7 +128,8 @@ export const routes: Routes = [
   bootstrap: [AppComponent],
   entryComponents: [
     LoginFormComponent,
-    RepairPlanDialogComponent,
+    RepairPlanEditDialogComponent,
+    RepairHistoryEditDialogComponent,
   ]
 })
 export class AppModule {

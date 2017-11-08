@@ -1,8 +1,14 @@
 import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {RepairHistoryDataDetailInterface, RepairHistorySingleDataInterface} from '../repair-history-collect.store';
+import {
+  RepairHistoryCollectStoreActions as actions,
+  RepairHistoryDataDetailInterface,
+  RepairHistorySingleDataInterface
+} from '../repair-history-collect.store';
 import {RepairHistoryDetailApiService} from '../../services/repair-history-detail-api.service';
 import {Observable} from 'rxjs/Observable';
 import {Subscription} from 'rxjs/Subscription';
+import {AppState} from '../../store';
+import {Store} from '@ngrx/store';
 
 @Component({
   selector: 'app-repair-history-detail-card',
@@ -19,7 +25,8 @@ export class RepairHistoryDetailCardComponent implements OnInit, OnDestroy {
   public history_data_un: Subscription;
   public detail_data_un: Subscription;
 
-  constructor(public service: RepairHistoryDetailApiService) {
+  constructor(public service: RepairHistoryDetailApiService,
+              public store: Store<AppState>) {
   }
 
   ngOnDestroy() {
@@ -40,6 +47,10 @@ export class RepairHistoryDetailCardComponent implements OnInit, OnDestroy {
 
   public get_history_detail(value: RepairHistorySingleDataInterface) {
     this.service.get_history_detail_by_id(value);
+  }
+
+  public open_change_dialog(id: string) {
+    this.store.dispatch(new actions.OpenOrCloseADialog({dialog_type: 'repair_history', dialog_id: id}));
   }
 
 }

@@ -28,7 +28,7 @@ function convert_h_mm_time_format_to_hh_mm_time_format(string: string) {
   templateUrl: './repair-plan-dialog.component.html',
   styleUrls: ['./repair-plan-dialog.component.css'],
 })
-export class RepairPlanDialogComponent implements OnInit, OnDestroy {
+export class RepairPlanEditDialogComponent implements OnInit, OnDestroy {
   $plan_data: Observable<{ [id: string]: RepairPlanSingleDataInterface }>;
   $dialog_plan_number: Observable<string>;
   origin_data: RepairPlanSingleDataInterface = null;
