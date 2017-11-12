@@ -6,13 +6,14 @@ import {Subject} from 'rxjs/Subject';
 import {SystemUserInterface} from './api';
 import {Selector, Store, Action, State} from '@ngrx/store';
 import {AppState} from './store';
+import {HttpClient} from '@angular/common/http';
 
 @Injectable()
 export class UserService {
   public login_end: Subject<boolean> = new Subject();
   public user: UserStoreInterface;
 
-  constructor(public http: Http, public snackBar: MatSnackBar, public store: Store<AppState>) {
+  constructor(public http: HttpClient, public snackBar: MatSnackBar, public store: Store<AppState>) {
     this.store.select('user').subscribe(v => this.user = v);
     this.login_end.subscribe(() => {
       this.store.dispatch(new SwitchLoginPending(false));
@@ -22,9 +23,9 @@ export class UserService {
 
   public get_login_status() {
     this.store.dispatch(new SwitchLoginPending(true));
-    this.http.get('/api/system-user/system-user/').subscribe(v => {
+    this.http.get('/api/system-user/system-user/').subscribe((v: SystemUserInterface) => {
       this.login_end.next(true);
-      const json: SystemUserInterface = v.json();
+      const json: SystemUserInterface = v;
       this.store.dispatch(new UpdateUserName({username: json.username, department: json.department}));
     }, () => {
       this.login_end.next(true);
@@ -44,7 +45,7 @@ export class UserService {
       },
       {withCredentials: true}
     ).subscribe(v => {
-      const json = v.json();
+      const json = v;
       this.store.dispatch(new UpdateUserName({username: json['username'], department: json['department']}));
       this.login_end.next(true);
     }, (err) => {

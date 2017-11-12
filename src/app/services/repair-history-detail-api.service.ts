@@ -8,6 +8,7 @@ import {
 } from '../repair-history-collect/repair-history-collect.store';
 import {Observable} from 'rxjs/Observable';
 import * as moment from 'moment';
+import {HttpClient} from '@angular/common/http';
 
 export interface RepairHistoryDetailAPIInterface {
   actual_host_person: string;
@@ -24,7 +25,7 @@ export interface RepairHistoryDetailAPIInterface {
 @Injectable()
 export class RepairHistoryDetailApiService {
 
-  constructor(public http: Http, public store: Store<AppState>) {
+  constructor(public http: HttpClient, public store: Store<AppState>) {
   }
 
   public get_history_detail_by_id(value: RepairHistorySingleDataInterface) {
@@ -36,8 +37,8 @@ export class RepairHistoryDetailApiService {
     const sub = this.http.get(url, {withCredentials: true}).delay(5000).publish();
     sub.connect();
     sub.subscribe(
-      response => {
-        const json: RepairHistoryDetailAPIInterface = response.json();
+      (response: RepairHistoryDetailAPIInterface) => {
+        const json: RepairHistoryDetailAPIInterface = response;
         this.store.dispatch(new actions.UpdateSingleRepairHistoryDetailData(
           {
             id: value.id,

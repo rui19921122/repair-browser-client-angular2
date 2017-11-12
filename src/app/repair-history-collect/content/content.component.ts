@@ -15,6 +15,7 @@ import {Subject} from 'rxjs/Subject';
 import {Subscription} from 'rxjs/Subscription';
 import {Http} from '@angular/http';
 import {RepairHistoryDetailApiService} from '../../services/repair-history-detail-api.service';
+import {HttpClient} from '@angular/common/http';
 
 
 @Component({
@@ -36,7 +37,7 @@ export class ContentComponent implements OnInit, OnDestroy {
 
   constructor(public store: Store<AppState>,
               public repair_history_detail_service: RepairHistoryDetailApiService,
-              public http: Http) {
+              public http: HttpClient) {
   }
 
   ngOnInit() {

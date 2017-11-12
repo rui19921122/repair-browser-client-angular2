@@ -8,19 +8,18 @@ import {
 } from './repair-history-collect.store';
 import {MatDialog, MatDialogRef, MatSnackBar} from '@angular/material';
 import * as moment from 'moment';
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs/Rx';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {AppState} from '../store';
 import {Store} from '@ngrx/store';
-import {Http} from '@angular/http';
 import {RepairHistoryDataApiInterface, RepairHistoryDataSingleApiInterface, RepairPlanApi} from '../api';
 import {Subject} from 'rxjs/Subject';
 import {Subscription} from 'rxjs/Subscription';
 import {RepairPlanEditDialogComponent} from './repair-plan-edit-dialog/repair-plan-dialog.component';
 import {dialogConfig} from '../dialog-config';
 import {mock_history_data, mock_repair_data} from './mock-data';
-import {sort_data_by_date, add_a_value_to_sorted_object, generate_a_id, string_is_a_valid_time_range} from '../util_func';
 import {RepairHistoryEditDialogComponent} from './repair-history-edit-dialog/repair-history-edit-dialog.component';
+import {HttpClient} from '@angular/common/http';
 
 class ButtonType {
   text: string;
@@ -55,17 +54,18 @@ export class RepairHistoryCollectComponent implements OnInit, AfterViewInit, OnD
   public repair_plan_data_unsubscribe: Subscription;
   public $repair_history_data: Observable<{ [id: string]: RepairHistorySingleDataInterface }>;
 
-  constructor(public http: Http,
+  constructor(public http: HttpClient,
               public store: Store<AppState>,
-              public ng_change: ChangeDetectorRef,
               public snack_bar: MatSnackBar,
               public dialog: MatDialog,
               fb: FormBuilder) {
     // 对话框相关
+    console.log(this.store);
     this.$open_or_close_plan_data_dialog = this.store.select(state => state.repair_history_collect.dialog_settings.which_dialog_open);
     this.$plan_data_dialog_number = this.store.select(state => state.repair_history_collect.dialog_settings.dialog_id);
     this.$repair_plan_data = this.store.select(state => state.repair_history_collect.repair_plan_data);
     this.$repair_history_data = this.store.select(state => state.repair_history_collect.repair_history_data);
+    console.log(this.$repair_plan_data);
     this.repair_plan_data_unsubscribe = this.$repair_plan_data.merge(this.$repair_history_data).subscribe(value => {
       this.store.dispatch(new RepairHistoryCollectStoreActions.MapPlanAndHistoryNumber());
     });
@@ -100,8 +100,8 @@ export class RepairHistoryCollectComponent implements OnInit, AfterViewInit, OnD
           const url = `/api/scrapy/plan/plan/?start_date` +
             `=${state.start_date.format('YYYY-MM-DD')}&end_date=${state.end_date.format('YYYY-MM-DD')}`;
           this.store.dispatch(new RepairHistoryCollectStoreActions.SwitchPendingRepairPlan(true));
-          this.http.get(url).subscribe(v => {
-            let json: RepairPlanApi = v.json();
+          this.http.get(url).subscribe((v: RepairPlanApi) => {
+            let json = v;
             // 模拟数据
             json = JSON.parse(mock_repair_data);
             this.store.dispatch(new RepairHistoryCollectStoreActions.UpdateAllRepairPlanDataFromServer({data: json.data}));
@@ -119,8 +119,8 @@ export class RepairHistoryCollectComponent implements OnInit, AfterViewInit, OnD
               `=${state.start_date.format('YYYYMMDD')}&end=${state.end_date.format('YYYYMMDD')}`;
             this.http.get(url).do(() => this.store.dispatch(new RepairHistoryCollectStoreActions.SwitchPendingRepairPlan(true)))
               .subscribe(
-                v => {
-                  let json: RepairHistoryDataApiInterface = v.json();
+                (v: RepairHistoryDataApiInterface) => {
+                  let json: RepairHistoryDataApiInterface = v;
                   json = JSON.parse(mock_history_data);
                   // 模拟数据
                   this.store.dispatch(new RepairHistoryCollectStoreActions.UpdateAllRepairHistoryDataFromServer(
@@ -235,8 +235,8 @@ export class RepairHistoryCollectComponent implements OnInit, AfterViewInit, OnD
         `=${state.start_date.format('YYYYMMDD')}&end=${state.end_date.format('YYYYMMDD')}`;
       this.http.get(url).do(() => this.store.dispatch(new RepairHistoryCollectStoreActions.SwitchPendingRepairPlan(true)))
         .subscribe(
-          v => {
-            const json: RepairPlanApi = v.json();
+          (v: RepairPlanApi) => {
+            const json: RepairPlanApi = v;
           },
           () => {
           },
