@@ -1,3 +1,20 @@
-<p>
-  repair-history-edit-dialog works!
-</p>
+<form [formGroup]="form_data">
+  <mat-form-field
+  >
+    <input type="text"
+           placeholder="编号"
+           matInput
+           formControlName="number"
+           spellcheck="false"
+    />
+  </mat-form-field>
+  <mat-form-field>
+    <input type="text"
+           placeholder="解析编号"
+           matInput
+           spellcheck="false"
+           [value]="get_resolved_number(form_data.controls['number'].value)"
+           [disabled]="true"
+    >
+  </mat-form-field>
+</form>
