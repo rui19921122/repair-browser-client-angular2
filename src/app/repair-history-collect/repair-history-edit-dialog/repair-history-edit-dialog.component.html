@@ -1,20 +1,57 @@
 <form [formGroup]="form_data">
-  <mat-form-field
-  >
-    <input type="text"
-           placeholder="编号"
-           matInput
-           formControlName="number"
-           spellcheck="false"
-    />
-  </mat-form-field>
-  <mat-form-field>
-    <input type="text"
-           placeholder="解析编号"
-           matInput
-           spellcheck="false"
-           [value]="get_resolved_number(form_data.controls['number'].value)"
-           [disabled]="true"
+  <div fxLayout="column" fxLayoutGap="20px">
+    <div fxLayout="row" fxLayoutAlign="start" fxLayoutGap="15px">
+      <mat-form-field
+      >
+        <input type="text"
+               [required]="true"
+               placeholder="编号"
+               matInput
+               formControlName="number"
+               spellcheck="false"
+        />
+      </mat-form-field>
+      <mat-form-field>
+        <input type="text"
+               placeholder="解析编号"
+               matInput
+               spellcheck="false"
+               [value]="get_resolved_number(form_data.controls['number'].value)"
+               [disabled]="true"
+        >
+      </mat-form-field>
+
+    </div>
+    <div>
+      <mat-checkbox [formControlName]="'canceled'">
+        是否被取消
+      </mat-checkbox>
+    </div>
+    <div *ngIf="!form_data.controls['canceled'].value"
+         fxLayout="row"
+         fxLayoutGap="15px"
     >
-  </mat-form-field>
+      <mat-form-field>
+        <input
+          type="time"
+          matInput
+          formControlName="start_time"
+          placeholder="开始时间">
+      </mat-form-field>
+      <mat-form-field>
+        <input
+          formControlName="end_time"
+          type="time"
+          matInput
+          placeholder="结束时间">
+      </mat-form-field>
+    </div>
+    <div>
+      form_data_is {{form_data.getRawValue()|json}}
+    </div>
+  </div>
 </form>
+<mat-dialog-actions>
+  <button mat-raised-button>保存</button>
+  <button mat-raised-button (click)="close()">取消</button>
+</mat-dialog-actions>

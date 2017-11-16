@@ -58,3 +58,26 @@ export interface RepairHistoryDataApiInterface {
 }
 
 
+export interface SaveDataToServerApiInterface {
+  data: [
+    {
+      date: Date,
+      contents: {
+        number: string;
+        repair_plan_data: {
+          start_time: Date;
+          end_time: Date;
+        };
+        repair_detail_data: {
+          canceled: boolean;
+          manual: boolean;
+          start_time: Date;
+          end_time: Date;
+          start_number: string;
+          end_number: string;
+          person: string;
+        }
+      }[]
+    }
+    ];
+}

@@ -63,3 +63,17 @@ export function add_a_value_to_sorted_object(date: moment.Moment | string | Date
     origin[index].repair_history_data_index_on_this_day.push(value);
   }
 }
+
+export function end_time_should_later_than_start_time(start: string, end: string): boolean {
+  if (start && end) {
+    const start_moment = moment().hours(Number(start.split(':')[0])).minutes(Number(start.split(':')[1]));
+    const end_moment = moment().hours(Number(end.split(':')[0])).minutes(Number(end.split(':')[1]));
+    return start_moment.isBefore(end_moment);
+  } else {
+    return false;
+  }
+}
+
+export function convert_h_mm_time_format_to_hh_mm_time_format(string: string) {
+  return string.length === 5 ? string : '0' + string;
+}

@@ -1,27 +1,12 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
-import {MatDialogRef} from '@angular/material';
+import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../store';
 import {RepairHistoryCollectStoreActions, RepairPlanSingleDataInterface} from './../repair-history-collect.store';
 import {Observable} from 'rxjs/Observable';
-import {Form, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Subscription} from 'rxjs/Subscription';
 import * as moment from 'moment';
-import {generate_a_id} from '../../util_func';
-
-function end_time_should_later_than_start_time(start: string, end: string): boolean {
-  if (start && end) {
-    const start_moment = moment().hours(Number(start.split(':')[0])).minutes(Number(start.split(':')[1]));
-    const end_moment = moment().hours(Number(end.split(':')[0])).minutes(Number(end.split(':')[1]));
-    return start_moment.isBefore(end_moment);
-  } else {
-    return false;
-  }
-}
-
-function convert_h_mm_time_format_to_hh_mm_time_format(string: string) {
-  return string.length === 5 ? string : '0' + string;
-}
+import {convert_h_mm_time_format_to_hh_mm_time_format, end_time_should_later_than_start_time, generate_a_id} from '../../util_func';
 
 @Component({
   selector: 'app-repair-plan-dialog',

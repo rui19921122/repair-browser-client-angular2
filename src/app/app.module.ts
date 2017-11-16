@@ -37,7 +37,7 @@ import {Store, StoreModule} from '@ngrx/store';
 import {HomeComponent} from './home/home.component';
 import {UserService} from './user.service';
 import {LoginFormComponent} from './header/login-form/login-form.component';
-import {HttpClientModule  } from '@angular/common/http';
+import {HttpClientModule} from '@angular/common/http';
 
 import {RepairHistoryCollectComponent} from './repair-history-collect/repair-history-collect.component';
 import {HashLocationStrategy, LocationStrategy} from '@angular/common';
@@ -57,7 +57,8 @@ import {MapMomentToRepairPlanAndHistoryDataPipe} from './map-moment-to-repair-pl
 import {RepairPlanEditDialogComponent} from './repair-history-collect/repair-plan-edit-dialog/repair-plan-dialog.component';
 import {RepairHistoryDetailApiService} from './services/repair-history-detail-api.service';
 import {GetChildObjectInObjectByIdPipe} from './get-child-object-in-object-by-id.pipe';
-import { RepairHistoryEditDialogComponent } from './repair-history-collect/repair-history-edit-dialog/repair-history-edit-dialog.component';
+import {RepairHistoryEditDialogComponent} from './repair-history-collect/repair-history-edit-dialog/repair-history-edit-dialog.component';
+import { RepairDataPostToServerService } from './services/repair-data-post-to-server.service';
 
 export const routes: Routes = [
   {path: '', redirectTo: 'home', pathMatch: 'full'},
@@ -123,6 +124,7 @@ export const routes: Routes = [
   providers: [
     UserService,
     RepairHistoryDetailApiService,
+    RepairDataPostToServerService,
     {provide: LocationStrategy, useClass: HashLocationStrategy},
     {provide: LOCALE_ID, useValue: 'zh-hans'}
   ],

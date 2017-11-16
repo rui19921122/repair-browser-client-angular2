@@ -21,9 +21,11 @@ export class RepairPlanDetailCardComponent implements OnInit {
   }
 
   open_change_dialog(id: string) {
-    this.store.dispatch(new RepairHistoryCollectStoreActions.OpenOrCloseADialog(
-      {dialog_type: 'repair_plan', dialog_id: id}
-    ));
+    setTimeout(() => {
+      this.store.dispatch(new RepairHistoryCollectStoreActions.OpenOrCloseADialog(
+        {dialog_type: 'repair_plan', dialog_id: id}
+      ));
+    }, 500);
   }
 
   create_repair_plan_from_history() {
