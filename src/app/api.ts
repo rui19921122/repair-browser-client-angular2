@@ -59,25 +59,32 @@ export interface RepairHistoryDataApiInterface {
 
 
 export interface SaveDataToServerApiInterface {
-  data: [
-    {
-      date: Date,
-      contents: {
-        number: string;
-        repair_plan_data: {
-          start_time: Date;
-          end_time: Date;
-        };
-        repair_detail_data: {
-          canceled: boolean;
-          manual: boolean;
-          start_time: Date;
-          end_time: Date;
-          start_number: string;
-          end_number: string;
-          person: string;
-        }
-      }[]
-    }
-    ];
+  data: {
+    date: Date,
+    contents: {
+      number: string;
+      plan_start_time: Date;
+      plan_end_time: Date;
+      canceled: boolean;
+      manual: boolean;
+      actual_start_time: Date;
+      actual_end_time: Date;
+      actual_start_number: string;
+      actual_end_number: string;
+      person: string;
+    }[]
+  }[];
 }
+
+export interface QueryDataConflictFromServerRequestApi {
+  data: {
+    date: string[]
+  };
+}
+
+export interface QueryDataConflictFromServerResponseApi {
+  data: {
+    date_post: { date: string; conflict: 'true' | 'false' }[];
+  };
+}
+

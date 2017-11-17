@@ -1,5 +1,6 @@
 import {RepairPlanAndHistoryDataSorted} from './repair-history-collect/repair-history-collect.store';
 import * as moment from 'moment';
+import * as _ from 'lodash';
 
 export function generate_a_id(values: { date?: string | moment.Moment | Date, number: string }): string {
   let date_string: string;
@@ -77,3 +78,20 @@ export function end_time_should_later_than_start_time(start: string, end: string
 export function convert_h_mm_time_format_to_hh_mm_time_format(string: string) {
   return string.length === 5 ? string : '0' + string;
 }
+
+export function get_csrf_token() {
+  const name = 'csrftoken';
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = _.trim(cookies[i]);
+      if (cookie.substring(0, name.length + 1) === (name + '=')) {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+}
+

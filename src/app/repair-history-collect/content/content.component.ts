@@ -16,6 +16,7 @@ import {Subscription} from 'rxjs/Subscription';
 import {Http} from '@angular/http';
 import {RepairHistoryDetailApiService} from '../../services/repair-history-detail-api.service';
 import {HttpClient} from '@angular/common/http';
+import {RepairDataPostToServerService} from '../../services/repair-data-post-to-server.service';
 
 
 @Component({
@@ -37,6 +38,7 @@ export class ContentComponent implements OnInit, OnDestroy {
 
   constructor(public store: Store<AppState>,
               public repair_history_detail_service: RepairHistoryDetailApiService,
+              public post_data_to_server_service: RepairDataPostToServerService,
               public http: HttpClient) {
   }
 
@@ -116,5 +118,9 @@ export class ContentComponent implements OnInit, OnDestroy {
       }
     );
     subject.next(generate_next_value_list.next().value);
+  }
+
+  post_data_to_server() {
+    this.post_data_to_server_service.post_data_to_services();
   }
 }
