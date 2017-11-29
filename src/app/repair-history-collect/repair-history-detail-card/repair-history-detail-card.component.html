@@ -6,7 +6,10 @@
 >
   <div style="background-color: #5677fc">
     <div style="width: 55%;float: left;height: 100%;">
-      <div fxLayout="column" fxLayoutAlign="center center" style="height: 100%;" class="card-content-area"
+      <div fxLayout="column"
+           fxLayoutAlign="center center"
+           style="height: 100%;"
+           class="card-content-area"
            *ngIf="history_data">
         <div>
           编号：{{history_data.number}}
@@ -77,6 +80,9 @@
                 [disabled]="history_data?.pending"
                 matTooltip="刷新">
           <i class="iconfont icon-refresh"></i>
+        </button>
+        <button mat-icon-button [matTooltip]="history_data | json" matTooltipPosition="right">
+          <i class="iconfont icon-delete"></i>
         </button>
       </mat-button-toggle-group>
     </div>

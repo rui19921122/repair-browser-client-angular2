@@ -48,17 +48,18 @@ import {DateCardComponent} from './repair-history-collect/repair-collect-date-ca
 import {ContentComponent} from './repair-history-collect/content/content.component';
 import {RepairPlanDetailCardComponent} from './repair-history-collect/repair-plan-detail-card/repair-plan-detail-card.component';
 import {RepairHistoryDetailCardComponent} from './repair-history-collect/repair-history-detail-card/repair-history-detail-card.component';
-import {MomentPipe} from './moment.pipe';
-import {InTheMomentListPipe} from './in-the-moment-list.pipe';
-import {GetDataByIdPipe} from './get-data-by-id.pipe';
-import {SplitLongSentenceWithColon} from './split-long-sentence-with-colon.pipe';
-import {MapMomentToRepairPlanAndHistoryDataPipe} from './map-moment-to-repair-plan-and-history-data.pipe';
+import {MomentPipe} from './pipes/moment.pipe';
+import {InTheMomentListPipe} from './pipes/in-the-moment-list.pipe';
+import {GetDataByIdPipe} from './pipes/get-data-by-id.pipe';
+import {SplitLongSentenceWithColon} from './pipes/split-long-sentence-with-colon.pipe';
+import {MapMomentToRepairPlanAndHistoryDataPipe} from './pipes/map-moment-to-repair-plan-and-history-data.pipe';
 
 import {RepairPlanEditDialogComponent} from './repair-history-collect/repair-plan-edit-dialog/repair-plan-dialog.component';
 import {RepairHistoryDetailApiService} from './services/repair-history-detail-api.service';
-import {GetChildObjectInObjectByIdPipe} from './get-child-object-in-object-by-id.pipe';
+import {GetChildObjectInObjectByIdPipe} from './pipes/get-child-object-in-object-by-id.pipe';
 import {RepairHistoryEditDialogComponent} from './repair-history-collect/repair-history-edit-dialog/repair-history-edit-dialog.component';
 import { RepairDataPostToServerService } from './services/repair-data-post-to-server.service';
+import { PrettyprintPipe } from './pipes/prettyprint.pipe';
 
 export const routes: Routes = [
   {path: '', redirectTo: 'home', pathMatch: 'full'},
@@ -88,6 +89,7 @@ export const routes: Routes = [
     SplitLongSentenceWithColon,
     GetChildObjectInObjectByIdPipe,
     RepairHistoryEditDialogComponent,
+    PrettyprintPipe,
   ],
   imports: [
     FormsModule,

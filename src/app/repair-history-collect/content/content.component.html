@@ -34,7 +34,7 @@
       </div>
       <div>
         <button class="left-slider-bar-button accent-color" mat-raised-button mat-icon-button
-                (click)="post_data_to_server()"
+                (click)="get_all_history_detail_data()"
         >
           <i class="iconfont icon-add"></i>
         </button>
@@ -53,6 +53,7 @@
           <h2 class="text-primary-color">{{detail.date.format("YYYY年MM月DD日")}}</h2>
         </div>
         <div fxLayout="column" fxLayoutGap="25px" class="detail-card-single-date">
+          <!--天窗修计划与天窗修历史可以对应的上的部分-->
           <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="25px"
                *ngFor="let plan_date of detail.repair_plan_data_index_on_this_day">
             <div fxFlex="40">
@@ -67,17 +68,17 @@
               </app-repair-history-detail-card>
             </div>
           </div>
+          <!--只有天窗修历史，没有天窗修计划的部门（即站控和垂停等）-->
           <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="25px"
-               *ngFor="let plan_date of detail.repair_history_data_not_map_in_plan">
+               *ngFor="let number of detail.repair_history_data_not_map_in_plan">
             <div fxFlex="40">
               <app-repair-plan-detail-card
-                [history_data_id]="($repair_history_data|async)[plan_date].id"
               >
               </app-repair-plan-detail-card>
             </div>
             <div fxFlex="40">
               <app-repair-history-detail-card
-                [history_data_observable]="$repair_history_data| getChildObjectInObjectById: plan_date.id"
+                [history_data_observable]="$repair_history_data| getChildObjectInObjectById: number"
                 [single_dog_card]="true">
               </app-repair-history-detail-card>
             </div>

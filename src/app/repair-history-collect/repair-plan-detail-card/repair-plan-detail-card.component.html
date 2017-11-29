@@ -72,6 +72,9 @@
         <button mat-icon-button (click)="open_change_dialog(plan_data.id)" matTooltip="删除！">
           <i class="iconfont icon-delete"></i>
         </button>
+        <button mat-icon-button [matTooltip]="plan_data | json" matTooltipPosition="right">
+          <i class="iconfont icon-delete"></i>
+        </button>
       </mat-button-toggle-group>
     </div>
   </div>
