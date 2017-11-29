@@ -3,9 +3,9 @@ import {Observable, Observer} from 'rxjs';
 import {MatSnackBar} from '@angular/material';
 import {HttpModule, Http} from '@angular/http';
 import {Subject} from 'rxjs/Subject';
-import {SystemUserInterface} from './api';
+import {SystemUserInterface} from '../api';
 import {Selector, Store, Action, State} from '@ngrx/store';
-import {AppState} from './store';
+import {AppState} from '../store';
 import {HttpClient} from '@angular/common/http';
 
 @Injectable()

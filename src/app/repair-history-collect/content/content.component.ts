@@ -85,6 +85,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   }
 
   public get_all_history_detail_data() {
+    // todo 天窗修历史记录目前顺序与用户展示的列表数据不同，需要重新排序，以符合用户感知
     let value;
     this.$repair_history_data.take(1).subscribe(
       (v: { [id: string]: RepairHistorySingleDataInterface }) => {

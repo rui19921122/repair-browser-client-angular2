@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, NgZone, OnDestroy, OnInit} from '@angular/core';
 import {
   RepairHistoryCollectStoreActions as actions,
   RepairHistoryDataDetailInterface,
@@ -26,6 +26,7 @@ export class RepairHistoryDetailCardComponent implements OnInit, OnDestroy {
   public detail_data_un: Subscription;
 
   constructor(public service: RepairHistoryDetailApiService,
+              public zone: NgZone,
               public store: Store<AppState>) {
   }
 
@@ -45,8 +46,13 @@ export class RepairHistoryDetailCardComponent implements OnInit, OnDestroy {
     }
   }
 
-  public get_history_detail(value: RepairHistorySingleDataInterface) {
-    this.service.get_history_detail_by_id(value);
+  public get_history_detail(value: RepairHistorySingleDataInterface, event: Event) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.zone.runOutsideAngular(
+      () => this.service.get_history_detail_by_id(value)
+    );
+    return false;
   }
 
   public open_change_dialog(id: string) {

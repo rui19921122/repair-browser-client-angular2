@@ -1,3 +1,4 @@
+// 此服务包含了组件中监听store变化的subscribe
 import {Injectable} from '@angular/core';
 import {
   SaveDataToServerApiInterface, QueryDataConflictFromServerRequestApi, QueryDataConflictFromServerResponseApi,

@@ -9,6 +9,7 @@ import {
 import {Observable} from 'rxjs/Observable';
 import * as moment from 'moment';
 import {HttpClient} from '@angular/common/http';
+import {string_is_a_valid_time, convert_a_HH_mm_like_string_to_a_moment} from '../util_func';
 
 export interface RepairHistoryDetailAPIInterface {
   actual_host_person: string;
@@ -39,12 +40,21 @@ export class RepairHistoryDetailApiService {
     sub.subscribe(
       (response: RepairHistoryDetailAPIInterface) => {
         const json: RepairHistoryDetailAPIInterface = response;
+        const date = value.date;
+        let actual_start_time: moment.Moment;
+        let actual_end_time: moment.Moment;
+        if (json.actual_start_time && string_is_a_valid_time(json.actual_start_time)) {
+          actual_start_time = convert_a_HH_mm_like_string_to_a_moment(json.actual_start_time, date);
+        }
+        if (json.actual_end_time && string_is_a_valid_time(json.actual_end_time)) {
+          actual_end_time = convert_a_HH_mm_like_string_to_a_moment(json.actual_end_time, date);
+        }
         this.store.dispatch(new actions.UpdateSingleRepairHistoryDetailData(
           {
             id: value.id,
             value: {
-              actual_end_time: moment(json.actual_end_time, 'HH:mm'),
-              actual_start_time: moment(json.actual_start_time, 'HH:mm'),
+              actual_end_time: actual_end_time,
+              actual_start_time: actual_start_time,
               actual_start_number: json.publish_start_number,
               actual_end_number: json.actual_end_number,
               actual_watcher: json.actual_host_person,

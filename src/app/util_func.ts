@@ -14,10 +14,15 @@ export function generate_a_id(values: { date?: string | moment.Moment | Date, nu
   return date_string + '-' + values.number;
 }
 
-const re = /^(\d{1,2}:\d{1,2})\-(\d{1,2}:\d{1,2})/;
+const re_range = /^(\d{1,2}:\d{1,2})\-(\d{1,2}:\d{1,2})/;
+const re_time = /^(\d{1,2}):(\d{1,2})/;
 
 export function string_is_a_valid_time_range(string: string) {
-  return string.match(re);
+  return string.match(re_range);
+}
+
+export function string_is_a_valid_time(string: string) {
+  return string.match(re_time);
 }
 
 export function sort_data_by_date(data: RepairPlanAndHistoryDataSorted[]): RepairPlanAndHistoryDataSorted[] {
@@ -93,5 +98,17 @@ export function get_csrf_token() {
     }
   }
   return cookieValue;
+}
+
+export function convert_a_HH_mm_like_string_to_a_moment(string: string | null, date: moment.Moment): moment.Moment {
+  if (string) {
+    const match = string_is_a_valid_time(string);
+    if (match) {
+      return moment(date).hour(Number(match[1])).minute(Number(match[2]));
+    } else {
+      return null;
+    }
+  }
+  return null;
 }
 

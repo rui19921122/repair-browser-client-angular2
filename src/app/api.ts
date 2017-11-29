@@ -57,22 +57,24 @@ export interface RepairHistoryDataApiInterface {
   data: RepairHistoryDataSingleApiInterface[];
 }
 
+export interface SaveDateToServerContentInterface {
+  number: string;
+  plan_start_time: moment.Moment;
+  plan_end_time: moment.Moment;
+  canceled: boolean;
+  manual: boolean;
+  actual_start_time: moment.Moment;
+  actual_end_time: moment.Moment;
+  actual_start_number: string;
+  actual_end_number: string;
+  person: string;
+
+}
 
 export interface SaveDataToServerApiInterface {
   data: {
-    date: Date,
-    contents: {
-      number: string;
-      plan_start_time: Date;
-      plan_end_time: Date;
-      canceled: boolean;
-      manual: boolean;
-      actual_start_time: Date;
-      actual_end_time: Date;
-      actual_start_number: string;
-      actual_end_number: string;
-      person: string;
-    }[]
+    date: moment.Moment,
+    contents: SaveDateToServerContentInterface[]
   }[];
 }
 

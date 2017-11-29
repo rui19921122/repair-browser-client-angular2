@@ -35,7 +35,7 @@ import {AppState, store} from './store';
 import {get__HMR__state} from '../hmr';
 import {Store, StoreModule} from '@ngrx/store';
 import {HomeComponent} from './home/home.component';
-import {UserService} from './user.service';
+import {UserService} from './services/user.service';
 import {LoginFormComponent} from './header/login-form/login-form.component';
 import {HttpClientModule} from '@angular/common/http';
 
@@ -60,6 +60,7 @@ import {GetChildObjectInObjectByIdPipe} from './pipes/get-child-object-in-object
 import {RepairHistoryEditDialogComponent} from './repair-history-collect/repair-history-edit-dialog/repair-history-edit-dialog.component';
 import { RepairDataPostToServerService } from './services/repair-data-post-to-server.service';
 import { PrettyprintPipe } from './pipes/prettyprint.pipe';
+import { DiffTimeWithStringFormatPipe } from './pipes/diff-time-with-string-format.pipe';
 
 export const routes: Routes = [
   {path: '', redirectTo: 'home', pathMatch: 'full'},
@@ -90,6 +91,7 @@ export const routes: Routes = [
     GetChildObjectInObjectByIdPipe,
     RepairHistoryEditDialogComponent,
     PrettyprintPipe,
+    DiffTimeWithStringFormatPipe,
   ],
   imports: [
     FormsModule,

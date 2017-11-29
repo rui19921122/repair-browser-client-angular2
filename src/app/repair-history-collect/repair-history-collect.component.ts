@@ -60,12 +60,10 @@ export class RepairHistoryCollectComponent implements OnInit, AfterViewInit, OnD
               public dialog: MatDialog,
               fb: FormBuilder) {
     // 对话框相关
-    console.log(this.store);
     this.$open_or_close_plan_data_dialog = this.store.select(state => state.repair_history_collect.dialog_settings.which_dialog_open);
     this.$plan_data_dialog_number = this.store.select(state => state.repair_history_collect.dialog_settings.dialog_id);
     this.$repair_plan_data = this.store.select(state => state.repair_history_collect.repair_plan_data);
     this.$repair_history_data = this.store.select(state => state.repair_history_collect.repair_history_data);
-    console.log(this.$repair_plan_data);
     this.repair_plan_data_unsubscribe = this.$repair_plan_data.merge(this.$repair_history_data).subscribe(value => {
       this.store.dispatch(new RepairHistoryCollectStoreActions.MapPlanAndHistoryNumber());
     });

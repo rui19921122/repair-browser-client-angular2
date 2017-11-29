@@ -89,6 +89,10 @@ export interface RepairHistoryCollectStoreInterface {
     which_dialog_open: 'repair_plan' | 'repair_history' | '';
     dialog_id: string | null;
   };
+  post_settings: {
+    // 在向服务器上传数据前使用，当此项为True时，代表用户已经知晓当前要上传的日期与服务器上已存储的日期有冲突，会被覆盖
+    user_checked_the_date_is_conflicted: boolean;
+  };
 }
 
 export interface RepairHistoryDataDetailInterface {
@@ -352,6 +356,7 @@ const default_state: RepairHistoryCollectStoreInterface = {
     dialog_id: null,
   },
   repair_detail_data: {},
+  post_settings: {user_checked_the_date_is_conflicted: false}
 };
 
 

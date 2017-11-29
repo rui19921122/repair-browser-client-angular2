@@ -30,7 +30,7 @@
         </div>
         <div>
           <span class="card-time-extra-text-area">
-            {{detail_data.actual_end_time.diff(detail_data.actual_start_time,'minutes')}}分钟
+            {{detail_data.actual_end_time|diffTimeWithStringFormat:detail_data.actual_start_time:'HH:mm'}}分钟
           </span>
         </div>
       </div>
@@ -76,7 +76,7 @@
           <i class="iconfont icon-delete"></i>
         </button>
         <button mat-icon-button
-                (click)="get_history_detail(history_data)"
+                (click)="get_history_detail(history_data,$event)"
                 [disabled]="history_data?.pending"
                 matTooltip="刷新">
           <i class="iconfont icon-refresh"></i>
