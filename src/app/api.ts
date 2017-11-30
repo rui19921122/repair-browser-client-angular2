@@ -73,7 +73,7 @@ export interface SaveDateToServerContentInterface {
 
 export interface SaveDataToServerApiInterface {
   data: {
-    date: moment.Moment,
+    date: string,
     contents: SaveDateToServerContentInterface[]
   }[];
 }

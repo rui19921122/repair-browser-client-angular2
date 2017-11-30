@@ -1,6 +1,8 @@
 import {Injectable} from '@angular/core';
 import {
-  SaveDataToServerApiInterface, QueryDataConflictFromServerRequestApi, QueryDataConflictFromServerResponseApi,
+  SaveDataToServerApiInterface,
+  QueryDataConflictFromServerRequestApi,
+  QueryDataConflictFromServerResponseApi,
   SaveDateToServerContentInterface
 } from '../api';
 import {HttpClient} from '@angular/common/http';
@@ -9,7 +11,10 @@ import {AppState} from '../store';
 import {RepairHistoryCollectStoreInterface} from '../repair-history-collect/repair-history-collect.store';
 import {Observable} from 'rxjs/Observable';
 
-import {get_csrf_token, convert_a_HH_mm_like_string_to_a_moment} from '../util_func';
+import {
+  get_csrf_token,
+  convert_a_HH_mm_like_string_to_a_moment
+} from '../util_func';
 import {MatSnackBar} from '@angular/material';
 
 @Injectable()
@@ -63,7 +68,7 @@ export class RepairDataPostToServerService {
               }
               post_data.data.push(
                 {
-                  date: date,
+                  date: date.format("YYYY-MM-DD"),
                   contents: this_date_data
                 }
               );

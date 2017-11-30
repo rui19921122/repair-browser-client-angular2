@@ -58,14 +58,17 @@ import {RepairPlanEditDialogComponent} from './repair-history-collect/repair-pla
 import {RepairHistoryDetailApiService} from './services/repair-history-detail-api.service';
 import {GetChildObjectInObjectByIdPipe} from './pipes/get-child-object-in-object-by-id.pipe';
 import {RepairHistoryEditDialogComponent} from './repair-history-collect/repair-history-edit-dialog/repair-history-edit-dialog.component';
-import { RepairDataPostToServerService } from './services/repair-data-post-to-server.service';
-import { PrettyprintPipe } from './pipes/prettyprint.pipe';
-import { DiffTimeWithStringFormatPipe } from './pipes/diff-time-with-string-format.pipe';
+import {RepairDataPostToServerService} from './services/repair-data-post-to-server.service';
+import {PrettyprintPipe} from './pipes/prettyprint.pipe';
+import {DiffTimeWithStringFormatPipe} from './pipes/diff-time-with-string-format.pipe';
+import {ReapirHistoryQueryComponent} from './reapir-history-query/reapir-history-query.component';
+import { HeaderBarComponent } from './reapir-history-query/header-bar/header-bar.component';
 
 export const routes: Routes = [
   {path: '', redirectTo: 'home', pathMatch: 'full'},
   {path: 'home', component: HomeComponent, pathMatch: 'full'},
   {path: 'repair-history-collect', component: RepairHistoryCollectComponent, pathMatch: 'full'},
+  {path: 'repair-history-query', component: ReapirHistoryQueryComponent, pathMatch: 'full'},
   {path: 'test', component: RepairHistoryDetailCardComponent, pathMatch: 'full'},
 ];
 
@@ -92,6 +95,8 @@ export const routes: Routes = [
     RepairHistoryEditDialogComponent,
     PrettyprintPipe,
     DiffTimeWithStringFormatPipe,
+    ReapirHistoryQueryComponent,
+    HeaderBarComponent,
   ],
   imports: [
     FormsModule,

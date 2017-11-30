@@ -64,7 +64,7 @@ export class RepairDataPostToServerService {
               }
               post_data.data.push(
                 {
-                  date: date,
+                  date: date.format('YYYY-MM-DD'),
                   contents: this_date_data
                 }
               );

@@ -1,0 +1,30 @@
+<div
+  fxLayout="row"
+  fxFlexAlign="start start"
+  fxLayoutGap="20px"
+>
+  <form>
+    <mat-form-field formGroup="header_bar_form">
+      <input matInput
+             [matDatepicker]="picker"
+             placeholder="开始日期">
+      <mat-datepicker-toggle matSuffix
+                             [for]="picker">
+      </mat-datepicker-toggle>
+      <mat-datepicker #picker>
+      </mat-datepicker>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput
+             [matDatepicker]="picker2"
+             placeholder="结束日期">
+      <mat-datepicker-toggle matSuffix
+                             [for]="picker2">
+      </mat-datepicker-toggle>
+      <mat-datepicker #picker2>
+      </mat-datepicker>
+    </mat-form-field>
+  </form>
+</div>
+<button mat-raised-button>查询</button>
+

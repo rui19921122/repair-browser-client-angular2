@@ -6,7 +6,7 @@
 
       <mat-menu #RepairMenu="matMenu" [overlapTrigger]="false">
         <a mat-menu-item [routerLink]="['repair-history-collect']">历史天窗修采集</a>
-        <button mat-menu-item>天窗修统计</button>
+        <a mat-menu-item [routerLink]="['repair-history-query']">历史天窗修统计</a>
       </mat-menu>
       <button mat-button [matMenuTriggerFor]="WorkMenu">施工模块</button>
       <mat-menu #WorkMenu="matMenu" [overlapTrigger]="false">
