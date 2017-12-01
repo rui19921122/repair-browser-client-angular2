@@ -1,15 +1,15 @@
 import { TestBed, inject } from '@angular/core/testing';
 
-import { RepairHistoryQueryConnectWithServerServicesService } from './repair-history-query-connect-with-server-services.service';
+import { RepairHistoryQueryConnectWithServerService } from './repair-history-query-connect-with-server-services.service';
 
-describe('RepairHistoryQueryConnectWithServerServicesService', () => {
+describe('RepairHistoryQueryConnectWithServerService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [RepairHistoryQueryConnectWithServerServicesService]
+      providers: [RepairHistoryQueryConnectWithServerService]
     });
   });
 
-  it('should be created', inject([RepairHistoryQueryConnectWithServerServicesService], (service: RepairHistoryQueryConnectWithServerServicesService) => {
+  it('should be created', inject([RepairHistoryQueryConnectWithServerService], (service: RepairHistoryQueryConnectWithServerService) => {
     expect(service).toBeTruthy();
   }));
 });

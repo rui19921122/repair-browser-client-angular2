@@ -3,8 +3,11 @@ import {Form, FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../store';
 import {Observable} from 'rxjs/Observable';
-import {RepairHistoryQueryStoreInterface} from '../store/repair-history-query.store';
-import {RepairHistoryQueryConnectWithServerServicesService} from '../../services/repair-history-query-connect-with-server-services.service';
+import {
+  RepairHistoryQueryStoreInterface,
+  RepairHistoryQueryStoreActions as actions
+} from '../store/repair-history-query.store';
+import {RepairHistoryQueryConnectWithServerService} from '../../services/repair-history-query-connect-with-server-services.service';
 
 @Component({
   selector: 'app-header-bar',
@@ -18,7 +21,7 @@ export class HeaderBarComponent implements OnInit {
   public repair_history_query_store: Observable<RepairHistoryQueryStoreInterface>;
 
   constructor(public store: Store<AppState>,
-              public api_service: RepairHistoryQueryConnectWithServerServicesService,) {
+              public api_service: RepairHistoryQueryConnectWithServerService,) {
     this.repair_history_query_store = this.store.select(state => state.repair_history_query);
     Observable.of(1).withLatestFrom(this.repair_history_query_store).subscribe(
       (value: [number, RepairHistoryQueryStoreInterface]) => {
@@ -30,15 +33,27 @@ export class HeaderBarComponent implements OnInit {
     this.date_bar_form = new FormGroup({});
     this.date_bar_form.addControl('start', this.date_bar_form_start_time);
     this.date_bar_form.addControl('end', this.date_bar_form_end_time);
+    this.date_bar_form.valueChanges.subscribe(
+      value => {
+        console.log(value);
+        this.store.dispatch(new actions.UpdateHeaderFormStartAndEndDate({
+          start: value['start'],
+          end: value['end']
+        }));
+      }
+    );
   }
 
   ngOnInit() {
   }
 
   public query() {
-    Observable.empty().withLatestFrom(this.repair_history_query_store).subscribe(
-      store => {
-        console.log(this.store);
+    Observable.of(null).withLatestFrom(this.repair_history_query_store).subscribe(
+      (store: [null, RepairHistoryQueryStoreInterface]) => {
+        this.api_service.get_repair_history_data_from_server(
+          store[1].start_time,
+          store[1].end_time,
+        );
       }
     );
   }

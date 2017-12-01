@@ -62,7 +62,8 @@ import {RepairDataPostToServerService} from './services/repair-data-post-to-serv
 import {PrettyprintPipe} from './pipes/prettyprint.pipe';
 import {DiffTimeWithStringFormatPipe} from './pipes/diff-time-with-string-format.pipe';
 import {ReapirHistoryQueryComponent} from './reapir-history-query/reapir-history-query.component';
-import { HeaderBarComponent } from './reapir-history-query/header-bar/header-bar.component';
+import {HeaderBarComponent} from './reapir-history-query/header-bar/header-bar.component';
+import {RepairHistoryQueryConnectWithServerService} from './services/repair-history-query-connect-with-server-services.service';
 
 export const routes: Routes = [
   {path: '', redirectTo: 'home', pathMatch: 'full'},
@@ -134,6 +135,7 @@ export const routes: Routes = [
     UserService,
     RepairHistoryDetailApiService,
     RepairDataPostToServerService,
+    RepairHistoryQueryConnectWithServerService,
     {provide: LocationStrategy, useClass: HashLocationStrategy},
     {provide: LOCALE_ID, useValue: 'zh-hans'}
   ],

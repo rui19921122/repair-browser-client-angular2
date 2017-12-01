@@ -13,8 +13,8 @@ export interface RepairHistoryQueryDetailDataInterface {
   number: string;
   plan_start_time: moment.Moment;
   actual_start_time: moment.Moment;
-  plan_end_time: string;
-  actual_end_time: string;
+  plan_end_time: moment.Moment;
+  actual_end_time: moment.Moment;
   canceled: boolean;
   manual: boolean;
   repair_type: string;
@@ -47,11 +47,25 @@ export class UpdateAllRepairData implements Action {
   }
 }
 
+export const UPDATE_HEADER_FORM_START_AND_END_DATE = '[repair-history-query]UPDATE_HEADER_FORM_START_AND_END_DATE';
 
-export type RepairHistoryQueryStoreActionType = UpdateAllRepairData; // 复制此行到ActionType中,更新store里的历史数据 action type
+// 更新选择的开始日期和结束日期
+export class UpdateHeaderFormStartAndEndDate implements Action {
+  readonly type = UPDATE_HEADER_FORM_START_AND_END_DATE;
+
+  constructor(public payload: { start: Date, end: Date }) {
+
+  }
+}
+
+
+export type RepairHistoryQueryStoreActionType = UpdateAllRepairData // 复制此行到ActionType中,更新store里的历史数据 action type
+  | UpdateHeaderFormStartAndEndDate // 复制此行到ActionType中,更新选择的开始日期和结束日期 action type
+  ;
 
 export const RepairHistoryQueryStoreActions = {
   UpdateAllRepairData,  // 复制此行到导出的Action中,更新store里的历史数据 actions
+  UpdateHeaderFormStartAndEndDate,  // 复制此行到导出的Action中,更新选择的开始日期和结束日期 actions
 };
 
 
@@ -68,6 +82,13 @@ export function reducer(state: RepairHistoryQueryStoreInterface = default_state,
     case
     UPDATE_ALL_REPAIR_DATA:
       return {...state, repair_data: action.payload.data}; // 复制此两行到reducer中,更新store里的历史数据 reducer
+    case
+    UPDATE_HEADER_FORM_START_AND_END_DATE:
+      return {
+        ...state,
+        start_time: moment(action.payload.start),
+        end_time: moment(action.payload.end)
+      }; // 复制此两行到reducer中,更新选择的开始日期和结束日期 reducer
     default:
       return state;
   }

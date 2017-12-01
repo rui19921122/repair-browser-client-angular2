@@ -2,16 +2,51 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Store} from '@ngrx/store';
 import {AppState} from '../store';
+import {RepairHistoryQueryGetDataListApi} from '../reapir-history-query/api';
+import {
+  RepairHistoryQueryDetailDataInterface,
+  RepairHistoryQueryStoreActions as actions,
+  RepairHistoryQueryStoreInterface, RepairHistoryQueryWholeDayDetailDataInterface
+} from '../reapir-history-query/store/repair-history-query.store';
 import * as moment from 'moment';
 
 @Injectable()
-export class RepairHistoryQueryConnectWithServerServicesService {
+export class RepairHistoryQueryConnectWithServerService {
 
   constructor(public httpClient: HttpClient,
               public store: Store<AppState>) {
   }
 
   public get_repair_history_data_from_server(start_time: moment.Moment, end_time: moment.Moment) {
+    const url = '/api/data/get-repair-data/';
+    this.httpClient.get(url, {
+      withCredentials: true, params: {
+        'start': start_time.format('YYYYMMDD'),
+        'end': end_time.format('YYYYMMDD'),
+      }
+    }).subscribe((json: RepairHistoryQueryGetDataListApi) => {
+      const data: RepairHistoryQueryWholeDayDetailDataInterface[] = [];
+      for (const i of json.data) {
+        const detail: RepairHistoryQueryDetailDataInterface[] = [];
+        for (const j of i.contents) {
+          detail.push({
+            ...j,
+            plan_start_time: j.plan_start_time ? moment(j.plan_start_time) : null,
+            plan_end_time: j.plan_end_time ? moment(j.plan_end_time) : null,
+            actual_start_time: j.actual_start_time ? moment(j.actual_start_time) : null,
+            actual_end_time: j.actual_end_time ? moment(j.actual_end_time) : null,
+            date: moment(j.date)
+          });
+        }
+        data.push(
+          {
+            date: i.date,
+            contents: detail
+          }
+        );
+      }
+      this.store.dispatch(new actions.UpdateAllRepairData({data: data}));
+    });
   }
 
 }
