@@ -1,0 +1,32 @@
+<div class="mat-elevation-z8">
+  <ngx-datatable [rows]="$detail_data|async"
+                 class="material"
+                 id="table"
+                 [headerHeight]="50"
+                 [footerHeight]="50"
+                 [rowHeight]="'auto'"
+  >
+    <ngx-datatable-column name="编号" prop="number">
+    </ngx-datatable-column>
+    <ngx-datatable-column name="计划时间">
+      <ng-template let-value="value" ngx-datatable-cell-template>
+        {{value.plan_start_time| renderShowedTimeWithGivenMoment: value.plan_end_time: 'time'}}
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="计划时长">
+      <ng-template let-value="value" ngx-datatable-cell-template>
+        {{value.plan_start_time| renderShowedTimeWithGivenMoment: value.plan_end_time:'long'}}
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="实际时间">
+      <ng-template let-value="value" ngx-datatable-cell-template>
+        {{value.actual_start_time| renderShowedTimeWithGivenMoment: value.actual_end_time:'time'}}
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="实际时长">
+      <ng-template let-value="value" ngx-datatable-cell-template>
+        {{value.actual_start_time| renderShowedTimeWithGivenMoment: value.actual_end_time:'long'}}
+      </ng-template>
+    </ngx-datatable-column>
+  </ngx-datatable>
+</div>
