@@ -5,6 +5,9 @@
 @import "assets/font/MFYueHei_Noncommercial-Regular.css";
 @import "assets/font_eyg4l5qajjl6usor/iconfont.css";
 @import "assets/font_office/iconfont.css";
+@import '~@swimlane/ngx-datatable/release/index.css';
+@import '~@swimlane/ngx-datatable/release/themes/material.css';
+@import '~@swimlane/ngx-datatable/release/assets/icons.css';
 
 body {
   margin: 0;

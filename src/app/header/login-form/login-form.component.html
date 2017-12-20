@@ -25,14 +25,14 @@
 </mat-dialog-content>
 <div class="button-area">
   <button mat-raised-button class="button" (click)="login(username.value,password.value)"
-          (load)="UserService.user.login_pending"
-          *ngIf="!UserService.user.login_pending"
+          (load)="user_service.user.login_pending"
+          *ngIf="!user_service.user.login_pending"
   >
     登陆
   </button>
   <button mat-raised-button class="button"
           [disabled]="true"
-          *ngIf="UserService.user.login_pending"
+          *ngIf="user_service.user.login_pending"
   >
     登陆中...
   </button>

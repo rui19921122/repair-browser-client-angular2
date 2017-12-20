@@ -65,10 +65,11 @@ export class RepairDataPostToServerService {
                     number: history_data.number
                   }
                 );
+                console.log(this_date_data);
               }
               post_data.data.push(
                 {
-                  date: date.format("YYYY-MM-DD"),
+                  date: date.format('YYYY-MM-DD'),
                   contents: this_date_data
                 }
               );

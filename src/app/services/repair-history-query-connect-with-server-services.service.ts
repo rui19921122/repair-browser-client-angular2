@@ -25,11 +25,12 @@ export class RepairHistoryQueryConnectWithServerService {
         'end': end_time.format('YYYYMMDD'),
       }
     }).subscribe((json: RepairHistoryQueryGetDataListApi) => {
-      const data: RepairHistoryQueryWholeDayDetailDataInterface[] = [];
+      const data_sorted: RepairHistoryQueryWholeDayDetailDataInterface[] = [];
+      const data_list: RepairHistoryQueryDetailDataInterface[] = [];
       for (const i of json.data) {
-        const detail: RepairHistoryQueryDetailDataInterface[] = [];
         for (const j of i.contents) {
-          detail.push({
+          console.log(j.plan_start_time);
+          data_list.push({
             ...j,
             plan_start_time: j.plan_start_time ? moment(j.plan_start_time) : null,
             plan_end_time: j.plan_end_time ? moment(j.plan_end_time) : null,
@@ -37,15 +38,14 @@ export class RepairHistoryQueryConnectWithServerService {
             actual_end_time: j.actual_end_time ? moment(j.actual_end_time) : null,
             date: moment(j.date)
           });
-        }
-        data.push(
-          {
+          const index = data_sorted.findIndex(value => value.date === i.date);
+          index >= 0 ? data_sorted[index].contents.push(data_list.length - 1) : data_sorted.push({
             date: i.date,
-            contents: detail
-          }
-        );
+            contents: [data_list.length - 1]
+          });
+        }
       }
-      this.store.dispatch(new actions.UpdateAllRepairData({data: data}));
+      this.store.dispatch(new actions.UpdateAllRepairData({data: {contents: data_list, sorted_by_date: data_sorted}}));
     });
   }
 

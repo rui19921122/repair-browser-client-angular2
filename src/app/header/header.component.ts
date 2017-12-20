@@ -22,7 +22,7 @@ export class HeaderComponent implements OnInit {
   public should_login_panel_open: Observable<boolean>;
 
 
-  constructor(public UserService: UserService,
+  constructor(public user_service: UserService,
               public dialog: MatDialog,
               public store: Store<AppState>) {
     this.login_pending = this.store.select(state => state.user.login_pending);
@@ -47,7 +47,7 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.UserService.get_login_status();
+    this.user_service.get_login_status();
   }
 
   public open() {

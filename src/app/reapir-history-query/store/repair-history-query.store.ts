@@ -26,12 +26,13 @@ export interface RepairHistoryQueryDetailDataInterface {
 }
 
 export interface RepairHistoryQueryWholeDayDetailDataInterface {
-  date: string;
-  contents: RepairHistoryQueryDetailDataInterface[]; // date string 的格式为YYYY-MM-DD
+  date: string; // date string 的格式为YYYY-MM-DD
+  contents: number[];
 }
 
 export interface RepairHistoryQueryStoreInterface {
-  repair_data: RepairHistoryQueryWholeDayDetailDataInterface[];
+  repair_data_list: RepairHistoryQueryDetailDataInterface[];
+  sorted_by_date: RepairHistoryQueryWholeDayDetailDataInterface[];
   start_time: moment.Moment;
   end_time: moment.Moment;
 }
@@ -42,7 +43,12 @@ export const UPDATE_ALL_REPAIR_DATA = '[repair-history-query]UPDATE_ALL_REPAIR_D
 export class UpdateAllRepairData implements Action {
   readonly type = UPDATE_ALL_REPAIR_DATA;
 
-  constructor(public payload: { data: RepairHistoryQueryWholeDayDetailDataInterface[] }) {
+  constructor(public payload: {
+    data: {
+      contents: RepairHistoryQueryDetailDataInterface[],
+      sorted_by_date: RepairHistoryQueryWholeDayDetailDataInterface[]
+    }
+  }) {
 
   }
 }
@@ -70,9 +76,10 @@ export const RepairHistoryQueryStoreActions = {
 
 
 const default_state: RepairHistoryQueryStoreInterface = {
-  repair_data: [],
+  repair_data_list: [],
   start_time: moment(),
-  end_time: moment()
+  end_time: moment(),
+  sorted_by_date: [],
 };
 
 
@@ -81,7 +88,11 @@ export function reducer(state: RepairHistoryQueryStoreInterface = default_state,
   switch (action.type) {
     case
     UPDATE_ALL_REPAIR_DATA:
-      return {...state, repair_data: action.payload.data}; // 复制此两行到reducer中,更新store里的历史数据 reducer
+      return {
+        ...state,
+        repair_data_list: action.payload.data.contents,
+        sorted_by_date: action.payload.data.sorted_by_date
+      }; // 复制此两行到reducer中,更新store里的历史数据 reducer
     case
     UPDATE_HEADER_FORM_START_AND_END_DATE:
       return {

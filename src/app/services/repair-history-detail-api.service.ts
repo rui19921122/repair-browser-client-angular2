@@ -35,7 +35,7 @@ export class RepairHistoryDetailApiService {
     }
     this.store.dispatch(new actions.UpdateGetRepairDetailPending({id: value.id, value: true}));
     const url = '/api/scrapy/history-detail/detail/' + value.inner_id;
-    const sub = this.http.get(url, {withCredentials: true}).delay(5000).publish();
+    const sub = this.http.get(url, {withCredentials: true}).delay(1000).publish();
     sub.connect();
     sub.subscribe(
       (response: RepairHistoryDetailAPIInterface) => {

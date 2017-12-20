@@ -29,6 +29,7 @@ import {
   MatToolbarModule,
   MatTooltipModule
 } from '@angular/material';
+import {NgxDatatableModule  } from '@swimlane/ngx-datatable';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {RouterModule, Routes} from '@angular/router';
 import {AppState, store} from './store';
@@ -64,6 +65,8 @@ import {DiffTimeWithStringFormatPipe} from './pipes/diff-time-with-string-format
 import {ReapirHistoryQueryComponent} from './reapir-history-query/reapir-history-query.component';
 import {HeaderBarComponent} from './reapir-history-query/header-bar/header-bar.component';
 import {RepairHistoryQueryConnectWithServerService} from './services/repair-history-query-connect-with-server-services.service';
+import {DetailTableListComponent} from './reapir-history-query/detail-table-list/detail-table-list.component';
+import { RenderShowedTimeWithGivenMomentPipe } from './pipes/render-showed-time-with-given-moment.pipe';
 
 export const routes: Routes = [
   {path: '', redirectTo: 'home', pathMatch: 'full'},
@@ -98,8 +101,11 @@ export const routes: Routes = [
     DiffTimeWithStringFormatPipe,
     ReapirHistoryQueryComponent,
     HeaderBarComponent,
+    DetailTableListComponent,
+    RenderShowedTimeWithGivenMomentPipe,
   ],
   imports: [
+    NgxDatatableModule,
     FormsModule,
     ReactiveFormsModule,
     MatSelectModule,
