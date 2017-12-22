@@ -35,7 +35,6 @@ export class HeaderBarComponent implements OnInit {
     this.date_bar_form.addControl('end', this.date_bar_form_end_time);
     this.date_bar_form.valueChanges.subscribe(
       value => {
-        console.log(value);
         this.store.dispatch(new actions.UpdateHeaderFormStartAndEndDate({
           start: value['start'],
           end: value['end']

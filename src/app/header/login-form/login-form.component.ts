@@ -15,7 +15,9 @@ export class LoginFormComponent implements OnInit {
   public filterUsernames: string[];
   public valueChange: Subject<string> = new Subject();
 
-  constructor(public UserService: UserService, public http: HttpClient, public store: Store<AppState>) {
+  constructor(public user_service: UserService,
+              public http: HttpClient,
+              public store: Store<AppState>) {
     this.valueChange.debounceTime(1000).filter(v => v !== '').subscribe(v => {
       this.http.get('/api/system-user/username-autocomplete/', {params: {value: v}})
         .subscribe(json => {
@@ -32,7 +34,7 @@ export class LoginFormComponent implements OnInit {
   }
 
   login(username: string, password: string) {
-    this.UserService.login(username, password);
+    this.user_service.login(username, password);
   }
 
   input_change(username: string) {

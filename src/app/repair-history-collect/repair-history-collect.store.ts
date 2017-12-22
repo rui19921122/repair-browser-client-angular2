@@ -1,13 +1,23 @@
 ///<reference path="../api.ts"/>
 import {Action} from '@ngrx/store';
 import * as moment from 'moment';
+import * as _ from 'lodash';
 import {
-  RepairHistoryDataApiInterface, RepairHistoryDataSingleApiInterface, RepairPlanContentInterface,
+  RepairHistoryDataApiInterface,
+  RepairHistoryDataSingleApiInterface,
+  RepairPlanContentInterface,
   RepairPlanSingleDataApiInterface
 } from '../api';
-import {sort_data_by_date, add_a_value_to_sorted_object, generate_a_id, string_is_a_valid_time_range} from '../util_func';
+import {
+  sort_data_by_date,
+  add_a_value_to_sorted_object,
+  generate_a_id,
+  string_is_a_valid_time_range, add_or_change_obj_from_array_by_id
+} from '../util_func';
 
-function convert_a_origin_repair_plan_data_to_easy_understand(v: RepairPlanSingleDataApiInterface): RepairPlanSingleDataInterface {
+function convert_a_origin_repair_plan_data_to_easy_understand(v: RepairPlanSingleDataApiInterface): {
+  id: string, value: RepairPlanSingleDataInterface
+} {
   // 处理从服务器端返回的天窗修计划数据
   const is_a_time = string_is_a_valid_time_range(v.plan_time);
   let type;
@@ -21,7 +31,8 @@ function convert_a_origin_repair_plan_data_to_easy_understand(v: RepairPlanSingl
     default:
       type = '站';
   }
-  return {
+  const id = generate_a_id(v);
+  const value: RepairPlanSingleDataInterface = {
     type: type,
     number: v.number,
     date: moment(v.post_date),
@@ -35,6 +46,9 @@ function convert_a_origin_repair_plan_data_to_easy_understand(v: RepairPlanSingl
     content: [],
     direction: v.direction,
     used_number: `${v.type === '站' ? 'Z' : (v.type === '垂' ? 'D' : 'J')}${v.number}`
+  };
+  return {
+    id, value
   };
 
 }
@@ -65,12 +79,12 @@ export interface RepairPlanAndHistoryDataSorted {
 }
 
 export interface RepairHistoryCollectStoreInterface {
-  repair_history_data: { [id: string]: RepairHistorySingleDataInterface };
   start_date?: moment.Moment;
   end_date?: moment.Moment;
-  repair_plan_data: { [id: string]: RepairPlanSingleDataInterface };
+  repair_plan_data: RepairPlanSingleDataInterface[];
   repair_plan_and_history_sorted_by_date: RepairPlanAndHistoryDataSorted[];
-  repair_detail_data: { [id: string]: RepairHistoryDataDetailInterface };
+  repair_detail_data: RepairHistoryDataDetailInterface[];
+  repair_history_data: RepairHistorySingleDataInterface[];
   show_all_dates_on_dates_header: boolean;
   pending: {
     repair_plan: boolean;
@@ -115,9 +129,9 @@ export interface RepairHistorySingleDataInterface {
   use_paper: boolean;
   apply_place: string;
   plan_time: string;
-  id?: string;
+  id: string;
   used_number: string;
-  cached: 0 | 1 | 2 | 3;
+  cached: number;
   // 0 未从服务器获得数据 1 已从服务器获得数据 2 未从服务器获得数据且已被手动修改 3 已从服务器获得数据且被手动修改
   pending: boolean;
 }
@@ -338,8 +352,8 @@ const default_state: RepairHistoryCollectStoreInterface = {
   repair_plan_and_history_sorted_by_date: [],
   start_date: null,
   end_date: null,
-  repair_plan_data: {},
-  repair_history_data: {},
+  repair_plan_data: [],
+  repair_history_data: [],
   pending: {repair_plan: false, repair_history: false},
   show_all_dates_on_dates_header: false,
   side_nav_settings: {
@@ -355,7 +369,7 @@ const default_state: RepairHistoryCollectStoreInterface = {
     which_dialog_open: null,
     dialog_id: null,
   },
-  repair_detail_data: {},
+  repair_detail_data: [],
   post_settings: {user_checked_the_date_is_conflicted: false}
 };
 
@@ -389,12 +403,10 @@ export function reducer(state: RepairHistoryCollectStoreInterface = default_stat
     case UPDATE_REPAIR_PLAN_DATA:
       // 更新单个天窗修计划内容
       const index: string = generate_a_id(action.payload);
+      // todo 未实现
       // 按照天窗修编号及日期索引
       return {
-        ...state, repair_plan_data: {
-          ...state.repair_plan_data,
-          index: action.payload
-        }
+        ...state
       };  // 复制此两行到reducer中
     case OPEN_OR_CLOSE_A_DIALOG:
       // 打开或者关闭修改天窗修计划对话框
@@ -441,6 +453,7 @@ export function reducer(state: RepairHistoryCollectStoreInterface = default_stat
       }; // 复制此两行到reducer中,切换是否仅在内容框中显示一个日期 reducer
     case
     MAP_PLAN_AND_HISTORY_NUMBER:
+      // 重构于2017年12月22日10点32分
       const date_array: RepairPlanAndHistoryDataSorted[] = [];
       for (const v of Object.keys(state.repair_plan_data)) {
         add_a_value_to_sorted_object(
@@ -503,8 +516,8 @@ export function reducer(state: RepairHistoryCollectStoreInterface = default_stat
       return {...state, side_nav_settings: {...state.side_nav_settings, opened_date_index: opened_date_panel}};  // 复制此两行到reducer中
     case
     UPDATE_REPAIR_HISTORY_DATA:
-      return {...state, repair_history_data: {}}; // 复制此两行到reducer中,更新天窗修历史实绩集合 reducer
-
+      // todo 未实现
+      return {...state}; // 复制此两行到reducer中,更新天窗修历史实绩集合 reducer
     case
     SWITCH_GET_HISTORY_DATA_PENDING:
       return {...state, pending: {...state.pending, repair_history: action.payload}}; // 复制此两行到reducer中
@@ -529,18 +542,18 @@ export function reducer(state: RepairHistoryCollectStoreInterface = default_stat
       return {...state, start_date: action.payload.start_date, end_date: action.payload.end_date};
     case UPDATE_ALL_REPAIR_PLAN_DATA_FROM_SERVER:
       // 处理服务器返回的数据
-      const new_repair_plan_list: { [id: string]: RepairPlanSingleDataInterface } = {};
+      let new_repair_plan_list: RepairPlanSingleDataInterface [] = [];
       action.payload.data.forEach(v => {
-        const data = convert_a_origin_repair_plan_data_to_easy_understand(v);
-        new_repair_plan_list[data.id] = data;
+        const data = convert_a_origin_repair_plan_data_to_easy_understand(v).value;
+        new_repair_plan_list = add_or_change_obj_from_array_by_id(new_repair_plan_list, data).objects;
       });
       return {...state, repair_plan_data: new_repair_plan_list}; // 复制此两行到reducer中,从服务器的数据中更新数据，会对数据进行处理 reducer
     case UPDATE_ALL_REPAIR_HISTORY_DATA_FROM_SERVER:
-      const new_repair_history_list: { [id: string]: RepairHistorySingleDataInterface } = {};
+      let new_repair_history_list: RepairHistorySingleDataInterface[] = [];
       action.payload.data.forEach(
         v => {
           const used_number = v.number.split('-').length === 2 ? v.number.split('-')[1] : null;
-          new_repair_history_list[generate_a_id(v)] = {
+          const data = {
             date: moment(v.date),
             number: v.number,
             plan_time: v.plan_time,
@@ -555,6 +568,7 @@ export function reducer(state: RepairHistoryCollectStoreInterface = default_stat
             cached: 0,
             pending: false,
           };
+          new_repair_history_list = add_or_change_obj_from_array_by_id(new_repair_history_list, data).objects;
         }
       );
       return {

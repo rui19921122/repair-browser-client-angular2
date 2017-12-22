@@ -2,20 +2,35 @@ import {RepairPlanAndHistoryDataSorted} from './repair-history-collect/repair-hi
 import * as moment from 'moment';
 import * as _ from 'lodash';
 
-export function generate_a_id(values: { date?: string | moment.Moment | Date, number: string }): string {
+export function generate_a_id(values: {
+  date?: string | Date | moment.Moment,
+  number: string,
+  post_date?: string | Date | moment.Moment
+}): string {
   let date_string: string;
-  if (typeof values.date === 'string') {
-    date_string = values.date;
-  } else if (moment.isMoment(values.date)) {
-    date_string = values.date.format('YYYY-MM-DD');
-  } else if (Date.isPrototypeOf(values.date)) {
-    date_string = moment(values.date).format('YYY-MM-DD');
+  const origin_type = values.date ? values.date : values.post_date;
+  if (typeof origin_type === 'string') {
+    const string_type = string_is_a_YYYYMMDD_or_YYYY_MM_DD_like_date(origin_type);
+    date_string = moment(origin_type, string_type).format('YYYYMMDD');
+  } else {
+    date_string = moment(origin_type).format('YYYYMMDD');
   }
   return date_string + '-' + values.number;
 }
 
-const re_range = /^(\d{1,2}:\d{1,2})\-(\d{1,2}:\d{1,2})/;
+const re_range = /^(\d{1,2}:\d{1,2})-(\d{1,2}:\d{1,2})/;
 const re_time = /^(\d{1,2}):(\d{1,2})/;
+const re_YYYYMMDD_like_date = /^\d{8}/;
+const re_YYYY_MM_DD_like_date = /^\d{4}-\d{2}-\d{2}/;
+
+export function string_is_a_YYYYMMDD_or_YYYY_MM_DD_like_date(string: string): 'YYYYMMDD' | 'YYYY-MM-DD' {
+  if (string.match(re_YYYYMMDD_like_date)) {
+    return 'YYYYMMDD';
+  } else if (string.match(re_YYYY_MM_DD_like_date)) {
+    return 'YYYY-MM-DD';
+  }
+  throw Error('string is not a valid date string');
+}
 
 export function string_is_a_valid_time_range(string: string) {
   return string.match(re_range);
@@ -112,3 +127,41 @@ export function convert_a_HH_mm_like_string_to_a_moment(string: string | null, d
   return null;
 }
 
+export function get_obj_from_array_by_id<T extends { id: string }>(array: T[], id: string): { obj: T, index: number } {
+  const index = array.findIndex(value => value.id === id);
+  if (index >= 0) {
+    return {obj: array[index], index: index};
+  }
+  throw Error(`寻找的id ${id}不存在`);
+}
+
+export function delete_obj_from_array_by_id<T extends { id: string }>(array: T[], id: string): {
+  objects: T[], method: 'deleted' | 'not-found'
+} {
+  // 返回更新后的数组
+  const index = array.findIndex(value => value.id === id);
+  if (index >= 0) {
+    array.splice(index, 1);
+    return {objects: array, method: 'deleted'};
+  } else {
+    return {objects: array, method: 'not-found'};
+  }
+}
+
+export function add_or_change_obj_from_array_by_id<T extends { id: string }>(origin: T[],
+                                                                             changed: T): { objects: T[], method: 'change' | 'add' } {
+  const index = origin.findIndex(value => value.id === changed.id);
+  if (index >= 0) {
+    origin.splice(index, 1, changed);
+    return {
+      method: 'change',
+      objects: origin
+    };
+  } else {
+    origin.push(changed);
+    return {
+      objects: origin,
+      method: 'add',
+    };
+  }
+}

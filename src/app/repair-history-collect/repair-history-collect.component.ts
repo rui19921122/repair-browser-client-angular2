@@ -50,9 +50,9 @@ export class RepairHistoryCollectComponent implements OnInit, AfterViewInit, OnD
   public $open_or_close_plan_data_dialog: Observable<string>;
   public $plan_data_dialog_number: Observable<string>;
   public open_or_close_plan_data_dialog_unsubscribe: Subscription;
-  public $repair_plan_data: Observable<{ [id: string]: RepairPlanSingleDataInterface }>;
+  public $repair_plan_data: Observable<RepairPlanSingleDataInterface[]>;
   public repair_plan_data_unsubscribe: Subscription;
-  public $repair_history_data: Observable<{ [id: string]: RepairHistorySingleDataInterface }>;
+  public $repair_history_data: Observable<RepairHistorySingleDataInterface[]>;
 
   constructor(public http: HttpClient,
               public store: Store<AppState>,
@@ -101,7 +101,7 @@ export class RepairHistoryCollectComponent implements OnInit, AfterViewInit, OnD
           this.http.get(url).subscribe((v: RepairPlanApi) => {
             let json = v;
             // 模拟数据
-            json = JSON.parse(mock_repair_data);
+            // json = JSON.parse(mock_repair_data);
             this.store.dispatch(new RepairHistoryCollectStoreActions.UpdateAllRepairPlanDataFromServer({data: json.data}));
             this.store.dispatch(new RepairHistoryCollectStoreActions.SwitchPendingRepairPlan(false));
           });
@@ -119,7 +119,7 @@ export class RepairHistoryCollectComponent implements OnInit, AfterViewInit, OnD
               .subscribe(
                 (v: RepairHistoryDataApiInterface) => {
                   let json: RepairHistoryDataApiInterface = v;
-                  json = JSON.parse(mock_history_data);
+                  // json = JSON.parse(mock_history_data);
                   // 模拟数据
                   this.store.dispatch(new RepairHistoryCollectStoreActions.UpdateAllRepairHistoryDataFromServer(
                     {data: json.data}

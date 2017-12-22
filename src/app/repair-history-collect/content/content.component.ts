@@ -28,12 +28,12 @@ import {RepairDataPostToServerService} from '../../services/repair-data-post-to-
 export class ContentComponent implements OnInit, OnDestroy {
   public $state: Observable<RepairHistoryCollectStoreInterface>;
   public $repair_plan_and_history_data: Observable<RepairPlanAndHistoryDataSorted[]>;
-  public $repair_plan_data: Observable<{ [id: string]: RepairPlanSingleDataInterface }>;
-  public $repair_history_data: Observable<{ [id: string]: RepairHistorySingleDataInterface }>;
+  public $repair_plan_data: Observable<RepairPlanSingleDataInterface[]>;
+  public $repair_history_data: Observable<RepairHistorySingleDataInterface[]>;
   public $not_showed_dates_on_content: Observable<moment.Moment[]>;
   public $showed_date_on_content: Observable<moment.Moment>;
   public $only_show_one_date_on_content: Observable<boolean>;
-  public $repair_detail_data: Observable<{ [id: string]: RepairHistoryDataDetailInterface }>;
+  public $repair_detail_data: Observable<RepairHistoryDataDetailInterface[]>;
   @Input('height') height: number;
 
   constructor(public store: Store<AppState>,
@@ -88,7 +88,7 @@ export class ContentComponent implements OnInit, OnDestroy {
     // todo 天窗修历史记录目前顺序与用户展示的列表数据不同，需要重新排序，以符合用户感知
     let value;
     this.$repair_history_data.take(1).subscribe(
-      (v: { [id: string]: RepairHistorySingleDataInterface }) => {
+      (v) => {
         value = v;
       }
     ).unsubscribe();

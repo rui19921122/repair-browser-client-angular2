@@ -14,7 +14,7 @@ import {convert_h_mm_time_format_to_hh_mm_time_format, end_time_should_later_tha
   styleUrls: ['./repair-plan-dialog.component.css'],
 })
 export class RepairPlanEditDialogComponent implements OnInit, OnDestroy {
-  $plan_data: Observable<{ [id: string]: RepairPlanSingleDataInterface }>;
+  $plan_data: Observable<RepairPlanSingleDataInterface[]>;
   $dialog_plan_number: Observable<string>;
   origin_data: RepairPlanSingleDataInterface = null;
   form: FormGroup;
@@ -93,14 +93,15 @@ export class RepairPlanEditDialogComponent implements OnInit, OnDestroy {
       }
     );
     this.number_un = this.form.valueChanges.withLatestFrom(this.$plan_data).subscribe(
-      (value: [{ date: Date, number: string }, { [id: string]: RepairPlanSingleDataInterface }]) => {
+      (value: [{ date: Date, number: string },
+        RepairPlanSingleDataInterface[]]) => {
         const _: string[] = [];
         if (this.origin_data) {
           if (value[0].toString() !== this.origin_data.number) {
-            _.push('您正在修改天窗修编号，请谨慎修改');
+            _.push(`您正在修改天窗修编号${this.origin_data.number}，请谨慎修改`);
             const new_id = generate_a_id(value[0]);
             if (value[1][new_id]) {
-              _.push('天窗修编号与当日其他的天窗修编号重合，您的修改将会覆盖重合的天窗修详情，请确认');
+              _.push(`天窗修编号${this.origin_data.number}与当日其他的天窗修编号重合，您的修改将会覆盖重合的天窗修详情，请确认`);
             }
           }
         } else {
