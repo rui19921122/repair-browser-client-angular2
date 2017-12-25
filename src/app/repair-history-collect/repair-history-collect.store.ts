@@ -10,7 +10,6 @@ import {
 } from '../api';
 import {
   sort_data_by_date,
-  add_a_value_to_sorted_object,
   generate_a_id,
   string_is_a_valid_time_range, add_or_change_obj_from_array_by_id
 } from '../util_func';
@@ -74,7 +73,6 @@ export interface RepairPlanSingleDataInterface {
 export interface RepairPlanAndHistoryDataSorted {
   date: moment.Moment;
   repair_plan_data_index_on_this_day: { plan_number_id: string, history_number_id: string | null, is_manual: boolean }[];
-  repair_history_data_index_on_this_day: string[];
   repair_history_data_not_map_in_plan: string[];
 }
 
@@ -82,7 +80,7 @@ export interface RepairHistoryCollectStoreInterface {
   start_date?: moment.Moment;
   end_date?: moment.Moment;
   repair_plan_data: RepairPlanSingleDataInterface[];
-  repair_plan_and_history_sorted_by_date: RepairPlanAndHistoryDataSorted[];
+  repair_plan_and_history_data_mapped: RepairPlanAndHistoryDataSorted[];
   repair_detail_data: RepairHistoryDataDetailInterface[];
   repair_history_data: RepairHistorySingleDataInterface[];
   show_all_dates_on_dates_header: boolean;
@@ -216,7 +214,7 @@ export class MapPlanAndHistoryNumber implements Action {
   // 此计算将根据state现有的plan和history状态构建排序后的数据，计算量可能较大，需要想办法优化的话就优化。
   readonly type = MAP_PLAN_AND_HISTORY_NUMBER;
 
-  constructor() {
+  constructor(public payload: { data: RepairHistoryCollectStoreInterface['repair_plan_and_history_data_mapped'] }) {
 
   }
 }
@@ -349,7 +347,7 @@ export const RepairHistoryCollectStoreActions = {
 
 
 const default_state: RepairHistoryCollectStoreInterface = {
-  repair_plan_and_history_sorted_by_date: [],
+  repair_plan_and_history_data_mapped: [],
   start_date: null,
   end_date: null,
   repair_plan_data: [],
@@ -454,49 +452,7 @@ export function reducer(state: RepairHistoryCollectStoreInterface = default_stat
     case
     MAP_PLAN_AND_HISTORY_NUMBER:
       // 重构于2017年12月22日10点32分
-      const date_array: RepairPlanAndHistoryDataSorted[] = [];
-      for (const v of Object.keys(state.repair_plan_data)) {
-        add_a_value_to_sorted_object(
-          state.repair_plan_data[v].date,
-          date_array,
-          state.repair_plan_data[v].id,
-          'plan');
-      }
-      for (const v of Object.keys(state.repair_history_data)) {
-        add_a_value_to_sorted_object(
-          state.repair_history_data[v].date,
-          date_array, state.repair_history_data[v].id,
-          'history');
-      }
-      // 提取所有需要的date对象
-      for (const single_date of date_array) {
-        const not_include_history_data: string[] = [];
-        for (const i of single_date.repair_plan_data_index_on_this_day) {
-          const plan_number = state.repair_plan_data[i.plan_number_id].used_number;
-          if (i.is_manual) {
-            // 对人工匹配的项目不进行干预
-          } else {
-            for (const history_id of single_date.repair_history_data_index_on_this_day) {
-              if (state.repair_history_data[history_id].used_number === plan_number) {
-                i.history_number_id = history_id;
-                break;
-              }
-            }
-          }
-        }
-        for (const i of single_date.repair_history_data_index_on_this_day) {
-          if (single_date.repair_plan_data_index_on_this_day.findIndex(value => value.history_number_id === i) < 0) {
-            not_include_history_data.push(i);
-          }
-        }
-        single_date.repair_history_data_not_map_in_plan = not_include_history_data;
-      }
-      if (state.content_settings.not_displayed_data) {
-
-      } else {
-
-      }
-      return {...state, repair_plan_and_history_sorted_by_date: date_array};  // 复制此两行到reducer中
+      return {...state, repair_plan_and_history_data_mapped: action.payload.data};
     case
     ADD_OR_REMOVE_DATE_TO_OPENED_DATE_PANEL:
       const opened_date_panel = [

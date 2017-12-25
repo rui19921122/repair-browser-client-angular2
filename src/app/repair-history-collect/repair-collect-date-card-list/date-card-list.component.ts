@@ -24,7 +24,7 @@ export class DateCardListComponent implements OnInit, OnDestroy {
 
     constructor(public mark: ChangeDetectorRef,
                 public store: Store<AppState>) {
-        this.dates_collection = this.store.select(state => state.repair_history_collect.repair_plan_and_history_sorted_by_date);
+        this.dates_collection = this.store.select(state => state.repair_history_collect.repair_plan_and_history_data_mapped);
         this.dates_opened_panel = this.store.select(state => state.repair_history_collect.side_nav_settings.opened_date_index);
         this.$only_show_one_date_on_content = this.store.select(
             state => state.repair_history_collect.content_settings.only_show_on_day_on_content);

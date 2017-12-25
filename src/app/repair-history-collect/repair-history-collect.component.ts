@@ -45,13 +45,11 @@ export class RepairHistoryCollectComponent implements OnInit, AfterViewInit, OnD
   public search_for_history_data = new Subject();
   public $repair_plan_and_history_data: Observable<RepairPlanAndHistoryDataSorted[]>;
   public $show_all_dates_on_header: Observable<boolean>;
-  public listen_for_keyboard_click: Observable<KeyboardEvent>;
   public listen_for_keyboard_click_unsubscribe: Subscription;
   public $open_or_close_plan_data_dialog: Observable<string>;
   public $plan_data_dialog_number: Observable<string>;
   public open_or_close_plan_data_dialog_unsubscribe: Subscription;
   public $repair_plan_data: Observable<RepairPlanSingleDataInterface[]>;
-  public repair_plan_data_unsubscribe: Subscription;
   public $repair_history_data: Observable<RepairHistorySingleDataInterface[]>;
 
   constructor(public http: HttpClient,
@@ -64,9 +62,6 @@ export class RepairHistoryCollectComponent implements OnInit, AfterViewInit, OnD
     this.$plan_data_dialog_number = this.store.select(state => state.repair_history_collect.dialog_settings.dialog_id);
     this.$repair_plan_data = this.store.select(state => state.repair_history_collect.repair_plan_data);
     this.$repair_history_data = this.store.select(state => state.repair_history_collect.repair_history_data);
-    this.repair_plan_data_unsubscribe = this.$repair_plan_data.merge(this.$repair_history_data).subscribe(value => {
-      this.store.dispatch(new RepairHistoryCollectStoreActions.MapPlanAndHistoryNumber());
-    });
     this.open_or_close_plan_data_dialog_unsubscribe = this.$open_or_close_plan_data_dialog.withLatestFrom(this.$plan_data_dialog_number)
       .delay(100)
       .subscribe(
@@ -88,7 +83,7 @@ export class RepairHistoryCollectComponent implements OnInit, AfterViewInit, OnD
         }
       );
     this.$repair_plan_and_history_data = this.store.select(state =>
-      state.repair_history_collect.repair_plan_and_history_sorted_by_date);
+      state.repair_history_collect.repair_plan_and_history_data_mapped);
     this.$state = this.store.select(state2 => state2.repair_history_collect);
     this.$show_all_dates_on_header = this.store.select(state => state.repair_history_collect.show_all_dates_on_dates_header);
     this.search_for_plan_data
@@ -182,9 +177,6 @@ export class RepairHistoryCollectComponent implements OnInit, AfterViewInit, OnD
     }
     if (this.open_or_close_plan_data_dialog_unsubscribe) {
       this.open_or_close_plan_data_dialog_unsubscribe.unsubscribe();
-    }
-    if (this.repair_plan_data_unsubscribe) {
-      this.repair_plan_data_unsubscribe.unsubscribe();
     }
   }
 

@@ -143,7 +143,6 @@ export class RepairPlanEditDialogComponent implements OnInit, OnDestroy {
           id: null,
         }),
       );
-      this.store.dispatch(new RepairHistoryCollectStoreActions.MapPlanAndHistoryNumber());
       this.store.dispatch(new RepairHistoryCollectStoreActions.OpenOrCloseADialog({dialog_type: ''}));
     } else {
       console.log(this.form.errors);

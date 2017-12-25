@@ -30,7 +30,7 @@ export class RepairDataPostToServerService {
       (value: [null, RepairHistoryCollectStoreInterface]) => {
         const state = value[1];
         const query_data: QueryDataConflictFromServerRequestApi = {data: {date: []}};
-        for (const i of state.repair_plan_and_history_sorted_by_date) {
+        for (const i of state.repair_plan_and_history_data_mapped) {
           query_data.data.date.push(i.date.format('YYYYMMDD'));
         }
         // 浏览器端检测数据是否完整
@@ -44,7 +44,7 @@ export class RepairDataPostToServerService {
         ).subscribe(
           (v) => {
             const post_data: SaveDataToServerApiInterface = {data: []};
-            for (const date_data of state.repair_plan_and_history_sorted_by_date) {
+            for (const date_data of state.repair_plan_and_history_data_mapped) {
               const this_date_data: SaveDateToServerContentInterface[] = [];
               const date = date_data.date;
               for (const single_data of date_data.repair_plan_data_index_on_this_day) {

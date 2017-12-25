@@ -4,7 +4,6 @@ import * as moment from 'moment';
 import {} from '../api';
 import {
   sort_data_by_date,
-  add_a_value_to_sorted_object,
   generate_a_id,
   string_is_a_valid_time_range
 } from '../../util_func';

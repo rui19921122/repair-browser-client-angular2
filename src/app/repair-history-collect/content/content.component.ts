@@ -45,7 +45,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.$state = this.store.select(state => state.repair_history_collect);
     this.$repair_plan_and_history_data = this.store.select(
-      state => state.repair_history_collect.repair_plan_and_history_sorted_by_date);
+      state => state.repair_history_collect.repair_plan_and_history_data_mapped);
     this.$repair_history_data = this.store.select(state => state.repair_history_collect.repair_history_data);
     this.$repair_plan_data = this.store.select(state => state.repair_history_collect.repair_plan_data);
     this.$not_showed_dates_on_content = this.store.select(state => state.repair_history_collect.content_settings.not_displayed_data);
