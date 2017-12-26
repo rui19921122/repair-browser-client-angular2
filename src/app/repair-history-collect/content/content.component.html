@@ -57,14 +57,14 @@
           <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="25px"
                *ngFor="let plan_date of detail.repair_plan_data_index_on_this_day">
             <div fxFlex="40">
-              <app-repair-plan-detail-card [plan_data]="($repair_plan_data|async)[plan_date.plan_number_id]">
+              <app-repair-plan-detail-card
+                [plan_data]="($repair_plan_data|async)| getDataById: plan_date.plan_number_id">
               </app-repair-plan-detail-card>
             </div>
             <div fxFlex="40">
               <app-repair-history-detail-card
-                [history_data_observable]="$repair_history_data|getChildObjectInObjectById: plan_date.history_number_id"
-                [detail_data_observable]="$repair_detail_data|getChildObjectInObjectById: plan_date.history_number_id"
-              >
+                [history_data]="($repair_history_data| async)|getDataById: plan_date.history_number_id"
+                [detail_data]="($repair_history_data|async)|getDataById: plan_date.history_number_id">
               </app-repair-history-detail-card>
             </div>
           </div>
@@ -78,7 +78,7 @@
             </div>
             <div fxFlex="40">
               <app-repair-history-detail-card
-                [history_data_observable]="$repair_history_data| getChildObjectInObjectById: number"
+                [history_data]="$repair_history_data| getDataById: number"
                 [single_dog_card]="true">
               </app-repair-history-detail-card>
             </div>

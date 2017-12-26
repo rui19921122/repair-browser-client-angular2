@@ -8,33 +8,16 @@ import {FlexLayoutModule} from '@angular/flex-layout';
 import {AppComponent} from './app.component';
 import {HeaderComponent} from './header/header.component';
 import {
-  MatAutocompleteModule,
-  MatButtonModule,
-  MatButtonToggleModule,
-  MatCardModule,
-  MatCheckboxModule,
-  MatChipsModule,
-  MatDatepickerModule,
-  MatDialogModule,
-  MatExpansionModule,
-  MatInputModule,
-  MatMenuModule,
-  MatNativeDateModule,
-  MatProgressBarModule,
-  MatProgressSpinnerModule,
-  MatSelectModule,
-  MatSidenavModule,
-  MatSnackBarModule,
-  MatTableModule,
-  MatToolbarModule,
-  MatTooltipModule
+  MatAutocompleteModule, MatButtonModule, MatButtonToggleModule, MatCardModule, MatCheckboxModule, MatChipsModule,
+  MatDatepickerModule, MatDialogModule, MatExpansionModule, MatInputModule, MatMenuModule, MatNativeDateModule, MatProgressBarModule,
+  MatProgressSpinnerModule, MatSelectModule, MatSidenavModule, MatSnackBarModule, MatTableModule, MatToolbarModule, MatTooltipModule
 } from '@angular/material';
-import {NgxDatatableModule  } from '@swimlane/ngx-datatable';
+import {NgxDatatableModule} from '@swimlane/ngx-datatable';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {RouterModule, Routes} from '@angular/router';
-import {AppState, store} from './store';
+import {store} from './store';
 import {get__HMR__state} from '../hmr';
-import {Store, StoreModule} from '@ngrx/store';
+import {StoreModule} from '@ngrx/store';
 import {HomeComponent} from './home/home.component';
 import {UserService} from './services/user.service';
 import {LoginFormComponent} from './header/login-form/login-form.component';
@@ -54,7 +37,6 @@ import {InTheMomentListPipe} from './pipes/in-the-moment-list.pipe';
 import {GetDataByIdPipe} from './pipes/get-data-by-id.pipe';
 import {SplitLongSentenceWithColon} from './pipes/split-long-sentence-with-colon.pipe';
 import {MapMomentToRepairPlanAndHistoryDataPipe} from './pipes/map-moment-to-repair-plan-and-history-data.pipe';
-
 import {RepairPlanEditDialogComponent} from './repair-history-collect/repair-plan-edit-dialog/repair-plan-dialog.component';
 import {RepairHistoryDetailApiService} from './services/repair-history-detail-api.service';
 import {GetChildObjectInObjectByIdPipe} from './pipes/get-child-object-in-object-by-id.pipe';
@@ -66,7 +48,10 @@ import {ReapirHistoryQueryComponent} from './reapir-history-query/reapir-history
 import {HeaderBarComponent} from './reapir-history-query/header-bar/header-bar.component';
 import {RepairHistoryQueryConnectWithServerService} from './services/repair-history-query-connect-with-server-services.service';
 import {DetailTableListComponent} from './reapir-history-query/detail-table-list/detail-table-list.component';
-import { RenderShowedTimeWithGivenMomentPipe } from './pipes/render-showed-time-with-given-moment.pipe';
+import {RenderShowedTimeWithGivenMomentPipe} from './pipes/render-showed-time-with-given-moment.pipe';
+import {WatchStoreChangeService} from './services/watch_store_change_sub';
+import {SnackBarConfig} from './providers/snack-bar-provider';
+import { RepairCollectGetDataFromServerService } from './services/repair-collect-get-data-from-server.service';
 
 export const routes: Routes = [
   {path: '', redirectTo: 'home', pathMatch: 'full'},
@@ -142,8 +127,11 @@ export const routes: Routes = [
     RepairHistoryDetailApiService,
     RepairDataPostToServerService,
     RepairHistoryQueryConnectWithServerService,
+    WatchStoreChangeService,
+    RepairCollectGetDataFromServerService,
     {provide: LocationStrategy, useClass: HashLocationStrategy},
-    {provide: LOCALE_ID, useValue: 'zh-hans'}
+    {provide: LOCALE_ID, useValue: 'zh-hans'},
+    {provide: SnackBarConfig, useValue: {duration: 3000}},
   ],
   bootstrap: [AppComponent],
   entryComponents: [
@@ -153,6 +141,6 @@ export const routes: Routes = [
   ]
 })
 export class AppModule {
-  constructor(public store: Store<AppState>) {
+  constructor() {
   }
 }

@@ -17,11 +17,9 @@ import {Store} from '@ngrx/store';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RepairHistoryDetailCardComponent implements OnInit, OnDestroy {
-  @Input() history_data_observable: Observable<RepairHistorySingleDataInterface>;
+  @Input() history_data: RepairHistorySingleDataInterface;
   @Input() single_dog_card = false; // 是否为单身卡
-  @Input() detail_data_observable: Observable<RepairHistoryDataDetailInterface>;
-  public history_data = <RepairHistorySingleDataInterface>null;
-  public detail_data = <RepairHistoryDataDetailInterface>null;
+  @Input() detail_data: RepairHistoryDataDetailInterface;
   public history_data_un: Subscription;
   public detail_data_un: Subscription;
 
@@ -40,10 +38,6 @@ export class RepairHistoryDetailCardComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.history_data_un = this.history_data_observable.subscribe(v => this.history_data = v);
-    if (this.detail_data_observable) {
-      this.detail_data_un = this.detail_data_observable.subscribe(v => this.detail_data = v);
-    }
   }
 
   public get_history_detail(value: RepairHistorySingleDataInterface, event: Event) {

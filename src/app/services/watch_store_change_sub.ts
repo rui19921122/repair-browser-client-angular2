@@ -1,62 +1,73 @@
 // 此服务包含了组件中监听store变化的subscribe
 import {Injectable} from '@angular/core';
-import {
-  SaveDataToServerApiInterface, QueryDataConflictFromServerRequestApi, QueryDataConflictFromServerResponseApi,
-  SaveDateToServerContentInterface
-} from '../api';
-import * as _ from 'lodash';
 import {HttpClient} from '@angular/common/http';
 import {Store} from '@ngrx/store';
 import {AppState} from '../store';
 import {
-  RepairHistoryCollectStoreInterface, RepairHistorySingleDataInterface, RepairPlanAndHistoryDataSorted,
+  RepairHistoryCollectStoreInterface,
+  RepairHistorySingleDataInterface,
+  RepairPlanAndHistoryDataSorted,
   RepairPlanSingleDataInterface,
   RepairHistoryCollectStoreActions as actions
 } from '../repair-history-collect/repair-history-collect.store';
 import {Observable} from 'rxjs/Observable';
 
-import {get_csrf_token, convert_a_HH_mm_like_string_to_a_moment} from '../util_func';
 import {MatSnackBar} from '@angular/material';
 import {Subscription} from 'rxjs/Subscription';
+import {Subject} from 'rxjs/Subject';
+import {SnackBarConfig} from '../providers/snack-bar-provider';
+import * as moment from 'moment';
 
 @Injectable()
-export class RepairDataPostToServerService {
-  public watcher_for_plan_and_history_data_map: Subscription;
+export class WatchStoreChangeService {
+  public refresh_the_plan_and_history_map: Subject<null | moment.Moment> = new Subject();
   public store_observable: Observable<AppState>;
+  public plan_and_history_observable: Observable<[RepairPlanSingleDataInterface[], RepairHistorySingleDataInterface[]]>;
+  public watcher_the_plan_and_history_map: Subscription;
 
   constructor(public http: HttpClient,
               public store: Store<AppState>,
-              public snack_bar: MatSnackBar) {
+              public snack_bar: MatSnackBar,
+              public snack_bar_config: SnackBarConfig) {
     this.store_observable = this.store.select(state => state);
+    this.plan_and_history_observable = this.store.select(state => state.repair_history_collect.repair_plan_data)
+      .combineLatest(this.store.select(state => state.repair_history_collect.repair_history_data));
+    this.refresh_the_plan_and_history_map.withLatestFrom(this.store_observable).subscribe((value) => {
+      const calc_value = this.map_plan_and_history_data(
+        value[1].repair_history_collect.repair_plan_data,
+        value[1].repair_history_collect.repair_history_data,
+        value[1].repair_history_collect,
+        value[0]
+      );
+      this.store.dispatch(new actions.MapPlanAndHistoryNumber({
+        data: calc_value
+      }));
+    });
   }
 
   public watch_for_plan_and_history_data_map(bool: boolean) {
     if (bool) {
-      // 开始监控
+      // 开始自动监控
+      this.watcher_the_plan_and_history_map = this.plan_and_history_observable.subscribe(value => {
+        if (true) {
+          console.log('由于计划或历史数据数据变化，触发了一次更新操作');
+          this.refresh_the_plan_and_history_map.next(moment());
+          // 当计划数据与历史数据如何变化时会触发更新操作
+        }
+      });
     } else {
-      if (this.watcher_for_plan_and_history_data_map) {
-        this.watcher_for_plan_and_history_data_map.unsubscribe();
+      if (this.watcher_the_plan_and_history_map) {
+        this.snack_bar.open('不再自动追踪数值变化', '朕知道了', this.snack_bar_config);
+        this.watcher_the_plan_and_history_map.unsubscribe();
       }
     }
   }
 
-  public refresh_plan_and_history_data_map_by_hand() {
-    Observable.of(null).withLatestFrom(this.store_observable).subscribe(
-      value => {
-        this.store.dispatch(new actions.MapPlanAndHistoryNumber({
-          data: this.map_plan_and_history_data(
-            value[1].repair_history_collect.repair_plan_data,
-            value[1].repair_history_collect.repair_history_data,
-            value[1].repair_history_collect.repair_plan_and_history_data_mapped
-          )
-        }));
-      }
-    );
-  }
 
   private map_plan_and_history_data(plan_data: RepairPlanSingleDataInterface[],
                                     history_data: RepairHistorySingleDataInterface[],
-                                    prev_state?: RepairHistoryCollectStoreInterface): RepairPlanAndHistoryDataSorted[] {
+                                    prev_state?: RepairHistoryCollectStoreInterface,
+                                    start_time?: moment.Moment): RepairPlanAndHistoryDataSorted[] {
     // 首先找出人为标注的部分
     // 先找出所有日期
     const date_list: RepairPlanAndHistoryDataSorted[] = [];
@@ -97,17 +108,21 @@ export class RepairDataPostToServerService {
         const today_data = date_list[date_index_in_date_list];
         let found = false;
         for (const plan_data_collection of today_data.repair_plan_data_index_on_this_day) {
+          // 比对函数
           const plan_data_detail = plan_data.find(value => value.id === plan_data_collection.plan_number_id);
-          if (plan_data_detail.used_number === single_history_data.used_number) {
+          if (plan_data_detail.used_number === single_history_data.number) {
             plan_data_collection.history_number_id = single_history_data.id;
             found = true;
             break;
           }
         }
         if (!found) {
-          today_data.repair_history_data_not_map_in_plan.push(single_history_data.id);
+          date_list[date_index_in_date_list].repair_history_data_not_map_in_plan.push(single_history_data.id);
         }
       }
+    }
+    if (start_time) {
+      console.log(`本次更新操作耗时${moment().diff(start_time, 'millisecond')}毫秒`);
     }
     return date_list;
 

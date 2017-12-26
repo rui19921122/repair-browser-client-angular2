@@ -2,7 +2,7 @@ import { TestBed, inject } from '@angular/core/testing';
 
 import { RepairDataPostToServerService } from './repair-data-post-to-server.service';
 
-describe('RepairDataPostToServerService', () => {
+describe('WatchStoreChangeService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [RepairDataPostToServerService]

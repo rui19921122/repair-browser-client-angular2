@@ -40,7 +40,7 @@ export interface RepairPlanApi {
   data: RepairPlanSingleDataApiInterface[];
 }
 
-export interface RepairHistoryDataSingleApiInterface {
+export interface RepairHistorySingleDataApiInterface {
   date: string | moment.Moment;
   repair_content: string;
   number: string;
@@ -54,7 +54,7 @@ export interface RepairHistoryDataSingleApiInterface {
 }
 
 export interface RepairHistoryDataApiInterface {
-  data: RepairHistoryDataSingleApiInterface[];
+  data: RepairHistorySingleDataApiInterface[];
 }
 
 export interface SaveDateToServerContentInterface {

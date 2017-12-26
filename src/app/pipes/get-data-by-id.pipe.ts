@@ -5,7 +5,8 @@ import {Pipe, PipeTransform} from '@angular/core';
 })
 export class GetDataByIdPipe implements PipeTransform {
 
-  transform(): any {
+  transform(value: { id: string }[], id: string): any {
+    return value.find(value2 => value2.id === id);
   }
 
 }

@@ -13,6 +13,7 @@ import {Store} from '@ngrx/store';
 export class RepairPlanDetailCardComponent implements OnInit {
   @Input() plan_data = <RepairPlanSingleDataInterface>null;
   @Input() history_data_id: string;
+  public data: RepairPlanSingleDataInterface;
 
   constructor(public store: Store<AppState>) {
   }

@@ -18,7 +18,7 @@ export class LoginFormComponent implements OnInit {
   constructor(public user_service: UserService,
               public http: HttpClient,
               public store: Store<AppState>) {
-    this.valueChange.debounceTime(1000).filter(v => v !== '').subscribe(v => {
+    this.valueChange.debounceTime(300).filter(v => v !== '').subscribe(v => {
       this.http.get('/api/system-user/username-autocomplete/', {params: {value: v}})
         .subscribe(json => {
           this.filterUsernames = json['values'];

@@ -4,7 +4,7 @@ import * as moment from 'moment';
 import * as _ from 'lodash';
 import {
   RepairHistoryDataApiInterface,
-  RepairHistoryDataSingleApiInterface,
+  RepairHistorySingleDataApiInterface,
   RepairPlanContentInterface,
   RepairPlanSingleDataApiInterface
 } from '../api';
@@ -14,51 +14,12 @@ import {
   string_is_a_valid_time_range, add_or_change_obj_from_array_by_id
 } from '../util_func';
 
-function convert_a_origin_repair_plan_data_to_easy_understand(v: RepairPlanSingleDataApiInterface): {
-  id: string, value: RepairPlanSingleDataInterface
-} {
-  // 处理从服务器端返回的天窗修计划数据
-  const is_a_time = string_is_a_valid_time_range(v.plan_time);
-  let type;
-  switch (v.type) {
-    case 'Ⅱ':
-      type = v.type;
-      break;
-    case 'Ⅰ':
-      type = v.type;
-      break;
-    default:
-      type = '站';
-  }
-  const id = generate_a_id(v);
-  const value: RepairPlanSingleDataInterface = {
-    type: type,
-    number: v.number,
-    date: moment(v.post_date),
-    apply_place: v.apply_place,
-    id: generate_a_id(v),
-    calc_time: !!is_a_time,
-    start_time: is_a_time ? is_a_time[1] : null,
-    end_time: is_a_time ? is_a_time[2] : null,
-    plan_time: v.plan_time,
-    area: v.area,
-    content: [],
-    direction: v.direction,
-    used_number: `${v.type === '站' ? 'Z' : (v.type === '垂' ? 'D' : 'J')}${v.number}`
-  };
-  return {
-    id, value
-  };
-
-}
-
 
 export interface RepairPlanSingleDataInterface {
   type: 'Ⅰ' | 'Ⅱ' | '站' | '垂';
   plan_time: string;
   apply_place: string;
   area: string;
-  content: RepairPlanContentInterface[];
   number: string;
   direction: string;
   date: moment.Moment;
@@ -264,27 +225,30 @@ export class UpdateRepairPlanData implements Action {
   }
 }
 
-export const UPDATE_ALL_REPAIR_PLAN_DATA_FROM_SERVER = '[repair-history-collect]UPDATE_ALL_REPAIR_PLAN_DATA_FROM_SERVER';
 
-// 从服务器的数据中更新数据，会对数据进行处理
-export class UpdateAllRepairPlanDataFromServer implements Action {
-  readonly type = UPDATE_ALL_REPAIR_PLAN_DATA_FROM_SERVER;
+export const ADD_A_REPAIR_PLAN_DATA = '[repair-history-collect]ADD_A_REPAIR_PLAN_DATA';
 
-  constructor(public payload: { data: RepairPlanSingleDataApiInterface[] }) {
+//
+export class AddARepairPlanData implements Action {
+  readonly type = ADD_A_REPAIR_PLAN_DATA;
+
+  constructor(public payload: { data: RepairPlanSingleDataInterface }) {
+
+  }
+}
+
+export const REPLACE_ALL_HISTORY_DATA = '[repair-history-collect]REPLACE_ALL_HISTORY_DATA';
+
+// 更换所有的历史数据
+export class ReplaceAllHistoryData implements Action {
+  readonly type = REPLACE_ALL_HISTORY_DATA;
+
+  constructor(public payload: { data: RepairHistorySingleDataInterface[] }) {
 
   }
 }
 
-export const UPDATE_ALL_REPAIR_HISTORY_DATA_FROM_SERVER = '[repair-history-collect]UPDATE_ALL_REPAIR_HISTORY_DATA_FROM_SERVER';
-
 // 从服务器的数据中更新数据，会对数据进行处理
-export class UpdateAllRepairHistoryDataFromServer implements Action {
-  readonly type = UPDATE_ALL_REPAIR_HISTORY_DATA_FROM_SERVER;
-
-  constructor(public payload: { data: RepairHistoryDataSingleApiInterface[] }) {
-
-  }
-}
 
 export const UPDATE_SINGLE_REPAIR_HISTORY_DETAIL_DATA = '[repair-history-collect]UPDATE_SINGLE_REPAIR_HISTORY_DETAIL_DATA';  //
 
@@ -309,11 +273,24 @@ export class UpdateGetRepairDetailPending implements Action {
 }
 
 
-export type RepairHistoryCollectStoreActionType = SwitchOpenWhichSidebar
-  | UpdateGetRepairDetailPending // 复制此行到ActionType中,更新天窗修实际查询的pending action type
+export const REPLACE_ALL_REPAIR_DATA = '[repair-history-collect]REPLACE_ALL_REPAIR_DATA';
+
+// 更新所有计划
+export class ReplaceAllRepairData implements Action {
+  readonly type = REPLACE_ALL_REPAIR_DATA;
+
+  constructor(public payload: { data: RepairPlanSingleDataInterface[] }) {
+
+  }
+}
+
+export type RepairHistoryCollectStoreActionType =
+  SwitchOpenWhichSidebar
+  | ReplaceAllRepairData // 复制此行到ActionType中,更新所以的字节 action type
+  | ReplaceAllHistoryData // 复制此行到ActionType中,更换所有的历史数据 action type
+  | UpdateGetRepairDetailPending
+// 复制此行到ActionType中,更新天窗修实际查询的pending action type
   | UpdateSingleRepairHistoryDetailData  // 复制此行到ActionType中
-  | UpdateAllRepairPlanDataFromServer // 复制此行到ActionType中,从服务器的数据中更新数据，会对数据进行处理 action type
-  | UpdateAllRepairHistoryDataFromServer // 复制此行到ActionType中,从服务器的数据中更新数据，会对数据进行处理 action type
   | UpdateRepairPlanData   // 复制此行到ActionType中
   | UpdateWhichDateShouldDisplayOnContent // 复制此行到ActionType中,更新哪些日期可以在页面中显示 action type
   | SwitchOnlyShowOneDateOnContent // 复制此行到ActionType中,切换是否仅在内容框中显示一个日期 action type
@@ -324,11 +301,14 @@ export type RepairHistoryCollectStoreActionType = SwitchOpenWhichSidebar
   | SwitchGetHistoryDataPending // 复制此行到ActionType中
   | SwitchShowAllDatesOnDatesHeader   // 复制此行到ActionType中
   | SwitchPendingRepairPlan   // 复制此行到ActionType中
+  | AddARepairPlanData // 复制此行到ActionType中, action type
   | OpenOrCloseADialog  // 复制此行到ActionType中
   ;
 export const RepairHistoryCollectStoreActions = {
+  ReplaceAllRepairData,  // 复制此行到导出的Action中,更新所以的字节 actions
+  ReplaceAllHistoryData,  // 复制此行到导出的Action中,更换所有的历史数据 actions
   OpenOrCloseADialog,  // 复制此行到导出的Action中
-  UpdateAllRepairPlanDataFromServer,  // 复制此行到导出的Action中,从服务器的数据中更新数据，会对数据进行处理 actions
+  AddARepairPlanData,  // 复制此行到导出的Action中, actions
   UpdateWhichDateShouldDisplayOnContent,  // 复制此行到导出的Action中,更新哪些日期可以在页面中显示 actions
   UpdateSingleRepairHistoryDetailData,  // 复制此行到导出的Action中
   UpdateRepairPlanData,  // 复制此行到导出的Action中
@@ -341,7 +321,6 @@ export const RepairHistoryCollectStoreActions = {
   ChangeSelectedDate,
   UpdateGetRepairDetailPending,  // 复制此行到导出的Action中,更新天窗修实际查询的pending actions
   SwitchShowAllDatesOnDatesHeader,  // 复制此行到导出的Action中
-  UpdateAllRepairHistoryDataFromServer,  // 复制此行到导出的Action中,从服务器的数据中更新数据，会对数据进行处理 actions
   AddOrRemoveDateToOpenedDatePanel,  // 复制此行到导出的Action中
 };
 
@@ -375,7 +354,10 @@ const default_state: RepairHistoryCollectStoreInterface = {
 export function reducer(state: RepairHistoryCollectStoreInterface = default_state,
                         action: RepairHistoryCollectStoreActionType): RepairHistoryCollectStoreInterface {
   switch (action.type) {
-
+    case REPLACE_ALL_HISTORY_DATA:
+      return {...state, repair_history_data: action.payload.data}; // 复制此两行到reducer中,更换所有的历史数据 reducer
+    case REPLACE_ALL_REPAIR_DATA:
+      return {...state, repair_plan_data: action.payload.data}; // 复制此两行到reducer中,更新所以的字节 reducer
     case UPDATE_GET_REPAIR_DETAIL_PENDING:
       return {
         ...state, repair_history_data: {
@@ -427,9 +409,9 @@ export function reducer(state: RepairHistoryCollectStoreInterface = default_stat
       } else {
         // 如果显示多个日期，则按是否在数组中存在进行判断，如存在，则移去，如不存在，则增加,顺手把displayed_data设置为null，以避免内存泄漏
         const _not_displayed_data = Array.from(state.content_settings.not_displayed_data);
-        const index = _not_displayed_data.findIndex(value => value.isSame(action.payload.date));
-        if (index >= 0) {
-          _not_displayed_data.splice(index, 1);
+        const this_index = _not_displayed_data.findIndex(value => value.isSame(action.payload.date));
+        if (this_index >= 0) {
+          _not_displayed_data.splice(this_index, 1);
         } else {
           _not_displayed_data.push(action.payload.date);
         }
@@ -440,6 +422,10 @@ export function reducer(state: RepairHistoryCollectStoreInterface = default_stat
         };
       }
     // 复制此两行到reducer中,更新哪些日期可以在页面中显示 reducer
+    case ADD_A_REPAIR_PLAN_DATA:
+      const new_repair_plan_data = Array.from(state.repair_plan_data);
+      new_repair_plan_data.push(action.payload.data);
+      return {...state, repair_plan_data: new_repair_plan_data}; // 复制此两行到reducer中, reducer
     case
     SWITCH_ONLY_SHOW_ONE_DATE_ON_CONTENT:
       return {
@@ -496,40 +482,6 @@ export function reducer(state: RepairHistoryCollectStoreInterface = default_stat
       return {...state, side_nav_settings: {...state.side_nav_settings, which_sidenav_open: ''}};
     case CHANGE_SELECTED_DATE:
       return {...state, start_date: action.payload.start_date, end_date: action.payload.end_date};
-    case UPDATE_ALL_REPAIR_PLAN_DATA_FROM_SERVER:
-      // 处理服务器返回的数据
-      let new_repair_plan_list: RepairPlanSingleDataInterface [] = [];
-      action.payload.data.forEach(v => {
-        const data = convert_a_origin_repair_plan_data_to_easy_understand(v).value;
-        new_repair_plan_list = add_or_change_obj_from_array_by_id(new_repair_plan_list, data).objects;
-      });
-      return {...state, repair_plan_data: new_repair_plan_list}; // 复制此两行到reducer中,从服务器的数据中更新数据，会对数据进行处理 reducer
-    case UPDATE_ALL_REPAIR_HISTORY_DATA_FROM_SERVER:
-      let new_repair_history_list: RepairHistorySingleDataInterface[] = [];
-      action.payload.data.forEach(
-        v => {
-          const used_number = v.number.split('-').length === 2 ? v.number.split('-')[1] : null;
-          const data = {
-            date: moment(v.date),
-            number: v.number,
-            plan_time: v.plan_time,
-            id: generate_a_id(v),
-            apply_place: v.apply_place,
-            inner_id: v.inner_id,
-            plan_type: v.plan_type,
-            repair_content: v.repair_content,
-            repair_department: v.repair_department,
-            use_paper: v.use_paper,
-            used_number: used_number,
-            cached: 0,
-            pending: false,
-          };
-          new_repair_history_list = add_or_change_obj_from_array_by_id(new_repair_history_list, data).objects;
-        }
-      );
-      return {
-        ...state, repair_history_data: new_repair_history_list
-      }; // 复制此两行到reducer中,从服务器的数据中更新数据，会对数据进行处理 reducer
     default:
       return state;
   }

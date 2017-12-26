@@ -139,7 +139,6 @@ export class RepairPlanEditDialogComponent implements OnInit, OnDestroy {
           direction: this.form.controls['direction'].value,
           type: this.form.controls['type'].value,
           area: this.form.controls['area'].value,
-          content: [],
           id: null,
         }),
       );
