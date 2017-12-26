@@ -52,6 +52,7 @@ import {RenderShowedTimeWithGivenMomentPipe} from './pipes/render-showed-time-wi
 import {WatchStoreChangeService} from './services/watch_store_change_sub';
 import {SnackBarConfig} from './providers/snack-bar-provider';
 import { RepairCollectGetDataFromServerService } from './services/repair-collect-get-data-from-server.service';
+import { CountingMappedPlanDataWithoutHistoryPipe } from './pipes/counting-mapped-plan-data-without-history.pipe';
 
 export const routes: Routes = [
   {path: '', redirectTo: 'home', pathMatch: 'full'},
@@ -88,6 +89,7 @@ export const routes: Routes = [
     HeaderBarComponent,
     DetailTableListComponent,
     RenderShowedTimeWithGivenMomentPipe,
+    CountingMappedPlanDataWithoutHistoryPipe,
   ],
   imports: [
     NgxDatatableModule,

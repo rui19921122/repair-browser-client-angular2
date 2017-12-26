@@ -1,48 +1,52 @@
 <div
-        class="card-area"
-        fxLayout="column"
-        fxLayoutWrap
-        fxLayoutAlign="start"
-        fxLayoutGap="5px"
+  class="card-area"
+  fxLayout="column"
+  fxLayoutWrap
+  fxLayoutAlign="start"
+  fxLayoutGap="5px"
 >
-    <mat-accordion multi="true">
-        <mat-expansion-panel
-                *ngFor="let date of dates_collection|async"
-                [expanded]="date.date| inTheMomentList: (dates_opened_panel|async) "
-                (opened)="addOrRemoveDateToDatesOpenedPanel(date.date, true)"
-                (closed)="addOrRemoveDateToDatesOpenedPanel(date.date, false)"
-        >
-            <mat-expansion-panel-header
-            >
-                <mat-panel-title>{{date.date | moment}}</mat-panel-title>
-                <mat-panel-description>
+  <mat-accordion multi="true">
+    <mat-expansion-panel
+      *ngFor="let date of dates_collection|async"
+      [expanded]="date.date| inTheMomentList: (dates_opened_panel|async) "
+      (opened)="addOrRemoveDateToDatesOpenedPanel(date.date, true)"
+      (closed)="addOrRemoveDateToDatesOpenedPanel(date.date, false)"
+    >
+      <mat-expansion-panel-header
+      >
+        <mat-panel-title>{{date.date | moment}}</mat-panel-title>
+        <mat-panel-description>
           <span
-                  *ngIf="date.repair_history_data_index_on_this_day.length==date.repair_plan_data_index_on_this_day.length">
-            正常</span>
-                    <span
-                            *ngIf="date.repair_history_data_index_on_this_day.length!==date.repair_plan_data_index_on_this_day.length"
-                            style="color: red;"
-                    >
-            对数不匹配</span>
-                </mat-panel-description>
-            </mat-expansion-panel-header>
-            <p>
-                天窗修计划:{{date.repair_plan_data_index_on_this_day.length}} 个
-            </p>
-            <p>
-                天窗修实绩: {{date.repair_history_data_index_on_this_day.length}} 个
-            </p>
-            <mat-action-row>
-                <button mat-button>删除</button>
-                <button mat-button *ngIf="$only_show_one_date_on_content|async"
-                        (click)="SwitchWhichDateShouldDisplayOnContent(date.date)"
-                >跳转到
-                </button>
-                <button mat-button *ngIf="!($only_show_one_date_on_content|async)"
-                        (click)="SwitchWhichDateShouldDisplayOnContent(date.date)"
-                >切换显示
-                </button>
-            </mat-action-row>
-        </mat-expansion-panel>
-    </mat-accordion>
+            *ngIf="date.repair_history_data_not_map_in_plan.length===0">
+            正常
+          </span>
+          <span
+            *ngIf="date.repair_history_data_not_map_in_plan.length>0"
+            style="color: red;"
+          >
+            有缺失计划的实绩</span>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <p>
+        天窗修计划:{{date.repair_plan_data_index_on_this_day.length}} 个
+      </p>
+      <p>
+        无实绩的计划:{{date.repair_plan_data_index_on_this_day|countingMappedPlanDataWithoutHistory}}个
+      </p>
+      <p>
+        缺失计划的实绩:{{date.repair_history_data_not_map_in_plan.length}}个
+      </p>
+      <mat-action-row>
+        <button mat-button>删除</button>
+        <button mat-button *ngIf="$only_show_one_date_on_content|async"
+                (click)="SwitchWhichDateShouldDisplayOnContent(date.date)"
+        >跳转到
+        </button>
+        <button mat-button *ngIf="!($only_show_one_date_on_content|async)"
+                (click)="SwitchWhichDateShouldDisplayOnContent(date.date)"
+        >切换显示
+        </button>
+      </mat-action-row>
+    </mat-expansion-panel>
+  </mat-accordion>
 </div>

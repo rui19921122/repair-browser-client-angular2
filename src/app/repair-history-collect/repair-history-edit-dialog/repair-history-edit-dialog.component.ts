@@ -16,7 +16,6 @@ import {Actions} from '@ngrx/store-devtools/src/reducer';
   selector: 'app-repair-history-edit-dialog',
   templateUrl: './repair-history-edit-dialog.component.html',
   styleUrls: ['./repair-history-edit-dialog.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RepairHistoryEditDialogComponent implements OnInit {
   public origin_history_plan_data: RepairHistorySingleDataInterface;

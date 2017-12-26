@@ -12,7 +12,7 @@
            class="card-content-area"
            *ngIf="history_data">
         <div>
-          编号：{{history_data.id}}
+          编号：{{history_data.number}}
         </div>
         <div>
           解析编号：{{history_data.used_number}}
@@ -80,9 +80,6 @@
                 [disabled]="history_data?.pending"
                 matTooltip="刷新">
           <i class="iconfont icon-refresh"></i>
-        </button>
-        <button mat-icon-button [matTooltip]="history_data | json" matTooltipPosition="right">
-          <i class="iconfont icon-delete"></i>
         </button>
       </mat-button-toggle-group>
     </div>

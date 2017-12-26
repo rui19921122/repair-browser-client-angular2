@@ -14,7 +14,6 @@ import {RepairPlanAndHistoryDataSorted, RepairHistoryCollectStoreActions as acti
     selector: 'app-repair-collect-date-card-list',
     templateUrl: './date-card-list.component.html',
     styleUrls: ['./date-card-list.component.css'],
-    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DateCardListComponent implements OnInit, OnDestroy {
     @Output() show_all_card_on_header_is_clicked_output: EventEmitter<boolean> = new EventEmitter();

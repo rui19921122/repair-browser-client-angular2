@@ -51,6 +51,7 @@ export class ContentComponent implements OnInit, OnDestroy {
     this.$not_showed_dates_on_content = this.store.select(state => state.repair_history_collect.content_settings.not_displayed_data);
     this.$showed_date_on_content = this.store.select(state => state.repair_history_collect.content_settings.displayed_data);
     this.$repair_detail_data = this.store.select(state => state.repair_history_collect.repair_detail_data);
+    this.$repair_detail_data.subscribe(value => console.log(value));
     this.$only_show_one_date_on_content = this.store.select(
       state => state.repair_history_collect.content_settings.only_show_on_day_on_content);
   }

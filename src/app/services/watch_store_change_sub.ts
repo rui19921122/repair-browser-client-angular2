@@ -110,7 +110,7 @@ export class WatchStoreChangeService {
         for (const plan_data_collection of today_data.repair_plan_data_index_on_this_day) {
           // 比对函数
           const plan_data_detail = plan_data.find(value => value.id === plan_data_collection.plan_number_id);
-          if (plan_data_detail.used_number === single_history_data.number) {
+          if (plan_data_detail.used_number === single_history_data.used_number) {
             plan_data_collection.history_number_id = single_history_data.id;
             found = true;
             break;
@@ -124,6 +124,7 @@ export class WatchStoreChangeService {
     if (start_time) {
       console.log(`本次更新操作耗时${moment().diff(start_time, 'millisecond')}毫秒`);
     }
+    date_list.sort((a, b) => a.date.isBefore(b.date) ? -1 : 1);
     return date_list;
 
   }

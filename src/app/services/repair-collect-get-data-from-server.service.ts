@@ -11,6 +11,7 @@ import {RepairHistoryDataApiInterface, RepairPlanApi} from '../api';
 import {SnackBarConfig} from '../providers/snack-bar-provider';
 import {MatSnackBar} from '@angular/material';
 import {convert_history_data_server_to_store, convert_plan_data_server_to_store} from '../repair-history-collect/repair_collect_data_utils';
+import {mock_history_data, mock_repair_data} from '../repair-history-collect/mock-data';
 
 @Injectable()
 export class RepairCollectGetDataFromServerService {
@@ -33,17 +34,17 @@ export class RepairCollectGetDataFromServerService {
         `=${state.start_date.format('YYYY-MM-DD')}&end_date=${state.end_date.format('YYYY-MM-DD')}`;
       this.store.dispatch(new RepairHistoryCollectStoreActions.SwitchPendingRepairPlan(true));
       this.http_client.get(url, {withCredentials: true}).subscribe((v: RepairPlanApi) => {
-        const json = v;
+        let json = v;
         // 模拟数据
-        // json = JSON.parse(mock_repair_data);
+        json = JSON.parse(mock_repair_data);
         const data_list = [];
         for (const single_data of json.data) {
           data_list.push(convert_plan_data_server_to_store(single_data));
-          this.store.dispatch(new RepairHistoryCollectStoreActions.ReplaceAllRepairData(
-            {
-              data: data_list
-            }));
         }
+        this.store.dispatch(new RepairHistoryCollectStoreActions.ReplaceAllRepairData(
+          {
+            data: data_list
+          }));
         this.store.dispatch(new RepairHistoryCollectStoreActions.SwitchPendingRepairPlan(false));
       });
     } else {
@@ -64,7 +65,7 @@ export class RepairCollectGetDataFromServerService {
         .subscribe(
           (v: RepairHistoryDataApiInterface) => {
             let json: RepairHistoryDataApiInterface = v;
-            // json = JSON.parse(mock_history_data);
+            json = JSON.parse(mock_history_data);
             // 模拟数据
             const data_list = [];
             for (const single_data of json.data) {

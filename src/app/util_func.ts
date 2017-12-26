@@ -128,9 +128,10 @@ export function convert_a_HH_mm_like_string_to_a_moment(string: string | null, d
 }
 
 export function get_obj_from_array_by_id<T extends { id: string }>(array: T[], id: string): { obj: T, index: number } {
-  const index = array.findIndex(value => value.id === id);
+  const new_array = Array.from(array);
+  const index = new_array.findIndex(value => value.id === id);
   if (index >= 0) {
-    return {obj: array[index], index: index};
+    return {obj: new_array[index], index: index};
   }
   throw Error(`寻找的id ${id}不存在`);
 }
@@ -139,12 +140,13 @@ export function delete_obj_from_array_by_id<T extends { id: string }>(array: T[]
   objects: T[], method: 'deleted' | 'not-found'
 } {
   // 返回更新后的数组
-  const index = array.findIndex(value => value.id === id);
+  const new_array = Array.from(array);
+  const index = new_array.findIndex(value => value.id === id);
   if (index >= 0) {
-    array.splice(index, 1);
-    return {objects: array, method: 'deleted'};
+    new_array.splice(index, 1);
+    return {objects: new_array, method: 'deleted'};
   } else {
-    return {objects: array, method: 'not-found'};
+    return {objects: new_array, method: 'not-found'};
   }
 }
 
@@ -155,12 +157,13 @@ export function add_or_change_obj_from_array_by_id<T extends { id: string }>(ori
     origin.splice(index, 1, changed);
     return {
       method: 'change',
-      objects: origin
+      objects: Array.from(origin)
     };
   } else {
     origin.push(changed);
+    console.log(origin);
     return {
-      objects: origin,
+      objects: Array.from(origin),
       method: 'add',
     };
   }

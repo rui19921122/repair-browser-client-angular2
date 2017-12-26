@@ -59,7 +59,8 @@ export class RepairHistoryDetailApiService {
               actual_end_number: json.actual_end_number,
               actual_watcher: json.actual_host_person,
               update_time: moment(),
-              canceled: false
+              canceled: false,
+              id: value.id
             }
           }
         ));

@@ -29,12 +29,12 @@ export function convert_plan_data_server_to_store(origin: RepairPlanSingleDataAp
     plan_time: origin.plan_time,
     area: origin.area,
     direction: origin.direction,
-    used_number: `${origin.type === '站' ? 'Z' : (origin.type === '垂' ? 'D' : 'J')}${origin.number}`
+    used_number: `${moment(origin.post_date)
+      .format('YYYYMMDD')}-${origin.type === '站' ? 'Z' : (origin.type === '垂' ? 'D' : 'J')}${origin.number}`
   };
 }
 
 export function convert_history_data_server_to_store(origin: RepairHistorySingleDataApiInterface): RepairHistorySingleDataInterface {
-  const used_number = origin.number.split('-').length === 2 ? origin.number.split('-')[1] : null;
   return {
     date: moment(origin.date),
     number: origin.number,
@@ -46,7 +46,7 @@ export function convert_history_data_server_to_store(origin: RepairHistorySingle
     repair_content: origin.repair_content,
     repair_department: origin.repair_department,
     use_paper: origin.use_paper,
-    used_number: used_number,
+    used_number: origin.number,
     cached: 0,
     pending: false,
   };

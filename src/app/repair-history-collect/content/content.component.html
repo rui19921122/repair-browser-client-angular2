@@ -64,7 +64,7 @@
             <div fxFlex="40">
               <app-repair-history-detail-card
                 [history_data]="($repair_history_data| async)|getDataById: plan_date.history_number_id"
-                [detail_data]="($repair_history_data|async)|getDataById: plan_date.history_number_id">
+                [detail_data]="($repair_detail_data|async)|getDataById: plan_date.history_number_id">
               </app-repair-history-detail-card>
             </div>
           </div>
@@ -78,7 +78,7 @@
             </div>
             <div fxFlex="40">
               <app-repair-history-detail-card
-                [history_data]="$repair_history_data| getDataById: number"
+                [history_data]="($repair_history_data|async)| getDataById: number"
                 [single_dog_card]="true">
               </app-repair-history-detail-card>
             </div>
