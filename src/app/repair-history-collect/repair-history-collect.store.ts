@@ -66,7 +66,7 @@ export interface RepairHistoryCollectStoreInterface {
     // 在向服务器上传数据前使用，当此项为True时，代表用户已经知晓当前要上传的日期与服务器上已存储的日期有冲突，会被覆盖
     user_checked_the_date_is_conflicted: boolean;
   };
-  query_repair_detail_list: string[];
+  query_repair_detail_list: Set<string>;
 }
 
 export interface RepairHistoryDataDetailInterface {
@@ -94,7 +94,6 @@ export interface RepairHistorySingleDataInterface {
   used_number: string;
   cached: number;
   // 0 未从服务器获得数据 1 已从服务器获得数据 2 未从服务器获得数据且已被手动修改 3 已从服务器获得数据且被手动修改
-  pending: boolean;
 }
 
 
@@ -292,7 +291,7 @@ export const UPDATE_QUERY_DETAIL_LIST = '[repair-history-collect]UPDATE_QUERY_DE
 export class UpdateQueryDetailList implements Action {
   readonly type = UPDATE_QUERY_DETAIL_LIST;
 
-  constructor(public payload: { data: string[] }) {
+  constructor(public payload: { data: Set<string> }) {
 
   }
 }
@@ -363,7 +362,7 @@ const default_state: RepairHistoryCollectStoreInterface = {
   },
   repair_detail_data: [],
   post_settings: {user_checked_the_date_is_conflicted: false},
-  query_repair_detail_list: []
+  query_repair_detail_list: new Set<string>()
 };
 
 
@@ -377,15 +376,12 @@ export function reducer(state: RepairHistoryCollectStoreInterface = default_stat
     case REPLACE_ALL_REPAIR_DATA:
       return {...state, repair_plan_data: action.payload.data}; // 复制此两行到reducer中,更新所以的字节 reducer
     case UPDATE_GET_REPAIR_DETAIL_PENDING:
+      const new_set = new Set(state.query_repair_detail_list);
+      !action.payload.value ? new_set.delete(action.payload.id) : new_set.add(action.payload.id);
       return {
-        ...state, repair_history_data: add_or_change_obj_from_array_by_id(
-          state.repair_history_data,
-          {
-            ...get_obj_from_array_by_id(state.repair_history_data, action.payload.id).obj,
-            pending: action.payload.value
-          }
-        ).objects
-      }; // 复制此两行到reducer中,更新天窗修实际查询的pending reducer
+        ...state,
+        query_repair_detail_list: new_set
+      };
     case UPDATE_SINGLE_REPAIR_HISTORY_DETAIL_DATA:
       return {
         ...state,

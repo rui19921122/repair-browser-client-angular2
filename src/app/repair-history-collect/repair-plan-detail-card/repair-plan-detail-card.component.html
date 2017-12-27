@@ -56,11 +56,13 @@
             局
           </p>
         </div>
-        <div *ngIf="!plan_data">
-          <button mat-icon-button (click)="create_repair_plan_from_history()">
-            <i class="iconfont icon-add" matTooltip="从历史计划导入基础信息">
-            </i>
-          </button>
+        <div *ngIf="!plan_data" class="card-title-button">
+          <div>
+            <button mat-icon-button (click)="create_repair_plan_from_history()">
+              <i class="iconfont icon-add" matTooltip="从历史计划导入基础信息">
+              </i>
+            </button>
+          </div>
         </div>
       </div>
     </div>

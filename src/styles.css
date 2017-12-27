@@ -157,7 +157,24 @@ a, a:visited, a:focus, a:hover {
   color: #FFFFFF;
 }
 
-.card-title > div > button {
+.card-title-button {
+  position: relative;
+  width: 0;
+  height: 0;
+  left: 19px;
+
+}
+
+.card-title-button > div {
+  height: 120px;
+  width: 120px;
+  border-radius: 50%;
+  background-color: #673ab7;
+  margin-top: 60px;
+  box-shadow: 0 15px 15px -12px rgba(0, 0, 0, 0.56), 0 4px 20px 0px rgba(0, 0, 0, 0.12), 0 3px 10px -5px rgba(0, 0, 0, 0.2);
+}
+
+.card-title-button > div > button {
   color: white;
   text-align: center;
   width: 120px;
@@ -165,7 +182,7 @@ a, a:visited, a:focus, a:hover {
   height: 120px;
 }
 
-.card-title > div i {
+.card-title-button > div i {
   font-size: 75px !important;
   color: white;
   text-align: center;

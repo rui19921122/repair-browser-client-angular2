@@ -48,7 +48,6 @@ export function convert_history_data_server_to_store(origin: RepairHistorySingle
     use_paper: origin.use_paper,
     used_number: origin.number,
     cached: 0,
-    pending: false,
   };
 
 }
