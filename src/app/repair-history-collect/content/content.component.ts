@@ -17,6 +17,7 @@ import {Http} from '@angular/http';
 import {RepairHistoryDetailApiService} from '../../services/repair-history-detail-api.service';
 import {HttpClient} from '@angular/common/http';
 import {RepairDataPostToServerService} from '../../services/repair-data-post-to-server.service';
+import {RepairCollectGetDataFromServerService} from '../../services/repair-collect-get-data-from-server.service';
 
 
 @Component({
@@ -34,16 +35,19 @@ export class ContentComponent implements OnInit, OnDestroy {
   public $showed_date_on_content: Observable<moment.Moment>;
   public $only_show_one_date_on_content: Observable<boolean>;
   public $repair_detail_data: Observable<RepairHistoryDataDetailInterface[]>;
+  public $repair_detail_data_list: Observable<Set<string>>;
   @Input('height') height: number;
 
   constructor(public store: Store<AppState>,
               public repair_history_detail_service: RepairHistoryDetailApiService,
               public post_data_to_server_service: RepairDataPostToServerService,
+              public repair_collect_get_data_from_server_service: RepairCollectGetDataFromServerService,
               public http: HttpClient) {
   }
 
   ngOnInit() {
     this.$state = this.store.select(state => state.repair_history_collect);
+    this.$repair_detail_data_list = this.store.select(state => state.repair_history_collect.query_repair_detail_list);
     this.$repair_plan_and_history_data = this.store.select(
       state => state.repair_history_collect.repair_plan_and_history_data_mapped);
     this.$repair_history_data = this.store.select(state => state.repair_history_collect.repair_history_data);
@@ -51,7 +55,6 @@ export class ContentComponent implements OnInit, OnDestroy {
     this.$not_showed_dates_on_content = this.store.select(state => state.repair_history_collect.content_settings.not_displayed_data);
     this.$showed_date_on_content = this.store.select(state => state.repair_history_collect.content_settings.displayed_data);
     this.$repair_detail_data = this.store.select(state => state.repair_history_collect.repair_detail_data);
-    this.$repair_detail_data.subscribe(value => console.log(value));
     this.$only_show_one_date_on_content = this.store.select(
       state => state.repair_history_collect.content_settings.only_show_on_day_on_content);
   }
@@ -61,6 +64,10 @@ export class ContentComponent implements OnInit, OnDestroy {
 
   handle_show_all_clicked(boolean) {
     this.store.dispatch(new actions.SwitchShowAllDatesOnDatesHeader(boolean));
+  }
+
+  public calc_lost_repair_plan_data() {
+    this.repair_collect_get_data_from_server_service.calc_miss_repair_plan_data_by_history_data();
   }
 
   public open_panel(string: 'date_list' | 'date_select') {

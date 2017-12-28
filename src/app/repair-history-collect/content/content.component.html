@@ -6,14 +6,18 @@
       <div>
         <button class="left-slider-bar-button accent-color" mat-raised-button mat-icon-button
                 (click)="open_panel('date_select')"
-                mat-tooltip="打开侧边栏" [matTooltipPosition]="'right'">
+                matTooltip="打开侧边栏"
+                [matTooltipPosition]="'right'">
           <i class="iconfont icon-lock"></i>
         </button>
       </div>
       <!--单个选项按钮-->
       <div>
-        <button class="left-slider-bar-button accent-color" mat-raised-button mat-icon-button
-                (click)="open_panel('date_list')" mat-tooltip="打开日期快速选择，快捷键 q"
+        <button class="left-slider-bar-button accent-color"
+                mat-raised-button
+                mat-icon-button
+                (click)="open_panel('date_list')"
+                matTooltip="打开日期快速选择，快捷键 q"
                 [matTooltipPosition]="'right'">
           <i class="iconfont icon-datepicker"></i>
         </button>
@@ -21,12 +25,40 @@
       <div>
         <button class="left-slider-bar-button accent-color" mat-raised-button mat-icon-button
                 (click)="switch_only_show_one_date_on_content()"
-                mat-tooltip="仅显示单日期(仅显示单日期有助于性能提升)" [matTooltipPosition]="'right'">
+                matTooltip="仅显示单日期(仅显示单日期有助于性能提升)"
+                [matTooltipPosition]="'right'"
+        >
           <i class="iconfont icon-single"></i>
         </button>
       </div>
       <div>
-        <button class="left-slider-bar-button accent-color" mat-raised-button mat-icon-button
+        <button class="left-slider-bar-button accent-color"
+                mat-raised-button
+                mat-icon-button
+                matTooltip="一键推导缺失的天窗修计划"
+                [matTooltipPosition]="'right'"
+                (click)="calc_lost_repair_plan_data()"
+        >
+          <i class="iconfont icon-icon122"></i>
+        </button>
+      </div>
+      <div *ngIf="($repair_detail_data_list|async).size>0">
+        <button class="left-slider-bar-button alert-color"
+                mat-raised-button
+                mat-icon-button
+                matTooltip="批量获取天窗修历史实绩"
+                [matTooltipPosition]="'right'"
+                style="font-size: 1.3rem;color:white"
+        >
+          {{($repair_detail_data_list|async).size}}
+        </button>
+      </div>
+      <div *ngIf="($repair_detail_data_list|async).size===0">
+        <button class="left-slider-bar-button accent-color"
+                mat-raised-button
+                mat-icon-button
+                matTooltip="批量获取天窗修历史实绩"
+                [matTooltipPosition]="'right'"
                 (click)="get_all_history_detail_data()"
         >
           <i class="iconfont icon-refresh"></i>
@@ -34,6 +66,8 @@
       </div>
       <div>
         <button class="left-slider-bar-button accent-color" mat-raised-button mat-icon-button
+                matTooltip="将数据上传到服务器"
+                [matTooltipPosition]="'right'"
                 (click)="post_data_to_server()"
         >
           <i class="iconfont icon-add"></i>

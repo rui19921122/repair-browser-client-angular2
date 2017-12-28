@@ -8,13 +8,19 @@ export function convert_plan_data_server_to_store(origin: RepairPlanSingleDataAp
   let type;
   switch (origin.type) {
     case 'Ⅱ':
-      type = origin.type;
+      type = '局';
       break;
     case 'Ⅰ':
-      type = origin.type;
+      type = '局';
+      break;
+    case '垂':
+      type = '垂';
+      break;
+    case '站':
+      type = '站';
       break;
     default:
-      type = '站';
+      type = origin.type;
   }
   const id = generate_a_id(origin);
   return {
@@ -22,7 +28,7 @@ export function convert_plan_data_server_to_store(origin: RepairPlanSingleDataAp
     number: origin.number,
     date: moment(origin.post_date),
     apply_place: origin.apply_place,
-    id: generate_a_id(origin),
+    id,
     calc_time: !!is_a_time,
     start_time: is_a_time ? is_a_time[1] : null,
     end_time: is_a_time ? is_a_time[2] : null,

@@ -1,5 +1,5 @@
 <div class="detail-card-collection with-cycle"
-     [ngClass]="{'shining-border': (history_data_list|async).has(history_data.id)}"
+     [ngClass]="{'shining-border': (history_data_list|async)?.has(history_data?.id)}"
      style="padding: 0;
       box-shadow: 0 15px 15px -12px rgba(0, 0, 0, 0.56), 0 4px 20px 0px rgba(0, 0, 0, 0.12), 0 3px 10px -5px rgba(0, 0, 0, 0.2);
 "
@@ -69,15 +69,15 @@
     </div>
     <div fxFlex="35" class="card-title-button-group">
       <mat-button-toggle-group>
-        <button mat-icon-button (click)="open_change_dialog(history_data.id)" matTooltip="修改">
+        <button mat-icon-button (click)="open_change_dialog(history_data?.id)" matTooltip="修改">
           <i class="iconfont icon-xiugai"></i>
         </button>
-        <button mat-icon-button (click)="open_change_dialog(plan_data.id)" matTooltip="删除！">
+        <button mat-icon-button (click)="open_change_dialog(plan_data?.id)" matTooltip="删除！">
           <i class="iconfont icon-delete"></i>
         </button>
         <button mat-icon-button
                 (click)="get_history_detail(history_data,$event)"
-                [disabled]="(history_data_list|async).has(history_data.id)"
+                [disabled]="(history_data_list|async).has(history_data?.id)"
                 matTooltip="刷新">
           <i class="iconfont icon-refresh"></i>
         </button>

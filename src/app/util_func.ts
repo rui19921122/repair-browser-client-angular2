@@ -161,7 +161,6 @@ export function add_or_change_obj_from_array_by_id<T extends { id: string }>(ori
     };
   } else {
     origin.push(changed);
-    console.log(origin);
     return {
       objects: Array.from(origin),
       method: 'add',

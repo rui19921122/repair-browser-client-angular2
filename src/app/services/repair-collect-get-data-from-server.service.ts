@@ -7,11 +7,12 @@ import {
   RepairHistoryCollectStoreActions,
   RepairHistoryCollectStoreInterface
 } from '../repair-history-collect/repair-history-collect.store';
-import {RepairHistoryDataApiInterface, RepairPlanApi} from '../api';
+import {RepairHistoryDataApiInterface, RepairPlanApi, RepairPlanSingleDataApiInterface} from '../api';
 import {SnackBarConfig} from '../providers/snack-bar-provider';
 import {MatSnackBar} from '@angular/material';
 import {convert_history_data_server_to_store, convert_plan_data_server_to_store} from '../repair-history-collect/repair_collect_data_utils';
 import {mock_history_data, mock_repair_data} from '../repair-history-collect/mock-data';
+import {generate_a_id, get_obj_from_array_by_id} from '../util_func';
 
 @Injectable()
 export class RepairCollectGetDataFromServerService {
@@ -82,5 +83,42 @@ export class RepairCollectGetDataFromServerService {
     }
 
   }
+
+  public calc_miss_repair_plan_data_by_history_data() {
+    function generate_plan_number_from_history_number(str: string): { number: string, type: 'Ⅰ' | 'Ⅱ' | '站' | '垂' } {
+      const slitted = str.split('-');
+      if (slitted.length !== 2) {
+        throw Error(`${str}无法按-切分`);
+      }
+      return {
+        number: slitted[1].slice(1, slitted[1].length),
+        type: slitted[1][0] === 'J' ? 'Ⅱ' : (slitted[1][0] === 'Z' ? '站' : '垂')
+      };
+    }
+
+    let current_state: RepairHistoryCollectStoreInterface;
+    this.repair_collect_store.subscribe(v => current_state = v).unsubscribe();
+    const repair_plan_data = Array.from(current_state.repair_plan_data);
+    for (const single_date of current_state.repair_plan_and_history_data_mapped) {
+      const miss_repair_history_data_id_list = single_date.repair_history_data_not_map_in_plan;
+      for (const repair_history_id of miss_repair_history_data_id_list) {
+        const history_detail = get_obj_from_array_by_id(current_state.repair_history_data, repair_history_id).obj;
+        const number_and_type = generate_plan_number_from_history_number(history_detail.number);
+        const repair_plan_like_data: RepairPlanSingleDataApiInterface = {
+          number: number_and_type.number,
+          post_date: history_detail.date.format(),
+          apply_place: history_detail.apply_place,
+          area: '',
+          direction: '',
+          plan_time: history_detail.plan_time,
+          type: number_and_type.type,
+          content: []
+        };
+        repair_plan_data.push(convert_plan_data_server_to_store(repair_plan_like_data));
+      }
+    }
+    this.store.dispatch(new RepairHistoryCollectStoreActions.ReplaceAllRepairData({data: repair_plan_data}));
+  }
+
 }
 

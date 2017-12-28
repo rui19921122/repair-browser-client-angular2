@@ -16,7 +16,7 @@ import {
 
 
 export interface RepairPlanSingleDataInterface {
-  type: 'Ⅰ' | 'Ⅱ' | '站' | '垂';
+  type: '局' | '站' | '垂';
   plan_time: string;
   apply_place: string;
   area: string;
