@@ -22,7 +22,6 @@ export class RepairHistoryDetailCardComponent implements OnInit, OnDestroy {
   public history_data_list: Observable<Set<string>>;
 
   constructor(public service: RepairHistoryDetailApiService,
-              public zone: NgZone,
               public store: Store<AppState>) {
     this.history_data_list = this.store.select(state => state.repair_history_collect.query_repair_detail_list);
   }

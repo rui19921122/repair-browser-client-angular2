@@ -200,3 +200,33 @@ a, a:visited, a:focus, a:hover {
   font-size: 25px;
 }
 
+.card-form {
+  text-align: right
+}
+
+.card-form > div {
+  width: 240px;
+}
+
+.card-form input, .card-form textarea {
+  width: 140px;
+  background: none;
+  color: white;
+  font-size: 15px;
+  border-left: none;
+  border-right: none;
+  border-top: none;
+}
+
+.card-form input:focus, .card-form textarea:focus {
+  outline: none;
+}
+
+.card-form input::placeholder {
+  color: white;
+  font-size: 10px;
+}
+
+.card-form input:disabled {
+  color: #bababa
+}

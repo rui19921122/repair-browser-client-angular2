@@ -1,4 +1,92 @@
 <div class="detail-card-collection"
+     *ngIf="is_edit"
+     style="padding: 0;
+  box-shadow: 0 15px 15px -12px rgba(0, 0, 0, 0.56), 0 4px 20px 0px rgba(0, 0, 0, 0.12), 0 3px 10px -5px rgba(0, 0, 0, 0.2);
+"
+>
+  <div style="background-color: #5677fc">
+    <div style="width: 55%;float: left;height: 100%;">
+      <div fxLayout="column" fxLayoutAlign="center center" style="height: 100%;" class="card-content-area"
+           *ngIf="plan_data">
+        <div class="card-form">
+          <div>
+            <label for="number">编号:</label>
+            <input placeholder="原编号是{{plan_data.number}}"
+                   [(ngModel)]="form.controls['number'].value"
+                   id="number"
+                   autocomplete="off"
+            >
+          </div>
+          <div>
+            <label for="used_number">解析编号:</label>
+            <input
+              placeholder="解析编号"
+              [disabled]="true"
+              id="used_number"
+              value="{{get_used_number()}}"
+            >
+          </div>
+          <div>
+            <label for="area">区域:</label>
+            <input
+              placeholder="区域"
+              [(ngModel)]="form.controls['area'].value"
+              id="area"
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div fxLayout="row">
+    <div fxFlex="55">
+      <div fxLayout="column" fxLayoutAlign="center center" *ngIf="plan_data">
+        <div>
+          <span *ngIf="plan_data.calc_time" class="card-time-area">
+            {{plan_data.start_time}}-{{plan_data.end_time}}
+          </span>
+        </div>
+        <div>
+          <span *ngIf="plan_data.calc_time" class="card-time-extra-text-area">
+
+          </span>
+          <span *ngIf="!plan_data.calc_time" class="card-time-extra-text-area card-warn">
+            {{plan_data.plan_time}}
+          </span>
+        </div>
+      </div>
+    </div>
+    <div fxFlex="1">
+      <div class="card-title">
+        <div *ngIf="plan_data">
+          <p>
+            {{plan_data.type}}
+          </p>
+        </div>
+        <div *ngIf="!plan_data" class="card-title-button">
+          <div>
+            <button mat-icon-button (click)="create_repair_plan_from_history()">
+              <i class="iconfont icon-add" matTooltip="从历史计划导入基础信息">
+              </i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div fxFlex="25" class="card-title-button-group">
+      <mat-button-toggle-group>
+        <button mat-icon-button (click)="open_change_dialog(plan_data.id)" matTooltip="修改">
+          <i class="iconfont icon-xiugai"></i>
+        </button>
+        <button mat-icon-button (click)="open_change_dialog(plan_data.id)" matTooltip="删除！">
+          <i class="iconfont icon-delete"></i>
+        </button>
+      </mat-button-toggle-group>
+    </div>
+  </div>
+</div>
+<div class="detail-card-collection"
+     *ngIf="!is_edit"
      style="padding: 0;
   box-shadow: 0 15px 15px -12px rgba(0, 0, 0, 0.56), 0 4px 20px 0px rgba(0, 0, 0, 0.12), 0 3px 10px -5px rgba(0, 0, 0, 0.2);
 "

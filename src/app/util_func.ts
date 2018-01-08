@@ -43,48 +43,6 @@ export function string_is_a_valid_time(string: string) {
 export function sort_data_by_date(data: RepairPlanAndHistoryDataSorted[]): RepairPlanAndHistoryDataSorted[] {
   return data.sort((a, b) => a.date.isSameOrBefore(b.date) ? -1 : 1);
 }
-
-// export function add_a_value_to_sorted_object(date: moment.Moment | string | Date,
-//                                              origin: RepairPlanAndHistoryDataSorted[],
-//                                              value: string,
-//                                              type: 'plan' | 'history') {
-//   let index = origin.findIndex(value2 => value2.date.isSame(date));
-//   if (index < 0) {
-//     let splice_index = 0; // 设置插入新日期的位置
-//     if (origin.length === 0 || origin[origin.length - 1].date.isBefore(date)) {
-//       origin.push({
-//           date: moment(date),
-//           repair_history_data_index_on_this_day: [],
-//           repair_plan_data_index_on_this_day: [],
-//           repair_history_data_not_map_in_plan: []
-//         }
-//       );
-//       splice_index = origin.length - 1;
-//     } else {
-//       for (const i of origin) {
-//         if (i.date.isAfter(date)) {
-//           origin.splice(splice_index, 0, {
-//             date: moment(date),
-//             repair_history_data_index_on_this_day: [],
-//             repair_plan_data_index_on_this_day: [],
-//             repair_history_data_not_map_in_plan: []
-//           });
-//           break;
-//         }
-//         splice_index += 1;
-//       }
-//     }
-//     index = splice_index;
-//     // 将index设为新增的最后一个日期
-//   }
-//
-//   if (type === 'plan') {
-//     origin[index].repair_plan_data_index_on_this_day.push({plan_number_id: value, is_manual: false, history_number_id: null});
-//   } else {
-//     origin[index].repair_history_data_index_on_this_day.push(value);
-//   }
-// }
-
 export function end_time_should_later_than_start_time(start: string, end: string): boolean {
   if (start && end) {
     const start_moment = moment().hours(Number(start.split(':')[0])).minutes(Number(start.split(':')[1]));

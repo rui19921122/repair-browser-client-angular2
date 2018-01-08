@@ -6,7 +6,10 @@ import {Observable} from 'rxjs/Observable';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Subscription} from 'rxjs/Subscription';
 import * as moment from 'moment';
-import {convert_h_mm_time_format_to_hh_mm_time_format, end_time_should_later_than_start_time, generate_a_id} from '../../util_func';
+import {
+  convert_h_mm_time_format_to_hh_mm_time_format, end_time_should_later_than_start_time, generate_a_id,
+  get_obj_from_array_by_id
+} from '../../util_func';
 
 @Component({
   selector: 'app-repair-plan-dialog',
@@ -29,7 +32,10 @@ export class RepairPlanEditDialogComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.$dialog_plan_number = this.store.select(state => state.repair_history_collect.dialog_settings.dialog_id);
+    this.$dialog_plan_number = this.store.select(state => {
+      return get_obj_from_array_by_id(state.repair_history_collect.repair_plan_data,
+        state.repair_history_collect.dialog_settings.dialog_id).obj.id;
+    });
     this.$plan_data = this.store.select(
       state => state.repair_history_collect.repair_plan_data
     );
@@ -42,22 +48,20 @@ export class RepairPlanEditDialogComponent implements OnInit, OnDestroy {
         calc_time: [true],
         apply_place: [''],
         area: [''],
-        direction: [''],
         number: [null, Validators.required],
       }
     );
     const un = this.$plan_data.withLatestFrom(this.$dialog_plan_number).subscribe(values => {
-      const value: RepairPlanSingleDataInterface = values[0][values[1]];
+      const value: RepairPlanSingleDataInterface = get_obj_from_array_by_id(values[0], values[1]).obj;
       if (value) {
         this.origin_data = value;
         this.form.setValue(
           {
             type: value.type ? value.type : '',
-            start_time: !value.calc_time ? convert_h_mm_time_format_to_hh_mm_time_format(value.plan_time.split('-')[0]) : '',
-            end_time: !value.calc_time ? convert_h_mm_time_format_to_hh_mm_time_format(value.plan_time.split('-')[1]) : '',
-            direction: value.direction ? value.direction : '',
+            start_time: value.calc_time ? convert_h_mm_time_format_to_hh_mm_time_format(value.plan_time.split('-')[0]) : '',
+            end_time: value.calc_time ? convert_h_mm_time_format_to_hh_mm_time_format(value.plan_time.split('-')[1]) : '',
             area: value.area ? value.area : '',
-            calc_time: !value.calc_time, // 注意这个，与实际不同
+            calc_time: value.calc_time, // 注意这个，与实际不同
             apply_place: value.apply_place ? value.apply_place : '',
             number: value.number ? value.number : null,
             date: value.date ? value.date.toDate() : null,
@@ -131,15 +135,17 @@ export class RepairPlanEditDialogComponent implements OnInit, OnDestroy {
       this.store.dispatch(new RepairHistoryCollectStoreActions.UpdateRepairPlanData({
           number: this.form.controls['number'].value,
           date: moment(this.form.controls['date'].value),
-          calc_time: !this.form.controls['calc_time'],
+          calc_time: !!this.form.controls['calc_time'],
           plan_time:
-            this.form.controls['calc_time'] ?
+            !!this.form.controls['calc_time'] ?
               `${this.form.controls['start_time'].value}-${this.form.controls['end_time'].value}` : '',
           apply_place: this.form.controls['apply_place'].value,
-          direction: this.form.controls['direction'].value,
           type: this.form.controls['type'].value,
           area: this.form.controls['area'].value,
-          id: null,
+          used_number: `${moment(this.form.controls['date'].value)
+            .format('YYYYMMDD')}-${this.form.controls['type'].value === '站' ? 'Z' : (this.form.controls['type'].value === '垂' ?
+            'D' : 'J')}${this.form.controls['number'].value}`,
+        id: null,
         }),
       );
       this.store.dispatch(new RepairHistoryCollectStoreActions.OpenOrCloseADialog({dialog_type: ''}));

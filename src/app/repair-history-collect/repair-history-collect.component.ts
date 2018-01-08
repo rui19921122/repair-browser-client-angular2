@@ -48,9 +48,7 @@ export class RepairHistoryCollectComponent implements OnInit, AfterViewInit, OnD
   public $repair_plan_and_history_data: Observable<RepairPlanAndHistoryDataSorted[]>;
   public $show_all_dates_on_header: Observable<boolean>;
   public listen_for_keyboard_click_unsubscribe: Subscription;
-  public $open_or_close_plan_data_dialog: Observable<string>;
   public $plan_data_dialog_number: Observable<string>;
-  public open_or_close_plan_data_dialog_unsubscribe: Subscription;
   public $repair_plan_data: Observable<RepairPlanSingleDataInterface[]>;
   public $repair_history_data: Observable<RepairHistorySingleDataInterface[]>;
 
@@ -62,31 +60,10 @@ export class RepairHistoryCollectComponent implements OnInit, AfterViewInit, OnD
               public repair_collect_get_data_from_server_service: RepairCollectGetDataFromServerService,
               fb: FormBuilder) {
     // 对话框相关
-    this.$open_or_close_plan_data_dialog = this.store.select(state => state.repair_history_collect.dialog_settings.which_dialog_open);
     this.$plan_data_dialog_number = this.store.select(state => state.repair_history_collect.dialog_settings.dialog_id);
     this.$repair_plan_data = this.store.select(state => state.repair_history_collect.repair_plan_data);
     this.$repair_history_data = this.store.select(state => state.repair_history_collect.repair_history_data);
     this.watch_store_change_service.watch_for_plan_and_history_data_map(true);
-    this.open_or_close_plan_data_dialog_unsubscribe = this.$open_or_close_plan_data_dialog.withLatestFrom(this.$plan_data_dialog_number)
-      .delay(100)
-      .subscribe(
-        (value: [string, string]) => {
-          const dialog_type = value[0];
-          switch (dialog_type) {
-            case 'repair_plan':
-              this.dialog.open(RepairPlanEditDialogComponent, dialogConfig);
-              break;
-            case 'repair_history':
-              this.dialog.open(RepairHistoryEditDialogComponent, dialogConfig);
-              break;
-            case '':
-              this.dialog.closeAll();
-              break;
-            default:
-              this.dialog.closeAll();
-          }
-        }
-      );
     this.$repair_plan_and_history_data = this.store.select(state =>
       state.repair_history_collect.repair_plan_and_history_data_mapped);
     this.$state = this.store.select(state2 => state2.repair_history_collect);
@@ -147,9 +124,6 @@ export class RepairHistoryCollectComponent implements OnInit, AfterViewInit, OnD
   ngOnDestroy() {
     if (this.listen_for_keyboard_click_unsubscribe) {
       this.listen_for_keyboard_click_unsubscribe.unsubscribe();
-    }
-    if (this.open_or_close_plan_data_dialog_unsubscribe) {
-      this.open_or_close_plan_data_dialog_unsubscribe.unsubscribe();
     }
   }
 

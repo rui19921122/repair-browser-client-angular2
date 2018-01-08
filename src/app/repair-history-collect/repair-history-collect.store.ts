@@ -11,7 +11,7 @@ import {
 import {
   sort_data_by_date,
   generate_a_id,
-  string_is_a_valid_time_range, add_or_change_obj_from_array_by_id, get_obj_from_array_by_id
+  string_is_a_valid_time_range, add_or_change_obj_from_array_by_id, get_obj_from_array_by_id, delete_obj_from_array_by_id
 } from '../util_func';
 
 
@@ -21,7 +21,6 @@ export interface RepairPlanSingleDataInterface {
   apply_place: string;
   area: string;
   number: string;
-  direction: string;
   date: moment.Moment;
   id: string;
   calc_time: boolean;
@@ -393,11 +392,16 @@ export function reducer(state: RepairHistoryCollectStoreInterface = default_stat
     case
     UPDATE_REPAIR_PLAN_DATA:
       // 更新单个天窗修计划内容
-      const index: string = generate_a_id(action.payload);
-      // todo 未实现
+      const current_plan_data = Array.from(state.repair_plan_data);
+      const obj = add_or_change_obj_from_array_by_id(current_plan_data, {
+        ...action.payload,
+        id: generate_a_id(action.payload),
+      });
       // 按照天窗修编号及日期索引
+      console.log(obj);
       return {
-        ...state
+        ...state,
+        repair_plan_data: obj.objects
       };  // 复制此两行到reducer中
     case
     OPEN_OR_CLOSE_A_DIALOG:

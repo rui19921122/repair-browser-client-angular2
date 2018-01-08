@@ -34,7 +34,6 @@ export function convert_plan_data_server_to_store(origin: RepairPlanSingleDataAp
     end_time: is_a_time ? is_a_time[2] : null,
     plan_time: origin.plan_time,
     area: origin.area,
-    direction: origin.direction,
     used_number: `${moment(origin.post_date)
       .format('YYYYMMDD')}-${origin.type === '站' ? 'Z' : (origin.type === '垂' ? 'D' : 'J')}${origin.number}`
   };
