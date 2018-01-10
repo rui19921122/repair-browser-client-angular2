@@ -47,7 +47,11 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.user_service.get_login_status();
+    this.store.select(state => state.user).take(1).subscribe(value => {
+      if (!value.is_login) {
+        this.user_service.get_login_status();
+      }
+    });
   }
 
   public open() {

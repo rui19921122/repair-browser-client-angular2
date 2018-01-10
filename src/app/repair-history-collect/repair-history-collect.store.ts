@@ -56,6 +56,7 @@ export interface RepairHistoryCollectStoreInterface {
     not_displayed_data: moment.Moment[]; // 哪些日期在多日期展示模式下屏蔽
     displayed_data: moment.Moment; // 哪个日期在单日期展示下呈现
     only_show_on_day_on_content: boolean;
+    show_detail_method: 'table' | 'card';
   };
   dialog_settings: {
     which_dialog_open: 'repair_plan' | 'repair_history' | '';
@@ -294,6 +295,17 @@ export class UpdateQueryDetailList implements Action {
 
   }
 }
+export const CHANGE_SHOW_DETAIL_METHOD = '[repair-collect]CHANGE_SHOW_DETAIL_METHOD';
+
+// 变更展示数据的方式
+export class ChangeShowDetailMethod implements Action {
+  readonly type = CHANGE_SHOW_DETAIL_METHOD;
+
+  constructor(public payload: {}) {
+
+  }
+}
+
 
 export type RepairHistoryCollectStoreActionType =
   SwitchOpenWhichSidebar
@@ -307,6 +319,7 @@ export type RepairHistoryCollectStoreActionType =
   | UpdateWhichDateShouldDisplayOnContent // 复制此行到ActionType中,更新哪些日期可以在页面中显示 action type
   | SwitchOnlyShowOneDateOnContent // 复制此行到ActionType中,切换是否仅在内容框中显示一个日期 action type
   | MapPlanAndHistoryNumber   // 复制此行到ActionType中
+  | ChangeShowDetailMethod // 复制此行到ActionType中,变更展示数据的方式 action type
   | AddOrRemoveDateToOpenedDatePanel   // 复制此行到ActionType中
   | UpdateRepairHistoryData // 复制此行到ActionType中,更新天窗修历史实绩集合 action type
   | ChangeSelectedDate
@@ -335,6 +348,7 @@ export const RepairHistoryCollectStoreActions = {
   UpdateGetRepairDetailPending,  // 复制此行到导出的Action中,更新天窗修实际查询的pending actions
   SwitchShowAllDatesOnDatesHeader,  // 复制此行到导出的Action中
   AddOrRemoveDateToOpenedDatePanel,  // 复制此行到导出的Action中
+  ChangeShowDetailMethod,  // 复制此行到导出的Action中,变更展示数据的方式 actions
 };
 
 
@@ -354,6 +368,7 @@ const default_state: RepairHistoryCollectStoreInterface = {
     not_displayed_data: [],
     only_show_on_day_on_content: true,
     displayed_data: null,
+    show_detail_method: 'card'
   },
   dialog_settings: {
     which_dialog_open: null,
@@ -370,6 +385,13 @@ export function reducer(state: RepairHistoryCollectStoreInterface = default_stat
   switch (action.type) {
     case UPDATE_QUERY_DETAIL_LIST:
       return {...state, query_repair_detail_list: action.payload.data}; // 复制此两行到reducer中,更新query查询计划列表 reducer
+    case CHANGE_SHOW_DETAIL_METHOD:
+      return {
+        ...state, content_settings: {
+          ...state.content_settings,
+          show_detail_method: state.content_settings.show_detail_method === 'card' ? 'table' : 'card'
+        }
+      }; // 复制此两行到reducer中,变更展示数据的方式 reducer
     case REPLACE_ALL_HISTORY_DATA:
       return {...state, repair_history_data: action.payload.data}; // 复制此两行到reducer中,更换所有的历史数据 reducer
     case REPLACE_ALL_REPAIR_DATA:

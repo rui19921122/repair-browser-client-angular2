@@ -1,0 +1,45 @@
+<table id="hor-minimalist-a">
+  <tr class="first-header">
+    <th colspan="8">
+      天窗修计划
+    </th>
+    <th colspan="5">
+      天窗修实绩
+    </th>
+  </tr>
+  <tr>
+    <th width="40px">日期</th>
+    <th width="40px">类别</th>
+    <th width="100px">计划编号</th>
+    <th width="150px">解析编号</th>
+    <th width="80px">区域</th>
+    <th width="80px">开始时间</th>
+    <th width="80px">结束时间</th>
+    <th width="150px">操作</th>
+    <th width="100px">计划编号</th>
+    <th width="150px">解析编号</th>
+    <th width="80px">开始时间</th>
+    <th width="80px">结束时间</th>
+    <th width="150px">操作</th>
+  </tr>
+  <ng-container *ngFor="let i of (mapped|async)">
+    <tr *ngFor="let j of i.repair_plan_data_index_on_this_day">
+      <!--计划部分-->
+      <ng-container
+        *ngIf="(plan_data|async|getDataById: j.plan_number_id)"
+      >
+        <ng-container *ngTemplateOutlet="plan_data_with_data;context: (plan_data|async|getDataById: j.plan_number_id)">
+
+        </ng-container>
+
+      </ng-container>
+      <!--实绩部分-->
+      <!--详细时间部门-->
+    </tr>
+
+  </ng-container>
+</table>
+<ng-template #plan_data_with_data let-data>
+  <td>123</td>
+  <td>{{data.date}}</td>
+</ng-template>

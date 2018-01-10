@@ -74,8 +74,20 @@
         </button>
       </div>
     </div>
+    <div>
+      <button class="left-slider-bar-button accent-color" mat-raised-button mat-icon-button
+              matTooltip="切换卡片布局或者表格布局"
+              [matTooltipPosition]="'right'"
+              (click)="change_detail_display_method()"
+      >
+        <i class="iconfont icon-add"></i>
+      </button>
+    </div>
   </div>
-  <div fxFlex="90" class="detail-card-area" style="overflow-y: auto;padding-bottom: 15px;"
+  <!--卡片布局-->
+  <div fxFlex="90" class="detail-card-area"
+       style="overflow-y: auto;padding-bottom: 15px;"
+       *ngIf="($display_detail_method|async)==='card'"
        [ngStyle]="{'height':height+'px'}">
     <div fxLayout="column">
       <div *ngFor="let detail of which_dates_data_displayed_on_the_content(
@@ -120,5 +132,11 @@
         </div>
       </div>
     </div>
+  </div>
+  <!--表格布局-->
+  <div fxFlex="90"
+       *ngIf="($display_detail_method|async)==='table'"
+  >
+    <app-repair-plan-edit-table-td></app-repair-plan-edit-table-td>
   </div>
 </div>

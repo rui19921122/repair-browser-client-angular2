@@ -14,7 +14,7 @@ export class UserService {
   public user: UserStoreInterface;
 
   constructor(public http: HttpClient, public snackBar: MatSnackBar, public store: Store<AppState>) {
-    this.store.select('user').subscribe(v => this.user = v);
+    this.store.select('user').subscribe(v => this.user = v).unsubscribe();
     this.login_end.subscribe(() => {
       this.store.dispatch(new SwitchLoginPending(false));
       this.store.dispatch(new SwitchOpenLoginPanel(false));

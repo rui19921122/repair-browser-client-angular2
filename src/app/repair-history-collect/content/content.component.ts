@@ -36,6 +36,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   public $only_show_one_date_on_content: Observable<boolean>;
   public $repair_detail_data: Observable<RepairHistoryDataDetailInterface[]>;
   public $repair_detail_data_list: Observable<Set<string>>;
+  public $display_detail_method: Observable<string>;
   @Input('height') height: number;
 
   constructor(public store: Store<AppState>,
@@ -46,6 +47,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.$display_detail_method = this.store.select(state => state.repair_history_collect.content_settings.show_detail_method);
     this.$state = this.store.select(state => state.repair_history_collect);
     this.$repair_detail_data_list = this.store.select(state => state.repair_history_collect.query_repair_detail_list);
     this.$repair_plan_and_history_data = this.store.select(
@@ -72,6 +74,10 @@ export class ContentComponent implements OnInit, OnDestroy {
 
   public open_panel(string: 'date_list' | 'date_select') {
     this.store.dispatch(new RepairHistoryCollectStoreActions.SwitchOpenWhichSidebar(string));
+  }
+
+  public change_detail_display_method() {
+    this.store.dispatch(new RepairHistoryCollectStoreActions.ChangeShowDetailMethod({}));
   }
 
   public switch_only_show_one_date_on_content() {
