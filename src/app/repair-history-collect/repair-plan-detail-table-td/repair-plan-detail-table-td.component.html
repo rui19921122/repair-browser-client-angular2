@@ -1,0 +1,35 @@
+<ng-container *ngIf="plan_data;else no_plan_data_template">
+  <!--日期-->
+  <td>
+    {{ plan_data.date|moment:'MM-DD' }}
+  </td>
+  <!--类别-->
+  <td>
+    {{plan_data.type}}
+  </td>
+  <!--计划编号-->
+  <td>{{plan_data.number}}</td>
+  <!--解析编号-->
+  <td>{{plan_data.used_number}}</td>
+  <!--区域-->
+  <td>{{plan_data.area|split_long_sentence_with_colon}}</td>
+  <!--判断是否计算时间-->
+  <ng-container *ngIf="plan_data.calc_time">
+    <td>{{ plan_data.start_time }}-{{plan_data.end_time}}</td>
+  </ng-container>
+  <ng-container *ngIf="!plan_data.calc_time">
+    <td>不计算</td>
+  </ng-container>
+  <!--操作-->
+  <!--计划编号-->
+  <!--解析编号-->
+  <!--开始时间-->
+  <!--结束时间-->
+  <!--操作-->
+</ng-container>
+<ng-template #no_plan_data_template>
+  <td>
+    4567
+  </td>
+</ng-template>
+

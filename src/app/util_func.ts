@@ -43,6 +43,7 @@ export function string_is_a_valid_time(string: string) {
 export function sort_data_by_date(data: RepairPlanAndHistoryDataSorted[]): RepairPlanAndHistoryDataSorted[] {
   return data.sort((a, b) => a.date.isSameOrBefore(b.date) ? -1 : 1);
 }
+
 export function end_time_should_later_than_start_time(start: string, end: string): boolean {
   if (start && end) {
     const start_moment = moment().hours(Number(start.split(':')[0])).minutes(Number(start.split(':')[1]));
@@ -86,12 +87,16 @@ export function convert_a_HH_mm_like_string_to_a_moment(string: string | null, d
 }
 
 export function get_obj_from_array_by_id<T extends { id: string }>(array: T[], id: string): { obj: T, index: number } {
+  if (!id) {
+    return {obj: null, index: -1};
+  }
   const new_array = Array.from(array);
   const index = new_array.findIndex(value => value.id === id);
   if (index >= 0) {
     return {obj: new_array[index], index: index};
+  } else {
+    return {obj: null, index: -1};
   }
-  throw Error(`寻找的id ${id}不存在`);
 }
 
 export function delete_obj_from_array_by_id<T extends { id: string }>(array: T[], id: string): {

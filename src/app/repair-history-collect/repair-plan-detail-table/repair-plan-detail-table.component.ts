@@ -1,20 +1,22 @@
-import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../store';
 import {Subscription} from 'rxjs/Subscription';
 import {
   RepairHistoryDataDetailInterface,
-  RepairHistorySingleDataInterface, RepairPlanAndHistoryDataSorted,
+  RepairHistorySingleDataInterface,
+  RepairPlanAndHistoryDataSorted,
   RepairPlanSingleDataInterface
 } from '../repair-history-collect.store';
 import {add_or_change_obj_from_array_by_id, get_obj_from_array_by_id} from '../../util_func';
 import {Observable} from 'rxjs/Observable';
 
 @Component({
-  selector: 'app-repair-plan-edit-table-td',
-  templateUrl: './repair-plan-edit-table-td.component.html',
-  styleUrls: ['./repair-plan-edit-table-td.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-repair-plan-detail-table',
+  templateUrl: './repair-plan-detail-table.component.html',
+  styleUrls: ['./repair-plan-detail-table.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.Native
 })
 export class RepairPlanEditTableTdComponent implements OnInit {
   public mapped: Observable<RepairPlanAndHistoryDataSorted[]>;

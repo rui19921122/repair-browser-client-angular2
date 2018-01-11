@@ -53,7 +53,8 @@ import {WatchStoreChangeService} from './services/watch_store_change_sub';
 import {SnackBarConfig} from './providers/snack-bar-provider';
 import {RepairCollectGetDataFromServerService} from './services/repair-collect-get-data-from-server.service';
 import {CountingMappedPlanDataWithoutHistoryPipe} from './pipes/counting-mapped-plan-data-without-history.pipe';
-import { RepairPlanEditTableTdComponent } from './repair-history-collect/repair-plan-edit-table-td/repair-plan-edit-table-td.component';
+import {RepairPlanEditTableTdComponent} from './repair-history-collect/repair-plan-detail-table/repair-plan-detail-table.component';
+import {RepairPlanDetailTableTdComponent} from './repair-history-collect/repair-plan-detail-table-td/repair-plan-detail-table-td.component';
 
 export const routes: Routes = [
   {path: '', redirectTo: 'home', pathMatch: 'full'},
@@ -92,6 +93,7 @@ export const routes: Routes = [
     RenderShowedTimeWithGivenMomentPipe,
     CountingMappedPlanDataWithoutHistoryPipe,
     RepairPlanEditTableTdComponent,
+    RepairPlanDetailTableTdComponent,
   ],
   imports: [
     NgxDatatableModule,

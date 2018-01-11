@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { RepairPlanEditTableTdComponent } from './repair-plan-edit-table-td.component';
+import { RepairPlanEditTableTdComponent } from './repair-plan-detail-table.component';
 
 describe('RepairPlanEditTableTdComponent', () => {
   let component: RepairPlanEditTableTdComponent;
