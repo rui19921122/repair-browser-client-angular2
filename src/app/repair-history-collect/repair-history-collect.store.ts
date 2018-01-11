@@ -27,6 +27,7 @@ export interface RepairPlanSingleDataInterface {
   start_time?: string;
   end_time?: string;
   used_number?: string;
+  longing: number; // 持续时间，以分钟为单位
 }
 
 
@@ -295,6 +296,7 @@ export class UpdateQueryDetailList implements Action {
 
   }
 }
+
 export const CHANGE_SHOW_DETAIL_METHOD = '[repair-collect]CHANGE_SHOW_DETAIL_METHOD';
 
 // 变更展示数据的方式

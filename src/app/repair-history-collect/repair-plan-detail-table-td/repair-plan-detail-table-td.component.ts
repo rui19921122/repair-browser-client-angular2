@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
 import {RepairHistoryDetailAPIInterface} from '../../services/repair-history-detail-api.service';
 import {
   RepairHistoryDataDetailInterface, RepairHistorySingleDataInterface,
@@ -15,7 +15,8 @@ import {get_obj_from_array_by_id} from '../../util_func';
   /* tslint:enable */
   templateUrl: './repair-plan-detail-table-td.component.html',
   styleUrls: ['./repair-plan-detail-table-td.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None
 })
 export class RepairPlanDetailTableTdComponent implements OnInit, OnDestroy {
   @Input() plan_data_id: string;
@@ -27,7 +28,8 @@ export class RepairPlanDetailTableTdComponent implements OnInit, OnDestroy {
   public sub2: Subscription;
   public sub3: Subscription;
 
-  constructor(public store: Store<AppState>) {
+  constructor(public store: Store<AppState>,
+              public cd: ChangeDetectorRef) {
   }
 
   ngOnInit() {
@@ -43,12 +45,15 @@ export class RepairPlanDetailTableTdComponent implements OnInit, OnDestroy {
       this.history_data_id
     ).obj);
     this.sub1 = observable1.subscribe(value => {
+      this.cd.markForCheck();
       value ? this.plan_data = value : this.plan_data = null;
     });
     this.sub2 = observable2.subscribe(value => {
+      this.cd.markForCheck();
       value ? this.history_data = value : this.history_data = null;
     });
     this.sub3 = observable3.subscribe(value => {
+      this.cd.markForCheck();
       value ? this.detail_data = value : this.detail_data = null;
     });
   }

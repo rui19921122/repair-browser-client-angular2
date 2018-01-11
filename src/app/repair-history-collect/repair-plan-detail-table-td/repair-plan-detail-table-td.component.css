@@ -1,0 +1,12 @@
+.button-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button-row button {
+  background: none;
+  margin: 0;
+  padding: 0 5px;
+  min-width: 30px !important;
+}

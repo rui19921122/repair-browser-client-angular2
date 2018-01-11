@@ -49,6 +49,7 @@ export class RepairPlanEditDialogComponent implements OnInit, OnDestroy {
         apply_place: [''],
         area: [''],
         number: [null, Validators.required],
+        longing: [null, Validators.required]
       }
     );
     const un = this.$plan_data.withLatestFrom(this.$dialog_plan_number).subscribe(values => {
@@ -65,6 +66,7 @@ export class RepairPlanEditDialogComponent implements OnInit, OnDestroy {
             apply_place: value.apply_place ? value.apply_place : '',
             number: value.number ? value.number : null,
             date: value.date ? value.date.toDate() : null,
+            longing: value.longing ? value.longing : null
           }
         );
       }
@@ -132,21 +134,28 @@ export class RepairPlanEditDialogComponent implements OnInit, OnDestroy {
 
   handle_submit() {
     if (this.form.valid) {
-      this.store.dispatch(new RepairHistoryCollectStoreActions.UpdateRepairPlanData({
-          number: this.form.controls['number'].value,
-          date: moment(this.form.controls['date'].value),
-          calc_time: !!this.form.controls['calc_time'],
-          plan_time:
-            !!this.form.controls['calc_time'] ?
-              `${this.form.controls['start_time'].value}-${this.form.controls['end_time'].value}` : '',
-          apply_place: this.form.controls['apply_place'].value,
-          type: this.form.controls['type'].value,
-          area: this.form.controls['area'].value,
-          used_number: `${moment(this.form.controls['date'].value)
-            .format('YYYYMMDD')}-${this.form.controls['type'].value === '站' ? 'Z' : (this.form.controls['type'].value === '垂' ?
-            'D' : 'J')}${this.form.controls['number'].value}`,
-        id: null,
-        }),
+      const number = this.form.controls['number'].value;
+      const date = moment(this.form.controls['date'].value);
+      const calc_time = !!this.form.controls['calc_time'];
+      const plan_time = !!this.form.controls['calc_time'] ?
+        `${this.form.controls['start_time'].value}-${this.form.controls['end_time'].value}` : '';
+      const start_time = !!this.form.controls['calc_time'] ? this.form.controls['start_time'].value : null;
+      const end_time = !!this.form.controls['calc_time'] ? this.form.controls['end_time'].value : null;
+      const type = this.form.controls['type'].value;
+      const area = this.form.controls['area'].value;
+      const used_number = `${moment(this.form.controls['date'].value)
+        .format('YYYYMMDD')}-${this.form.controls['type'].value === '站' ? 'Z' : (this.form.controls['type'].value === '垂' ?
+        'D' : 'J')}${this.form.controls['number'].value}`;
+      const longing = calc_time ? moment(end_time, 'HH:mm').diff(moment(start_time, 'HH:mm'), 'minutes')
+        : this.form.controls['longing'].value.toInteger();
+      const apply_place = this.form.controls['apply_place'].value;
+      this.store.dispatch(new RepairHistoryCollectStoreActions.UpdateRepairPlanData(
+        {
+          number, date, calc_time, plan_time, start_time, end_time, type, area, used_number, longing,
+          id: null,
+          apply_place
+        }
+        ),
       );
       this.store.dispatch(new RepairHistoryCollectStoreActions.OpenOrCloseADialog({dialog_type: ''}));
     } else {

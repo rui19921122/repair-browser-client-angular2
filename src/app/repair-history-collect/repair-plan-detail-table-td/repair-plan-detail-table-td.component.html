@@ -1,35 +1,71 @@
 <ng-container *ngIf="plan_data;else no_plan_data_template">
-  <!--日期-->
-  <td>
-    {{ plan_data.date|moment:'MM-DD' }}
-  </td>
-  <!--类别-->
-  <td>
-    {{plan_data.type}}
-  </td>
-  <!--计划编号-->
-  <td>{{plan_data.number}}</td>
-  <!--解析编号-->
-  <td>{{plan_data.used_number}}</td>
-  <!--区域-->
-  <td>{{plan_data.area|split_long_sentence_with_colon}}</td>
-  <!--判断是否计算时间-->
-  <ng-container *ngIf="plan_data.calc_time">
+  <td>{{ plan_data.date|moment:'MM-DD' }}</td><!--日期-->
+  <td>{{plan_data.type}}</td><!--类别-->
+  <td>{{plan_data.number}}</td><!--计划编号-->
+  <td>{{plan_data.used_number}}</td><!--解析编号-->
+  <td>{{plan_data.area|split_long_sentence_with_colon}}</td><!--区域-->
+  <ng-container *ngIf="plan_data.calc_time"><!--判断是否计算时间-->
     <td>{{ plan_data.start_time }}-{{plan_data.end_time}}</td>
   </ng-container>
   <ng-container *ngIf="!plan_data.calc_time">
     <td>不计算</td>
   </ng-container>
-  <!--操作-->
-  <!--计划编号-->
-  <!--解析编号-->
-  <!--开始时间-->
-  <!--结束时间-->
-  <!--操作-->
+  <td>{{plan_data.longing}}</td><!--时长-->
+  <td><!--操作-->
+    <mat-button-toggle-group>
+      <div class="button-row">
+        <button mat-button>
+          修改
+        </button>
+        <button mat-button>
+          删除
+        </button>
+      </div>
+    </mat-button-toggle-group>
+  </td>
 </ng-container>
+<!--天窗修历史部分-->
+<ng-container *ngIf="history_data;else no_history_data_template">
+  <td>{{history_data.number}}</td><!--计划编号-->
+  <td>{{history_data.used_number}}</td><!--解析编号-->
+</ng-container>
+<ng-container *ngIf="detail_data;else no_detail_data_template">
+  <td>{{history_data.number}}</td><!--计划编号-->
+  <td>{{history_data.used_number}}</td><!--解析编号-->
+</ng-container>
+<td><!--操作-->
+  <mat-button-toggle-group>
+    <div class="button-row">
+      <button mat-button>
+        修改
+      </button>
+      <button mat-button>
+        删除
+      </button>
+    </div>
+  </mat-button-toggle-group>
+</td>
 <ng-template #no_plan_data_template>
-  <td>
-    4567
+  <td colspan="7">
+    无计划的数据
+  </td>
+  <td><!--操作-->
+    <mat-button-toggle-group>
+      <div class="button-row">
+        <button mat-button>
+          添加
+        </button>
+      </div>
+    </mat-button-toggle-group>
   </td>
 </ng-template>
-
+<ng-template #no_history_data_template>
+  <td>
+    5678
+  </td>
+</ng-template>
+<ng-template #no_detail_data_template>
+  <td colspan="2">
+    未获取
+  </td>
+</ng-template>

@@ -1,6 +1,6 @@
 <table id="hor-minimalist-a">
   <tr class="first-header">
-    <th colspan="7">
+    <th colspan="8">
       天窗修计划
     </th>
     <th colspan="5">
@@ -10,10 +10,11 @@
   <tr>
     <th width="40px">日期</th>
     <th width="40px">类别</th>
-    <th width="100px">计划编号</th>
-    <th width="150px">解析编号</th>
+    <th width="70px">计划编号</th>
+    <th width="130px">解析编号</th>
     <th width="80px">区域</th>
     <th width="80px">时间</th>
+    <th width="30px">时长</th>
     <th width="150px">操作</th>
     <th width="100px">计划编号</th>
     <th width="150px">解析编号</th>
@@ -25,9 +26,14 @@
     <ng-container *ngFor="let j of detail_data.repair_plan_data_index_on_this_day">
       <tr app-repair-plan-detail-table-tr
           [plan_data_id]="j.plan_number_id"
-          [history_data_id]="j.plan_number_id"
+          [history_data_id]="j.history_number_id"
       >
-
+      </tr>
+    </ng-container>
+    <ng-container *ngFor="let j of detail_data.repair_history_data_not_map_in_plan">
+      <tr app-repair-plan-detail-table-tr
+          [history_data_id]="j.history_number_id"
+      >
       </tr>
     </ng-container>
   </ng-container>

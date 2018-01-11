@@ -23,17 +23,23 @@ export function convert_plan_data_server_to_store(origin: RepairPlanSingleDataAp
       type = origin.type;
   }
   const id = generate_a_id(origin);
+  const calc_time = !!is_a_time;
+  const start_time = calc_time ? is_a_time[1] : null;
+  const end_time = calc_time ? is_a_time[2] : null;
+  const longing = calc_time ? moment(end_time, 'HH:mm').diff(moment(start_time, 'HH:mm'), 'minutes')
+    : 0;
   return {
     type: type,
     number: origin.number,
     date: moment(origin.post_date),
     apply_place: origin.apply_place,
     id,
-    calc_time: !!is_a_time,
-    start_time: is_a_time ? is_a_time[1] : null,
-    end_time: is_a_time ? is_a_time[2] : null,
+    calc_time,
+    start_time,
+    end_time,
     plan_time: origin.plan_time,
     area: origin.area,
+    longing,
     used_number: `${moment(origin.post_date)
       .format('YYYYMMDD')}-${origin.type === '站' ? 'Z' : (origin.type === '垂' ? 'D' : 'J')}${origin.number}`
   };
