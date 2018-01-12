@@ -1,6 +1,6 @@
 <table id="hor-minimalist-a">
   <tr class="first-header">
-    <th colspan="8">
+    <th colspan="7">
       天窗修计划
     </th>
     <th colspan="5">
@@ -11,30 +11,35 @@
     <th width="40px">日期</th>
     <th width="40px">类别</th>
     <th width="70px">计划编号</th>
-    <th width="130px">解析编号</th>
     <th width="80px">区域</th>
     <th width="80px">时间</th>
     <th width="30px">时长</th>
     <th width="150px">操作</th>
     <th width="100px">计划编号</th>
-    <th width="150px">解析编号</th>
-    <th width="80px">开始时间</th>
-    <th width="80px">结束时间</th>
+    <th width="30px">纸质</th>
+    <th width="80px">时间</th>
+    <th width="80px">时长</th>
     <th width="150px">操作</th>
   </tr>
-  <ng-container *ngFor="let detail_data of (mapped|async)">
-    <ng-container *ngFor="let j of detail_data.repair_plan_data_index_on_this_day">
-      <tr app-repair-plan-detail-table-tr
-          [plan_data_id]="j.plan_number_id"
-          [history_data_id]="j.history_number_id"
-      >
-      </tr>
-    </ng-container>
-    <ng-container *ngFor="let j of detail_data.repair_history_data_not_map_in_plan">
-      <tr app-repair-plan-detail-table-tr
-          [history_data_id]="j.history_number_id"
-      >
-      </tr>
+  <ng-container *ngIf="show_one_day_or_all">
+    <ng-container *ngFor="let detail_data of mapped|filterSelectedDateFromMappedList:
+      showed_date:not_showed_date:show_one_day_or_all"
+    >
+      <ng-container *ngFor="let j of detail_data.repair_plan_data_index_on_this_day">
+        <tr app-repair-plan-detail-table-tr
+            [plan_data_id]="j.plan_number_id"
+            [history_data_id]="j.history_number_id"
+            [loading]="the_record_is_in_loading(j.history_number_id)"
+        >
+        </tr>
+      </ng-container>
+      <ng-container *ngFor="let j of detail_data.repair_history_data_not_map_in_plan">
+        <tr app-repair-plan-detail-table-tr
+            [history_data_id]="j"
+            [loading]="the_record_is_in_loading(j)"
+        >
+        </tr>
+      </ng-container>
     </ng-container>
   </ng-container>
 </table>

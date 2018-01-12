@@ -77,6 +77,7 @@ export interface RepairHistoryDataDetailInterface {
   actual_start_number: string | null;
   actual_end_number: string | null;
   actual_watcher: string; // 把关人
+  longing: number;
   canceled: boolean;
   id: string;
 }

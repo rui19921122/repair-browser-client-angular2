@@ -60,7 +60,8 @@ export class RepairHistoryDetailApiService {
               actual_watcher: json.actual_host_person,
               update_time: moment(),
               canceled: false,
-              id: value.id
+              id: value.id,
+              longing: actual_end_time.diff(actual_start_time, 'minutes')
             }
           }
         ));

@@ -19,12 +19,11 @@
   padding: 9px 8px 0px 8px;
 }
 
-
 #hor-minimalist-a .first-header th:first-child {
   border-right: 2px solid #6678b1;
 }
 
-#hor-minimalist-a tr th:nth-child(8) {
+#hor-minimalist-a tr th:nth-child(7), .td-with-right-border {
   border-right: 2px solid #6678b1;
 }
 

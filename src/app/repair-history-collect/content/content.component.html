@@ -42,7 +42,7 @@
           <i class="iconfont icon-icon122"></i>
         </button>
       </div>
-      <div *ngIf="($repair_detail_data_list|async).size>0">
+      <div *ngIf="repair_detail_data_list_length>0">
         <button class="left-slider-bar-button alert-color"
                 mat-raised-button
                 mat-icon-button
@@ -50,10 +50,10 @@
                 [matTooltipPosition]="'right'"
                 style="font-size: 1.3rem;color:white"
         >
-          {{($repair_detail_data_list|async).size}}
+          {{repair_detail_data_list_length}}
         </button>
       </div>
-      <div *ngIf="($repair_detail_data_list|async).size===0">
+      <div *ngIf="repair_detail_data_list_length===0">
         <button class="left-slider-bar-button accent-color"
                 mat-raised-button
                 mat-icon-button
@@ -65,7 +65,8 @@
         </button>
       </div>
       <div>
-        <button class="left-slider-bar-button accent-color" mat-raised-button mat-icon-button
+        <button class="left-slider-bar-button accent-color"
+                mat-raised-button mat-icon-button
                 matTooltip="将数据上传到服务器"
                 [matTooltipPosition]="'right'"
                 (click)="post_data_to_server()"
@@ -87,14 +88,12 @@
   <!--卡片布局-->
   <div fxFlex="90" class="detail-card-area"
        style="overflow-y: auto;padding-bottom: 15px;"
-       *ngIf="($display_detail_method|async)==='card'"
+       *ngIf="display_detail_method==='card'"
        [ngStyle]="{'height':height+'px'}">
     <div fxLayout="column">
-      <div *ngFor="let detail of which_dates_data_displayed_on_the_content(
-            ($only_show_one_date_on_content|async)? ($showed_date_on_content|async): ($not_showed_dates_on_content|async),
-            $repair_plan_and_history_data|async,
-            $only_show_one_date_on_content|async
-             )">
+      <div *ngFor="let detail of repair_plan_and_history_data|filterSelectedDateFromMappedList:
+      showed_date_on_content:not_showed_dates_on_content:only_show_one_date_on_content"
+      >
         <div class="date-column default-primary-color">
           <h2 class="text-primary-color">{{detail.date.format("YYYY年MM月DD日")}}</h2>
         </div>
@@ -135,8 +134,10 @@
   </div>
   <!--表格布局-->
   <div fxFlex="90"
-       *ngIf="($display_detail_method|async)==='table'"
+       style="overflow-y: auto"
+       *ngIf="display_detail_method==='table'"
   >
-    <app-repair-plan-detail-table></app-repair-plan-detail-table>
+    <app-repair-plan-detail-table>
+    </app-repair-plan-detail-table>
   </div>
 </div>

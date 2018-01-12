@@ -1,17 +1,17 @@
 <ng-container *ngIf="plan_data;else no_plan_data_template">
   <td>{{ plan_data.date|moment:'MM-DD' }}</td><!--日期-->
   <td>{{plan_data.type}}</td><!--类别-->
-  <td>{{plan_data.number}}</td><!--计划编号-->
-  <td>{{plan_data.used_number}}</td><!--解析编号-->
-  <td>{{plan_data.area|split_long_sentence_with_colon}}</td><!--区域-->
+  <td [matTooltip]="plan_data.used_number">{{plan_data.number}}</td><!--计划编号-->
+  <td [matTooltip]="plan_data.area">{{plan_data.area|split_long_sentence_with_colon}}</td><!--区域-->
   <ng-container *ngIf="plan_data.calc_time"><!--判断是否计算时间-->
     <td>{{ plan_data.start_time }}-{{plan_data.end_time}}</td>
   </ng-container>
-  <ng-container *ngIf="!plan_data.calc_time">
-    <td>不计算</td>
+  <ng-container *ngIf="!plan_data.calc_time"
+  >
+    <td [matTooltip]="plan_data.plan_time">不计算</td>
   </ng-container>
   <td>{{plan_data.longing}}</td><!--时长-->
-  <td><!--操作-->
+  <td class="td-with-right-border"><!--操作-->
     <mat-button-toggle-group>
       <div class="button-row">
         <button mat-button>
@@ -27,41 +27,61 @@
 <!--天窗修历史部分-->
 <ng-container *ngIf="history_data;else no_history_data_template">
   <td>{{history_data.number}}</td><!--计划编号-->
-  <td>{{history_data.used_number}}</td><!--解析编号-->
+  <!--是否为纸质-->
+  <td *ngIf="history_data.use_paper" class="accent-td">是</td>
+  <td *ngIf="!history_data.use_paper">否</td>
 </ng-container>
+<!--天窗修实际部分-->
 <ng-container *ngIf="detail_data;else no_detail_data_template">
-  <td>{{history_data.number}}</td><!--计划编号-->
-  <td>{{history_data.used_number}}</td><!--解析编号-->
+  <td>{{detail_data.actual_start_time|moment:"HH:mm"}}-{{detail_data.actual_end_time|moment:"HH:mm"}}</td>
+  <td [ngClass]="{'accent-td':plan_data&& plan_data.longing&&plan_data.longing>detail_data.longing}">
+    {{detail_data.longing}}
+  </td>
 </ng-container>
 <td><!--操作-->
   <mat-button-toggle-group>
     <div class="button-row">
-      <button mat-button>
-        修改
+      <button mat-button
+              (click)="repair_history_detail_service.get_history_detail_by_id(history_data)"
+              *ngIf="!loading"
+              [disabled]="history_data.use_paper"
+      >
+        自动
+      </button>
+      <button mat-button (click)="repair_history_detail_service.get_history_detail_by_id(history_data)"
+              *ngIf="loading"
+      >
+        ing..
       </button>
       <button mat-button>
-        删除
+        编辑
+      </button>
+      <button mat-button (click)="open_detail_page(history_data.inner_id)">
+        详细
       </button>
     </div>
   </mat-button-toggle-group>
 </td>
 <ng-template #no_plan_data_template>
-  <td colspan="7">
+  <td colspan="6">
     无计划的数据
   </td>
-  <td><!--操作-->
+  <td class="td-with-right-border"><!--操作-->
     <mat-button-toggle-group>
       <div class="button-row">
         <button mat-button>
-          添加
+          手动
+        </button>
+        <button mat-button>
+          自动
         </button>
       </div>
     </mat-button-toggle-group>
   </td>
 </ng-template>
 <ng-template #no_history_data_template>
-  <td>
-    5678
+  <td colspan="2">
+    无数据
   </td>
 </ng-template>
 <ng-template #no_detail_data_template>
