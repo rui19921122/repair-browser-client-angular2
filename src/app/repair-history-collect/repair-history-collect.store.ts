@@ -58,6 +58,7 @@ export interface RepairHistoryCollectStoreInterface {
     displayed_data: moment.Moment; // 哪个日期在单日期展示下呈现
     only_show_on_day_on_content: boolean;
     show_detail_method: 'table' | 'card';
+    can_safe_destroy: boolean
   };
   dialog_settings: {
     which_dialog_open: 'repair_plan' | 'repair_history' | '';
@@ -67,7 +68,6 @@ export interface RepairHistoryCollectStoreInterface {
     // 在向服务器上传数据前使用，当此项为True时，代表用户已经知晓当前要上传的日期与服务器上已存储的日期有冲突，会被覆盖
     user_checked_the_date_is_conflicted: boolean;
   };
-  query_repair_detail_list: Set<string>;
 }
 
 export interface RepairHistoryDataDetailInterface {
@@ -264,18 +264,6 @@ export class UpdateSingleRepairHistoryDetailData implements Action {
 }
 
 
-export const UPDATE_GET_REPAIR_DETAIL_PENDING = '[repair-history-collect]UPDATE_GET_REPAIR_DETAIL_PENDING';
-
-// 更新天窗修实际查询的pending
-export class UpdateGetRepairDetailPending implements Action {
-  readonly type = UPDATE_GET_REPAIR_DETAIL_PENDING;
-
-  constructor(public payload: { id: string, value: boolean }) {
-
-  }
-}
-
-
 export const REPLACE_ALL_REPAIR_DATA = '[repair-history-collect]REPLACE_ALL_REPAIR_DATA';
 
 // 更新所有计划
@@ -315,7 +303,6 @@ export type RepairHistoryCollectStoreActionType =
   | UpdateQueryDetailList // 复制此行到ActionType中,更新query查询计划列表 action type
   | ReplaceAllRepairData // 复制此行到ActionType中,更新所以的字节 action type
   | ReplaceAllHistoryData // 复制此行到ActionType中,更换所有的历史数据 action type
-  | UpdateGetRepairDetailPending
 // 复制此行到ActionType中,更新天窗修实际查询的pending action type
   | UpdateSingleRepairHistoryDetailData  // 复制此行到ActionType中
   | UpdateRepairPlanData   // 复制此行到ActionType中
@@ -348,7 +335,6 @@ export const RepairHistoryCollectStoreActions = {
   SwitchGetHistoryDataPending, // 复制此行到导出的Action中
   SwitchOpenWhichSidebar,
   ChangeSelectedDate,
-  UpdateGetRepairDetailPending,  // 复制此行到导出的Action中,更新天窗修实际查询的pending actions
   SwitchShowAllDatesOnDatesHeader,  // 复制此行到导出的Action中
   AddOrRemoveDateToOpenedDatePanel,  // 复制此行到导出的Action中
   ChangeShowDetailMethod,  // 复制此行到导出的Action中,变更展示数据的方式 actions
@@ -371,7 +357,8 @@ const default_state: RepairHistoryCollectStoreInterface = {
     not_displayed_data: [],
     only_show_on_day_on_content: true,
     displayed_data: null,
-    show_detail_method: 'card'
+    show_detail_method: 'card',
+    can_safe_destroy: true
   },
   dialog_settings: {
     which_dialog_open: null,
@@ -379,15 +366,12 @@ const default_state: RepairHistoryCollectStoreInterface = {
   },
   repair_detail_data: [],
   post_settings: {user_checked_the_date_is_conflicted: false},
-  query_repair_detail_list: new Set<string>()
 };
 
 
 export function reducer(state: RepairHistoryCollectStoreInterface = default_state,
                         action: RepairHistoryCollectStoreActionType): RepairHistoryCollectStoreInterface {
   switch (action.type) {
-    case UPDATE_QUERY_DETAIL_LIST:
-      return {...state, query_repair_detail_list: action.payload.data}; // 复制此两行到reducer中,更新query查询计划列表 reducer
     case CHANGE_SHOW_DETAIL_METHOD:
       return {
         ...state, content_settings: {
@@ -399,13 +383,6 @@ export function reducer(state: RepairHistoryCollectStoreInterface = default_stat
       return {...state, repair_history_data: action.payload.data}; // 复制此两行到reducer中,更换所有的历史数据 reducer
     case REPLACE_ALL_REPAIR_DATA:
       return {...state, repair_plan_data: action.payload.data}; // 复制此两行到reducer中,更新所以的字节 reducer
-    case UPDATE_GET_REPAIR_DETAIL_PENDING:
-      const new_set = new Set(state.query_repair_detail_list);
-      !action.payload.value ? new_set.delete(action.payload.id) : new_set.add(action.payload.id);
-      return {
-        ...state,
-        query_repair_detail_list: new_set
-      };
     case UPDATE_SINGLE_REPAIR_HISTORY_DETAIL_DATA:
       return {
         ...state,
@@ -423,7 +400,6 @@ export function reducer(state: RepairHistoryCollectStoreInterface = default_stat
         id: generate_a_id(action.payload),
       });
       // 按照天窗修编号及日期索引
-      console.log(obj);
       return {
         ...state,
         repair_plan_data: obj.objects

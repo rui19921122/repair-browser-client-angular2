@@ -55,7 +55,7 @@ import {RepairCollectGetDataFromServerService} from './services/repair-collect-g
 import {CountingMappedPlanDataWithoutHistoryPipe} from './pipes/counting-mapped-plan-data-without-history.pipe';
 import {RepairPlanEditTableTdComponent} from './repair-history-collect/repair-plan-detail-table/repair-plan-detail-table.component';
 import {RepairPlanDetailTableTdComponent} from './repair-history-collect/repair-plan-detail-table-td/repair-plan-detail-table-td.component';
-import { FilterSelectedDateFromMappedListPipe } from './pipes/filter-selected-date-from-mapped-list.pipe';
+import {FilterSelectedDateFromMappedListPipe} from './pipes/filter-selected-date-from-mapped-list.pipe';
 
 export const routes: Routes = [
   {path: '', redirectTo: 'home', pathMatch: 'full'},
@@ -140,6 +140,7 @@ export const routes: Routes = [
     {provide: LocationStrategy, useClass: HashLocationStrategy},
     {provide: LOCALE_ID, useValue: 'zh-hans'},
     {provide: SnackBarConfig, useValue: {duration: 3000}},
+    FilterSelectedDateFromMappedListPipe
   ],
   bootstrap: [AppComponent],
   entryComponents: [

@@ -29,7 +29,6 @@ export class RepairHistoryQueryConnectWithServerService {
       const data_list: RepairHistoryQueryDetailDataInterface[] = [];
       for (const i of json.data) {
         for (const j of i.contents) {
-          console.log(j.plan_start_time);
           data_list.push({
             ...j,
             plan_start_time: j.plan_start_time ? moment(j.plan_start_time) : null,

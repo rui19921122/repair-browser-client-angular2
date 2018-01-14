@@ -18,6 +18,10 @@ import {RepairHistoryDetailApiService} from '../../services/repair-history-detai
 import {HttpClient} from '@angular/common/http';
 import {RepairDataPostToServerService} from '../../services/repair-data-post-to-server.service';
 import {RepairCollectGetDataFromServerService} from '../../services/repair-collect-get-data-from-server.service';
+import {pipeDef} from '@angular/core/src/view';
+import {PipeResolver} from '@angular/compiler';
+import {FilterSelectedDateFromMappedListPipe} from '../../pipes/filter-selected-date-from-mapped-list.pipe';
+import {get_obj_from_array_by_id} from '../../util_func';
 
 
 @Component({
@@ -33,8 +37,8 @@ export class ContentComponent implements OnInit, OnDestroy {
   public $repair_plan_data: Observable<RepairPlanSingleDataInterface[]>;
   public $repair_history_data: Observable<RepairHistorySingleDataInterface[]>;
   public $repair_detail_data: Observable<RepairHistoryDataDetailInterface[]>;
-  public $repair_detail_data_list: Observable<Set<string>>;
-  public repair_detail_data_list: Set<string>;
+  public $repair_detail_data_list: Observable<string[]>;
+  public repair_detail_data_list: string[];
   public repair_detail_data_list_sub: Subscription;
   public $display_detail_method: Observable<string>;
   public display_detail_method: string;
@@ -55,12 +59,13 @@ export class ContentComponent implements OnInit, OnDestroy {
               public repair_history_detail_service: RepairHistoryDetailApiService,
               public post_data_to_server_service: RepairDataPostToServerService,
               public repair_collect_get_data_from_server_service: RepairCollectGetDataFromServerService,
-              public http: HttpClient) {
+              public http: HttpClient,
+              public filterSelectedDateFromMappedListPipe: FilterSelectedDateFromMappedListPipe) {
   }
 
   // 正在从服务器获取详情的历史条目数
   get repair_detail_data_list_length(): number {
-    return this.repair_detail_data_list.size;
+    return this.repair_detail_data_list.length;
 
   }
 
@@ -70,7 +75,7 @@ export class ContentComponent implements OnInit, OnDestroy {
       this.display_detail_method = value;
       this.cd.markForCheck();
     });
-    this.$repair_detail_data_list = this.store.select(state => state.repair_history_collect.query_repair_detail_list);
+    this.$repair_detail_data_list = this.repair_history_detail_service.loading_subject;
     this.repair_detail_data_list_sub = this.$repair_detail_data_list.subscribe(value => {
       this.repair_detail_data_list = value;
       this.cd.markForCheck();
@@ -123,10 +128,6 @@ export class ContentComponent implements OnInit, OnDestroy {
     }
   }
 
-  handle_show_all_clicked(boolean) {
-    this.store.dispatch(new actions.SwitchShowAllDatesOnDatesHeader(boolean));
-  }
-
   public calc_lost_repair_plan_data() {
     this.repair_collect_get_data_from_server_service.calc_miss_repair_plan_data_by_history_data();
   }
@@ -143,55 +144,52 @@ export class ContentComponent implements OnInit, OnDestroy {
     this.store.dispatch(new RepairHistoryCollectStoreActions.SwitchOnlyShowOneDateOnContent());
   }
 
-  public which_dates_data_displayed_on_the_content(a: moment.Moment[] | moment.Moment,
-                                                   b: RepairPlanAndHistoryDataSorted[],
-                                                   display_one: boolean) {
-    if (display_one) {
-      if (a) {
-        return b.filter(value => value.date.isSame(a as moment.Moment));
-      } else {
-        return b[0] ? [b[0]] : [];
-      }
-    } else {
-      return b.filter(value => (a as moment.Moment[]).findIndex(value2 => value2.isSame(value.date)) < 0);
-    }
-  }
 
   public get_all_history_detail_data() {
-    // todo 天窗修历史记录目前顺序与用户展示的列表数据不同，需要重新排序，以符合用户感知
-    let value;
-    this.$repair_history_data.take(1).subscribe(
-      (v) => {
-        value = v;
+    const list = [];
+    const already_added_date = new Set();
+    const display_date = this.filterSelectedDateFromMappedListPipe.transform(
+      this.repair_plan_and_history_data,
+      this.showed_date_on_content,
+      this.not_showed_dates_on_content,
+      this.only_show_one_date_on_content
+    );
+    let detail_data = [];
+    this.$repair_detail_data.subscribe(value => detail_data = value).unsubscribe();
+    for (const map_single_day of display_date) {
+      already_added_date.add(map_single_day.date);
+      for (const i of map_single_day.repair_plan_data_index_on_this_day) {
+        if (get_obj_from_array_by_id(detail_data, i.history_number_id).index >= 0) {
+        } else {
+          list.push(i.history_number_id);
+        }
       }
-    ).unsubscribe();
-    const subject = new Subject<RepairHistorySingleDataInterface>();
-    const list = Object.keys(value).filter(v1 => value[v1].cached === 0 && (!value[v1].use_paper));
-
-    function* generate_next_value() {
-      for (const i of list) {
-        yield value[i];
+      for (const i of map_single_day.repair_history_data_not_map_in_plan) {
+        if (get_obj_from_array_by_id(detail_data, i).index >= 0) {
+        } else {
+          list.push(i);
+        }
       }
     }
-
-    const generate_next_value_list = generate_next_value();
-
-    subject.subscribe(
-      data => {
-        this.repair_history_detail_service.get_history_detail_by_id(
-          data
-        ).subscribe(() => {
-            const next = generate_next_value_list.next();
-            if (next.done) {
-              subject.complete();
-            } else {
-              subject.next(next.value);
-            }
+    for (const map_single_day of this.repair_plan_and_history_data) {
+      if (already_added_date.has(map_single_day.date)) {
+      } else {
+        already_added_date.add(map_single_day.date);
+        for (const i of map_single_day.repair_plan_data_index_on_this_day) {
+          if (get_obj_from_array_by_id(detail_data, i.history_number_id).index >= 0) {
+          } else {
+            list.push(i.history_number_id);
           }
-        );
+        }
+        for (const i of map_single_day.repair_history_data_not_map_in_plan) {
+          if (get_obj_from_array_by_id(detail_data, i).index >= 0) {
+          } else {
+            list.push(i);
+          }
+        }
       }
-    );
-    subject.next(generate_next_value_list.next().value);
+    }
+    this.repair_history_detail_service.loading_subject.next(list);
   }
 
   post_data_to_server() {

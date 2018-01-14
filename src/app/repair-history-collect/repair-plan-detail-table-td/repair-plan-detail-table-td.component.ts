@@ -36,7 +36,6 @@ export class RepairPlanDetailTableTdComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    console.log(this.history_data_id);
     const observable1 = this.store.select(state => get_obj_from_array_by_id(
       state.repair_history_collect.repair_plan_data,
       this.plan_data_id).obj);

@@ -11,6 +11,7 @@ import {
 import {add_or_change_obj_from_array_by_id, get_obj_from_array_by_id} from '../../util_func';
 import {Observable} from 'rxjs/Observable';
 import * as moment from 'moment';
+import {RepairHistoryDetailApiService} from '../../services/repair-history-detail-api.service';
 
 @Component({
   selector: 'app-repair-plan-detail-table',
@@ -41,23 +42,19 @@ export class RepairPlanEditTableTdComponent implements OnInit, OnDestroy {
   public $not_showed_date: Observable<moment.Moment[]>;
   public not_showed_date: moment.Moment[];
   public not_showed_date_sub: Subscription;
-  public $loading_data: Observable<Set<string>>;
-  public loading_data: Set<string>;
+  public $loading_data: Observable<string[]>;
+  public loading_data: string[];
   public loading_data_sub: Subscription;
 
   constructor(public store: Store<AppState>,
+              public get_detail_service: RepairHistoryDetailApiService,
               public cd: ChangeDetectorRef) {
   }
 
   ngOnInit() {
-    this.$loading_data = this.store.select(state => state.repair_history_collect.query_repair_detail_list);
+    this.$loading_data = this.get_detail_service.loading_subject;
     this.loading_data_sub = this.$loading_data.subscribe(value => {
       this.loading_data = value;
-      this.cd.markForCheck();
-    });
-    this.$mapped = this.store.select(state => state.repair_history_collect.repair_plan_and_history_data_mapped);
-    this.mapped_sub = this.$mapped.subscribe(value => {
-      this.mapped = value;
       this.cd.markForCheck();
     });
     this.$plan_data = this.store.select(state => state.repair_history_collect.repair_plan_data);
@@ -90,10 +87,15 @@ export class RepairPlanEditTableTdComponent implements OnInit, OnDestroy {
       this.not_showed_date = value;
       this.cd.markForCheck();
     });
+    this.$mapped = this.store.select(state => state.repair_history_collect.repair_plan_and_history_data_mapped);
+    this.mapped_sub = this.$mapped.subscribe(value => {
+      this.mapped = value;
+      this.cd.markForCheck();
+    });
   }
 
   public the_record_is_in_loading(id: string) {
-    return this.loading_data.has(id);
+    return this.loading_data.findIndex(value => value === id) >= 0;
   }
 
   ngOnDestroy() {

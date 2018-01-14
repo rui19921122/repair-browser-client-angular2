@@ -19,11 +19,10 @@ export class RepairHistoryDetailCardComponent implements OnInit, OnDestroy {
   @Input() history_data: RepairHistorySingleDataInterface;
   @Input() single_dog_card = false; // 是否为单身卡
   @Input() detail_data: RepairHistoryDataDetailInterface;
-  public history_data_list: Observable<Set<string>>;
+  public history_data_list: Observable<string[]>;
 
   constructor(public service: RepairHistoryDetailApiService,
               public store: Store<AppState>) {
-    this.history_data_list = this.store.select(state => state.repair_history_collect.query_repair_detail_list);
   }
 
   ngOnDestroy() {

@@ -37,7 +37,7 @@ export class RepairCollectGetDataFromServerService {
       this.http_client.get(url, {withCredentials: true}).subscribe((v: RepairPlanApi) => {
         let json = v;
         // 模拟数据
-        // json = JSON.parse(mock_repair_data);
+        json = JSON.parse(mock_repair_data);
         const data_list = [];
         for (const single_data of json.data) {
           data_list.push(convert_plan_data_server_to_store(single_data));
@@ -66,7 +66,7 @@ export class RepairCollectGetDataFromServerService {
         .subscribe(
           (v: RepairHistoryDataApiInterface) => {
             let json: RepairHistoryDataApiInterface = v;
-            // json = JSON.parse(mock_history_data);
+            json = JSON.parse(mock_history_data);
             // 模拟数据
             const data_list = [];
             for (const single_data of json.data) {

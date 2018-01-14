@@ -24,7 +24,6 @@ export class DetailTableListComponent implements OnInit, OnDestroy {
   constructor(public store: Store<AppState>) {
     this.$detail_data = this.store.select(state => state.repair_history_query.repair_data_list);
     this.$detail_data.subscribe(value => {
-      console.log(value);
     });
   }
 
