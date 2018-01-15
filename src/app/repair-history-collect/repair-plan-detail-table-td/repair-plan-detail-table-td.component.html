@@ -44,7 +44,7 @@
       <button mat-button
               (click)="repair_history_detail_service.get_history_detail_by_id(history_data)"
               *ngIf="!loading"
-              [disabled]="history_data.use_paper"
+              [disabled]="history_data?.use_paper"
       >
         自动
       </button>

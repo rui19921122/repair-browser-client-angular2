@@ -56,6 +56,7 @@ import {CountingMappedPlanDataWithoutHistoryPipe} from './pipes/counting-mapped-
 import {RepairPlanEditTableTdComponent} from './repair-history-collect/repair-plan-detail-table/repair-plan-detail-table.component';
 import {RepairPlanDetailTableTdComponent} from './repair-history-collect/repair-plan-detail-table-td/repair-plan-detail-table-td.component';
 import {FilterSelectedDateFromMappedListPipe} from './pipes/filter-selected-date-from-mapped-list.pipe';
+import {RepairHistoryMonthQueryComponent} from './repair-history-month-query/repair-history-month-query.component';
 
 export const routes: Routes = [
   {path: '', redirectTo: 'home', pathMatch: 'full'},
@@ -63,6 +64,7 @@ export const routes: Routes = [
   {path: 'repair-history-collect', component: RepairHistoryCollectComponent, pathMatch: 'full'},
   {path: 'repair-history-query', component: ReapirHistoryQueryComponent, pathMatch: 'full'},
   {path: 'test', component: RepairHistoryDetailCardComponent, pathMatch: 'full'},
+  {path: 'repair-history-month-query', component: RepairHistoryMonthQueryComponent, pathMatch: 'full'},
 ];
 
 
@@ -96,6 +98,7 @@ export const routes: Routes = [
     RepairPlanEditTableTdComponent,
     RepairPlanDetailTableTdComponent,
     FilterSelectedDateFromMappedListPipe,
+    RepairHistoryMonthQueryComponent,
   ],
   imports: [
     NgxDatatableModule,

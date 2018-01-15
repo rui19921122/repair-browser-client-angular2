@@ -37,8 +37,8 @@ export class ContentComponent implements OnInit, OnDestroy {
   public $repair_plan_data: Observable<RepairPlanSingleDataInterface[]>;
   public $repair_history_data: Observable<RepairHistorySingleDataInterface[]>;
   public $repair_detail_data: Observable<RepairHistoryDataDetailInterface[]>;
-  public $repair_detail_data_list: Observable<string[]>;
-  public repair_detail_data_list: string[];
+  public $repair_detail_data_list: Observable<Set<string>>;
+  public repair_detail_data_list: Set<string>;
   public repair_detail_data_list_sub: Subscription;
   public $display_detail_method: Observable<string>;
   public display_detail_method: string;
@@ -65,7 +65,7 @@ export class ContentComponent implements OnInit, OnDestroy {
 
   // 正在从服务器获取详情的历史条目数
   get repair_detail_data_list_length(): number {
-    return this.repair_detail_data_list.length;
+    return this.repair_detail_data_list.size;
 
   }
 
@@ -146,7 +146,7 @@ export class ContentComponent implements OnInit, OnDestroy {
 
 
   public get_all_history_detail_data() {
-    const list = [];
+    const list = new Set();
     const already_added_date = new Set();
     const display_date = this.filterSelectedDateFromMappedListPipe.transform(
       this.repair_plan_and_history_data,
@@ -161,13 +161,13 @@ export class ContentComponent implements OnInit, OnDestroy {
       for (const i of map_single_day.repair_plan_data_index_on_this_day) {
         if (get_obj_from_array_by_id(detail_data, i.history_number_id).index >= 0) {
         } else {
-          list.push(i.history_number_id);
+          list.add(i.history_number_id);
         }
       }
       for (const i of map_single_day.repair_history_data_not_map_in_plan) {
         if (get_obj_from_array_by_id(detail_data, i).index >= 0) {
         } else {
-          list.push(i);
+          list.add(i);
         }
       }
     }
@@ -178,13 +178,13 @@ export class ContentComponent implements OnInit, OnDestroy {
         for (const i of map_single_day.repair_plan_data_index_on_this_day) {
           if (get_obj_from_array_by_id(detail_data, i.history_number_id).index >= 0) {
           } else {
-            list.push(i.history_number_id);
+            list.add(i.history_number_id);
           }
         }
         for (const i of map_single_day.repair_history_data_not_map_in_plan) {
           if (get_obj_from_array_by_id(detail_data, i).index >= 0) {
           } else {
-            list.push(i);
+            list.add(i);
           }
         }
       }

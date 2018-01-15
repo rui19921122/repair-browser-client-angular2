@@ -42,8 +42,8 @@ export class RepairPlanEditTableTdComponent implements OnInit, OnDestroy {
   public $not_showed_date: Observable<moment.Moment[]>;
   public not_showed_date: moment.Moment[];
   public not_showed_date_sub: Subscription;
-  public $loading_data: Observable<string[]>;
-  public loading_data: string[];
+  public $loading_data: Observable<Set<string>>;
+  public loading_data: Set<string>;
   public loading_data_sub: Subscription;
 
   constructor(public store: Store<AppState>,
@@ -95,7 +95,7 @@ export class RepairPlanEditTableTdComponent implements OnInit, OnDestroy {
   }
 
   public the_record_is_in_loading(id: string) {
-    return this.loading_data.findIndex(value => value === id) >= 0;
+    return this.loading_data.has(id);
   }
 
   ngOnDestroy() {

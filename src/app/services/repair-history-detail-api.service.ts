@@ -28,15 +28,19 @@ export interface RepairHistoryDetailAPIInterface {
 
 @Injectable()
 export class RepairHistoryDetailApiService {
-  public loading_subject = new BehaviorSubject<string[]>([]);
+  public loading_subject = new BehaviorSubject<Set<string>>(new Set());
+  public loading: boolean;
 
   constructor(public http: HttpClient, public store: Store<AppState>) {
     this.loading_subject.subscribe((value) => {
-      if (value.length === 0) {
+      // 获取需要处理的id
+      if (value.size === 0) {
         return;
       }
-      // 获取需要处理的id
-      const current = value[0];
+      if (this.loading) {
+        return;
+      }
+      const current = value.values().next().value;
       let inner_id;
       let date;
       this.store.select(state => get_obj_from_array_by_id(state.repair_history_collect.repair_history_data, current).obj).subscribe(
@@ -46,8 +50,8 @@ export class RepairHistoryDetailApiService {
         }
       ).unsubscribe();
       const url = '/api/scrapy/history-detail/detail/' + inner_id;
-      const sub = this.http.get(url, {withCredentials: true}).publish();
-      sub.connect();
+      this.loading = true;
+      const sub = this.http.get(url, {withCredentials: true}).share();
       sub.subscribe(
         (response: RepairHistoryDetailAPIInterface) => {
           const json: RepairHistoryDetailAPIInterface = response;
@@ -78,7 +82,10 @@ export class RepairHistoryDetailApiService {
         }, () => {
         },
         () => {
-          this.loading_subject.next(value.slice(1, value.length));
+          const next_value = this.loading_subject.getValue();
+          this.loading = false;
+          next_value.delete(current);
+          this.loading_subject.next(next_value);
         }
       );
     });
@@ -89,10 +96,10 @@ export class RepairHistoryDetailApiService {
     if (value.use_paper) {
       return Observable.of(1);
     } else {
-      let list = [];
+      let list: Set<string> = new Set();
       this.loading_subject.subscribe(value2 => {
         list = value2;
-        list.push(value.id);
+        list.add(value.id);
       }).unsubscribe();
       this.loading_subject.next(list);
     }
