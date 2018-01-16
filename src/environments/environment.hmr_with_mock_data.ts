@@ -1,4 +1,5 @@
 export const environment = {
   hmr: true,
-  production: false
+  production: false,
+  mock_data: true
 };
