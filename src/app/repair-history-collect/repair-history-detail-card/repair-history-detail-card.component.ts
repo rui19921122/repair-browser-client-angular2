@@ -4,7 +4,7 @@ import {
   RepairHistoryDataDetailInterface,
   RepairHistorySingleDataInterface
 } from '../repair-history-collect.store';
-import {RepairHistoryDetailApiService} from '../../services/repair-history-detail-api.service';
+import {RepairHistoryDetailApiService} from '../../../services/repair-collect-get-history-detail-data-from-server.service';
 import {Observable} from 'rxjs/Observable';
 import {Subscription} from 'rxjs/Subscription';
 import {AppState} from '../../store';

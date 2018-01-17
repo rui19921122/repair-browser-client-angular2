@@ -1,5 +1,5 @@
 import {Pipe, PipeTransform} from '@angular/core';
-import {RepairPlanAndHistoryDataSorted} from '../repair-history-collect/repair-history-collect.store';
+import {RepairPlanAndHistoryDataSorted} from '../app/repair-history-collect/repair-history-collect.store';
 import * as _ from 'lodash';
 
 @Pipe({

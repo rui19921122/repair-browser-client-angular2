@@ -1,5 +1,5 @@
 import {Action, ActionReducer, Store, ActionReducerMap} from '@ngrx/store';
-import {UserStoreInterface, reducer as user_reducer} from './services/user.service';
+import {UserStoreInterface, reducer as user_reducer} from '../services/user.service';
 import {StoreRouterConnectingModule, routerReducer} from '@ngrx/router-store';
 import {
   RepairHistoryCollectStoreInterface,

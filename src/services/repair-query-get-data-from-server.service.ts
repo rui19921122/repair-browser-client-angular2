@@ -1,13 +1,13 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Store} from '@ngrx/store';
-import {AppState} from '../store';
-import {RepairHistoryQueryGetDataListApi} from '../reapir-history-query/api';
+import {AppState} from '../app/store';
+import {RepairHistoryQueryGetDataListApi} from '../app/reapir-history-query/api';
 import {
   RepairHistoryQueryDetailDataInterface,
   RepairHistoryQueryStoreActions as actions,
   RepairHistoryQueryStoreInterface, RepairHistoryQueryWholeDayDetailDataInterface
-} from '../reapir-history-query/store/repair-history-query.store';
+} from '../app/reapir-history-query/store/repair-history-query.store';
 import * as moment from 'moment';
 
 @Injectable()

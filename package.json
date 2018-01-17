@@ -4,7 +4,8 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "hmr": "ng serve --hmr -e=hmr --proxy-config proxy.conf.json --sourcemap",
+    "hmr_with_mock_data": "ng serve --hmr -e=hmr_with_mock_data --proxy-config proxy.conf.json --sourcemap",
+    "hmr_without_mock_data": "ng serve --hmr -e=hmr_without_mock_data --proxy-config proxy.conf.json --sourcemap",
     "build": "webpack",
     "test": "ng serve",
     "lint": "ng lint",

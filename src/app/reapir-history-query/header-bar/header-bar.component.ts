@@ -7,7 +7,7 @@ import {
   RepairHistoryQueryStoreInterface,
   RepairHistoryQueryStoreActions as actions
 } from '../store/repair-history-query.store';
-import {RepairHistoryQueryConnectWithServerService} from '../../services/repair-history-query-connect-with-server-services.service';
+import {RepairHistoryQueryConnectWithServerService} from '../../../services/repair-query-get-data-from-server.service';
 
 @Component({
   selector: 'app-header-bar',

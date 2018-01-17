@@ -11,7 +11,7 @@ import {
 import {add_or_change_obj_from_array_by_id, get_obj_from_array_by_id} from '../../util_func';
 import {Observable} from 'rxjs/Observable';
 import * as moment from 'moment';
-import {RepairHistoryDetailApiService} from '../../services/repair-history-detail-api.service';
+import {RepairHistoryDetailApiService} from '../../../services/repair-collect-get-history-detail-data-from-server.service';
 
 @Component({
   selector: 'app-repair-plan-detail-table',

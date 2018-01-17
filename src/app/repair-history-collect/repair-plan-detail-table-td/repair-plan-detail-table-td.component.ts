@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
-import {RepairHistoryDetailAPIInterface, RepairHistoryDetailApiService} from '../../services/repair-history-detail-api.service';
+import {RepairHistoryDetailAPIInterface, RepairHistoryDetailApiService} from '../../../services/repair-collect-get-history-detail-data-from-server.service';
 import {
   RepairHistoryDataDetailInterface, RepairHistorySingleDataInterface,
   RepairPlanSingleDataInterface
@@ -8,7 +8,7 @@ import {Store} from '@ngrx/store';
 import {AppState} from '../../store';
 import {Subscription} from 'rxjs/Subscription';
 import {get_obj_from_array_by_id} from '../../util_func';
-import {RepairCollectGetDataFromServerService} from '../../services/repair-collect-get-data-from-server.service';
+import {RepairCollectGetDataFromServerService} from '../../../services/repair-collect-get-base-data-from-server.service';
 
 @Component({
   /* tslint:disable */

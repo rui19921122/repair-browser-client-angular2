@@ -2,14 +2,14 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Store} from '@ngrx/store';
-import {AppState} from '../store';
+import {AppState} from '../app/store';
 import {
   RepairHistoryCollectStoreInterface,
   RepairHistorySingleDataInterface,
   RepairPlanAndHistoryDataSorted,
   RepairPlanSingleDataInterface,
   RepairHistoryCollectStoreActions as actions
-} from '../repair-history-collect/repair-history-collect.store';
+} from '../app/repair-history-collect/repair-history-collect.store';
 import {Observable} from 'rxjs/Observable';
 
 import {MatSnackBar} from '@angular/material';

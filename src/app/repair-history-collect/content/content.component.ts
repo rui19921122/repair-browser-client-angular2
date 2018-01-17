@@ -14,13 +14,13 @@ import * as moment from 'moment';
 import {Subject} from 'rxjs/Subject';
 import {Subscription} from 'rxjs/Subscription';
 import {Http} from '@angular/http';
-import {RepairHistoryDetailApiService} from '../../services/repair-history-detail-api.service';
+import {RepairHistoryDetailApiService} from '../../../services/repair-collect-get-history-detail-data-from-server.service';
 import {HttpClient} from '@angular/common/http';
-import {RepairDataPostToServerService} from '../../services/repair-data-post-to-server.service';
-import {RepairCollectGetDataFromServerService} from '../../services/repair-collect-get-data-from-server.service';
+import {RepairDataPostToServerService} from '../../../services/repair-collect-post-data-to-server.service';
+import {RepairCollectGetDataFromServerService} from '../../../services/repair-collect-get-base-data-from-server.service';
 import {pipeDef} from '@angular/core/src/view';
 import {PipeResolver} from '@angular/compiler';
-import {FilterSelectedDateFromMappedListPipe} from '../../pipes/filter-selected-date-from-mapped-list.pipe';
+import {FilterSelectedDateFromMappedListPipe} from '../../../pipes/filter-selected-date-from-mapped-list.pipe';
 import {get_obj_from_array_by_id} from '../../util_func';
 
 

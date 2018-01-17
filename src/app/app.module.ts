@@ -3,6 +3,7 @@ import {LOCALE_ID, NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {StoreDevtoolsModule} from '@ngrx/store-devtools';
 import {FlexLayoutModule} from '@angular/flex-layout';
+import {environment} from './../environments/environment';
 
 
 import {AppComponent} from './app.component';
@@ -19,7 +20,7 @@ import {store} from './store';
 import {get__HMR__state} from '../hmr';
 import {StoreModule} from '@ngrx/store';
 import {HomeComponent} from './home/home.component';
-import {UserService} from './services/user.service';
+import {UserService} from '../services/user.service';
 import {LoginFormComponent} from './header/login-form/login-form.component';
 import {HttpClientModule} from '@angular/common/http';
 
@@ -32,31 +33,33 @@ import {DateCardComponent} from './repair-history-collect/repair-collect-date-ca
 import {ContentComponent} from './repair-history-collect/content/content.component';
 import {RepairPlanDetailCardComponent} from './repair-history-collect/repair-plan-detail-card/repair-plan-detail-card.component';
 import {RepairHistoryDetailCardComponent} from './repair-history-collect/repair-history-detail-card/repair-history-detail-card.component';
-import {MomentPipe} from './pipes/moment.pipe';
-import {InTheMomentListPipe} from './pipes/in-the-moment-list.pipe';
-import {GetDataByIdPipe} from './pipes/get-data-by-id.pipe';
-import {SplitLongSentenceWithColon} from './pipes/split-long-sentence-with-colon.pipe';
-import {MapMomentToRepairPlanAndHistoryDataPipe} from './pipes/map-moment-to-repair-plan-and-history-data.pipe';
+import {MomentPipe} from '../pipes/moment.pipe';
+import {InTheMomentListPipe} from '../pipes/in-the-moment-list.pipe';
+import {GetDataByIdPipe} from '../pipes/get-data-by-id.pipe';
+import {SplitLongSentenceWithColon} from '../pipes/split-long-sentence-with-colon.pipe';
+import {MapMomentToRepairPlanAndHistoryDataPipe} from '../pipes/map-moment-to-repair-plan-and-history-data.pipe';
 import {RepairPlanEditDialogComponent} from './repair-history-collect/repair-plan-edit-dialog/repair-plan-dialog.component';
-import {RepairHistoryDetailApiService} from './services/repair-history-detail-api.service';
-import {GetChildObjectInObjectByIdPipe} from './pipes/get-child-object-in-object-by-id.pipe';
+import {RepairHistoryDetailApiService} from '../services/repair-collect-get-history-detail-data-from-server.service';
+import {GetChildObjectInObjectByIdPipe} from '../pipes/get-child-object-in-object-by-id.pipe';
 import {RepairHistoryEditDialogComponent} from './repair-history-collect/repair-history-edit-dialog/repair-history-edit-dialog.component';
-import {RepairDataPostToServerService} from './services/repair-data-post-to-server.service';
-import {PrettyprintPipe} from './pipes/prettyprint.pipe';
-import {DiffTimeWithStringFormatPipe} from './pipes/diff-time-with-string-format.pipe';
+import {RepairDataPostToServerService} from '../services/repair-collect-post-data-to-server.service';
+import {PrettyprintPipe} from '../pipes/prettyprint.pipe';
+import {DiffTimeWithStringFormatPipe} from '../pipes/diff-time-with-string-format.pipe';
 import {ReapirHistoryQueryComponent} from './reapir-history-query/reapir-history-query.component';
 import {HeaderBarComponent} from './reapir-history-query/header-bar/header-bar.component';
-import {RepairHistoryQueryConnectWithServerService} from './services/repair-history-query-connect-with-server-services.service';
+import {RepairHistoryQueryConnectWithServerService} from '../services/repair-query-get-data-from-server.service';
 import {DetailTableListComponent} from './reapir-history-query/detail-table-list/detail-table-list.component';
-import {RenderShowedTimeWithGivenMomentPipe} from './pipes/render-showed-time-with-given-moment.pipe';
-import {WatchStoreChangeService} from './services/watch_store_change_sub';
-import {SnackBarConfig} from './providers/snack-bar-provider';
-import {RepairCollectGetDataFromServerService} from './services/repair-collect-get-data-from-server.service';
-import {CountingMappedPlanDataWithoutHistoryPipe} from './pipes/counting-mapped-plan-data-without-history.pipe';
+import {RenderShowedTimeWithGivenMomentPipe} from '../pipes/render-showed-time-with-given-moment.pipe';
+import {WatchStoreChangeService} from '../services/watch_store_change_sub';
+import {SnackBarConfig} from '../providers/snack-bar-provider';
+import {RepairCollectGetDataFromServerService} from '../services/repair-collect-get-base-data-from-server.service';
+import {CountingMappedPlanDataWithoutHistoryPipe} from '../pipes/counting-mapped-plan-data-without-history.pipe';
 import {RepairPlanEditTableTdComponent} from './repair-history-collect/repair-plan-detail-table/repair-plan-detail-table.component';
 import {RepairPlanDetailTableTdComponent} from './repair-history-collect/repair-plan-detail-table-td/repair-plan-detail-table-td.component';
-import {FilterSelectedDateFromMappedListPipe} from './pipes/filter-selected-date-from-mapped-list.pipe';
+import {FilterSelectedDateFromMappedListPipe} from '../pipes/filter-selected-date-from-mapped-list.pipe';
 import {RepairHistoryMonthQueryComponent} from './repair-history-month-query/repair-history-month-query.component';
+import {UseMockData} from '../providers/use-mock-data-provider';
+
 
 export const routes: Routes = [
   {path: '', redirectTo: 'home', pathMatch: 'full'},
@@ -143,7 +146,8 @@ export const routes: Routes = [
     {provide: LocationStrategy, useClass: HashLocationStrategy},
     {provide: LOCALE_ID, useValue: 'zh-hans'},
     {provide: SnackBarConfig, useValue: {duration: 3000}},
-    FilterSelectedDateFromMappedListPipe
+    FilterSelectedDateFromMappedListPipe,
+    {provide: UseMockData, useValue: environment.mock_data}
   ],
   bootstrap: [AppComponent],
   entryComponents: [

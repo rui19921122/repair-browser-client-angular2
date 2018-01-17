@@ -20,8 +20,8 @@ import {dialogConfig} from '../dialog-config';
 import {mock_history_data, mock_repair_data} from './mock-data';
 import {RepairHistoryEditDialogComponent} from './repair-history-edit-dialog/repair-history-edit-dialog.component';
 import {HttpClient} from '@angular/common/http';
-import {WatchStoreChangeService} from '../services/watch_store_change_sub';
-import {RepairCollectGetDataFromServerService} from '../services/repair-collect-get-data-from-server.service';
+import {WatchStoreChangeService} from '../../services/watch_store_change_sub';
+import {RepairCollectGetDataFromServerService} from '../../services/repair-collect-get-base-data-from-server.service';
 
 class ButtonType {
   text: string;

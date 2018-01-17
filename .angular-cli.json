@@ -26,7 +26,8 @@
       "environments": {
         "dev": "environments/environment.ts",
         "prod": "environments/environment.prod.ts",
-        "hmr": "environments/environment.hmr.ts"
+        "hmr_with_mock_data": "environments/environment.hmr_with_mock_data.ts",
+        "hmr_without_mock_data": "environments/environment.hmr_without_mock_data.ts"
       }
     }
   ],

@@ -1,18 +1,21 @@
 import {Injectable} from '@angular/core';
 import {Http} from '@angular/http';
-import {AppState} from '../store';
+import {AppState} from '../app/store';
 import {Store} from '@ngrx/store';
 import {
   RepairHistoryCollectStoreActions as actions,
   RepairHistorySingleDataInterface
-} from '../repair-history-collect/repair-history-collect.store';
+} from '../app/repair-history-collect/repair-history-collect.store';
 import {Observable} from 'rxjs/Observable';
 import * as moment from 'moment';
 import {HttpClient} from '@angular/common/http';
-import {string_is_a_valid_time, convert_a_HH_mm_like_string_to_a_moment, get_obj_from_array_by_id} from '../util_func';
+import {string_is_a_valid_time, convert_a_HH_mm_like_string_to_a_moment, get_obj_from_array_by_id} from '../app/util_func';
 import {Subject} from 'rxjs/Subject';
 import {Subscription} from 'rxjs/Subscription';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {SnackBarConfig} from '../providers/snack-bar-provider';
+import {MatSnackBar, MatSnackBarRef} from '@angular/material';
+import {CountingMappedPlanDataWithoutHistoryPipe} from '../pipes/counting-mapped-plan-data-without-history.pipe';
 
 export interface RepairHistoryDetailAPIInterface {
   actual_host_person: string;
@@ -31,7 +34,10 @@ export class RepairHistoryDetailApiService {
   public loading_subject = new BehaviorSubject<Set<string>>(new Set());
   public loading: boolean;
 
-  constructor(public http: HttpClient, public store: Store<AppState>) {
+  constructor(public http: HttpClient,
+              public store: Store<AppState>,
+              public snack_bar_config: SnackBarConfig,
+              public snack_bar: MatSnackBar) {
     this.loading_subject.subscribe((value) => {
       // 获取需要处理的id
       if (value.size === 0) {
@@ -80,6 +86,11 @@ export class RepairHistoryDetailApiService {
             }
           ));
         }, () => {
+          this.snack_bar.open(`获取${current}详情错误`, '朕知道了', this.snack_bar_config);
+          const next_value = this.loading_subject.getValue();
+          this.loading = false;
+          next_value.delete(current);
+          this.loading_subject.next(next_value);
         },
         () => {
           const next_value = this.loading_subject.getValue();

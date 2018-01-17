@@ -4,17 +4,17 @@ import {
   QueryDataConflictFromServerRequestApi,
   QueryDataConflictFromServerResponseApi,
   SaveDateToServerContentInterface
-} from '../api';
+} from '../app/api';
 import {HttpClient} from '@angular/common/http';
 import {Store} from '@ngrx/store';
-import {AppState} from '../store';
-import {RepairHistoryCollectStoreInterface} from '../repair-history-collect/repair-history-collect.store';
+import {AppState} from '../app/store';
+import {RepairHistoryCollectStoreInterface} from '../app/repair-history-collect/repair-history-collect.store';
 import {Observable} from 'rxjs/Observable';
 
 import {
   get_csrf_token,
   convert_a_HH_mm_like_string_to_a_moment
-} from '../util_func';
+} from '../app/util_func';
 import {MatSnackBar} from '@angular/material';
 
 @Injectable()

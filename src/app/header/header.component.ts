@@ -1,5 +1,5 @@
 import {Component, OnInit, Inject, ChangeDetectionStrategy} from '@angular/core';
-import {UserService, UserStoreInterface, UserActions} from '../services/user.service';
+import {UserService, UserStoreInterface, UserActions} from '../../services/user.service';
 import {MatDialog, MatDialogRef} from '@angular/material';
 import {LoginFormComponent} from './login-form/login-form.component';
 import {AppState} from '../store';
