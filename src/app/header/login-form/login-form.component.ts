@@ -12,7 +12,7 @@ import {AppState} from '../../store';
   styleUrls: ['./login-form.component.css']
 })
 export class LoginFormComponent implements OnInit {
-  public filterUsernames: string[];
+  public filterUsernameList: string[];
   public valueChange: Subject<string> = new Subject();
 
   constructor(public user_service: UserService,
@@ -21,7 +21,7 @@ export class LoginFormComponent implements OnInit {
     this.valueChange.debounceTime(300).filter(v => v !== '').subscribe(v => {
       this.http.get('/api/system-user/username-autocomplete/', {params: {value: v}})
         .subscribe(json => {
-          this.filterUsernames = json['values'];
+          this.filterUsernameList = json['values'];
         });
     });
   }

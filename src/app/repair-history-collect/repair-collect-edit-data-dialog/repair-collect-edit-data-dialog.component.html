@@ -1,3 +1,95 @@
-<p>
-  repair-collect-edit-data-dialog works!
-</p>
+<h2 mat-dialog-title>test title</h2>
+<mat-dialog-content>
+  <div fxLayout="column" fxFlexAlign="start center" class="form">
+    <form [formGroup]="form">
+      <div fxLayout="row" fxFlexAlign="start center" fxLayoutGap="30px">
+        <mat-form-field>
+          <input matInput
+                 placeholder="日期"
+                 [formControl]="date_group"
+                 [matDatepicker]="picker"
+          >
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput
+                 placeholder="编号"
+                 [formControl]="number_plan_group"
+          >
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput
+                 placeholder="内置编号"
+                 [formControl]="used_number_plan_group"
+          >
+        </mat-form-field>
+      </div>
+      <div fxLayout="row">
+        <mat-form-field>
+          <mat-select
+            placeholder="类型"
+            [formControl]="type_plan_group"
+          >
+            <mat-option value="局">局</mat-option>
+            <mat-option value="站">站</mat-option>
+            <mat-option value="垂">垂</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field style="width: 600px">
+          <textarea matInput
+                    placeholder="区域"
+                    style="resize: none"
+                    [formControl]="area_plan_group"
+          >
+          </textarea>
+        </mat-form-field>
+      </div>
+      <div fxLayoutGap="30px" fxLayout="row" fxLayoutAlign="start center">
+        <mat-form-field class="form-time-area">
+          <input matInput placeholder="计划开始时间" [formControl]="start_time_plan_group" type="time">
+        </mat-form-field>
+        <mat-form-field class="form-time-area">
+          <input matInput placeholder="计划结束时间" [formControl]="end_time_plan_group" type="time">
+        </mat-form-field>
+        <mat-form-field class="form-time-area">
+          <input type="number" matInput placeholder="持续时长" [formControl]="longing_plan_group"
+                 min="0"
+          >
+          <span matSuffix>分钟</span>
+        </mat-form-field>
+        <mat-checkbox [formControl]="calc_time_plan_group">
+          不计算时间
+        </mat-checkbox>
+      </div>
+      <div fxLayoutGap="30px" fxLayout="row" fxLayoutAlign="start center">
+        <mat-form-field class="form-time-area">
+          <input matInput placeholder="实际开始时间" [formControl]="actual_start_time_detail_group" type="time">
+        </mat-form-field>
+        <mat-form-field class="form-time-area">
+          <input matInput placeholder="实际结束时间" [formControl]="actual_end_time_detail_group" type="time">
+        </mat-form-field>
+        <mat-form-field class="form-time-area">
+          <input type="number" matInput placeholder="持续时长" [formControl]="actual_longing_detail_group"
+                 min="0"
+          >
+          <span matSuffix>分钟</span>
+        </mat-form-field>
+        <mat-checkbox [formControl]="calc_time_plan_group">
+          不计算时间
+        </mat-checkbox>
+      </div>
+      <div fxLayoutGap="30px" fxLayout="row" fxLayoutAlign="start center">
+        <mat-checkbox [formControl]="use_paper_history_group">是否纸质</mat-checkbox>
+      </div>
+
+    </form>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button>提交</button>
+  <button mat-button>重置</button>
+  <button mat-button (click)="close_without_save()">取消</button>
+</mat-dialog-actions>

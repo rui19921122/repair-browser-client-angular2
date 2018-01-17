@@ -3,7 +3,7 @@ import {LOCALE_ID, NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {StoreDevtoolsModule} from '@ngrx/store-devtools';
 import {FlexLayoutModule} from '@angular/flex-layout';
-import {environment} from './../environments/environment';
+import {environment} from '../environments/environment';
 
 
 import {AppComponent} from './app.component';

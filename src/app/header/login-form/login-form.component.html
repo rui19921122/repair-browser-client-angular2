@@ -12,7 +12,7 @@
       >
     </mat-input-container>
     <mat-autocomplete #auto="matAutocomplete">
-      <mat-option *ngFor="let username of filterUsernames" [value]="username">
+      <mat-option *ngFor="let username of filterUsernameList" [value]="username">
         {{username}}
       </mat-option>
     </mat-autocomplete>

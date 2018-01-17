@@ -111,7 +111,9 @@ export class RepairHistoryCollectComponent implements OnInit, AfterViewInit, OnD
       if (value.method === '') {
         this.dialog.closeAll();
       } else {
-        this.dialog.open(RepairCollectEditDataDialogComponent, {disableClose: true});
+        setTimeout(
+          () => this.dialog.open(RepairCollectEditDataDialogComponent, {disableClose: true})
+        );
       }
     });
     this.$repair_plan_data = this.store.select(state => state.repair_history_collect.repair_plan_data);

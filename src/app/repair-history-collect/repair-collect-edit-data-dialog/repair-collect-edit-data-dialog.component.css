@@ -1,0 +1,15 @@
+.form {
+  width: 700px;
+}
+
+.form form div {
+  width: 90%;
+}
+
+.form-time-area {
+  width: 100px;
+}
+
+.form-time-area input {
+  line-height: 24px;
+}
