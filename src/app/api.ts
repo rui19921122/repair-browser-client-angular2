@@ -1,6 +1,6 @@
 import * as moment from 'moment';
 
-export interface SystemUserInterface {
+export interface SystemUserApiInterface {
   username: string;
   department: string;
   message: string;
@@ -22,7 +22,7 @@ export interface RepairPlanContentInterface {
   work_vehicle: string;
 }
 
-export interface RepairPlanSingleDataApiInterface {
+export interface RepairPlanDataApiInterface {
 
   type: 'Ⅰ' | 'Ⅱ' | '站' | '垂';
   plan_time: string;
@@ -35,12 +35,12 @@ export interface RepairPlanSingleDataApiInterface {
 
 }
 
-export interface RepairPlanApi {
+export interface RepairPlanApiInterface {
   length: number;
-  data: RepairPlanSingleDataApiInterface[];
+  data: RepairPlanDataApiInterface[];
 }
 
-export interface RepairHistorySingleDataApiInterface {
+export interface RepairHistoryDataApiInterface {
   date: string | moment.Moment;
   repair_content: string;
   number: string;
@@ -53,11 +53,11 @@ export interface RepairHistorySingleDataApiInterface {
   id?: number;
 }
 
-export interface RepairHistoryDataApiInterface {
-  data: RepairHistorySingleDataApiInterface[];
+export interface RepairHistoryApiInterface {
+  data: RepairHistoryDataApiInterface[];
 }
 
-export interface SaveDateToServerContentInterface {
+export interface SaveDateToServerDataApiInterface {
   number: string;
   plan_start_time: moment.Moment;
   plan_end_time: moment.Moment;
@@ -68,23 +68,22 @@ export interface SaveDateToServerContentInterface {
   actual_start_number: string;
   actual_end_number: string;
   person: string;
-
 }
 
 export interface SaveDataToServerApiInterface {
   data: {
     date: string,
-    contents: SaveDateToServerContentInterface[]
+    contents: SaveDateToServerDataApiInterface[]
   }[];
 }
 
-export interface QueryDataConflictFromServerRequestApi {
+export interface QueryDataConflictFromServerRequestApiInterface {
   data: {
     date: string[]
   };
 }
 
-export interface QueryDataConflictFromServerResponseApi {
+export interface QueryDataConflictFromServerResponseApiInterface {
   data: {
     date_post: { date: string; conflict: 'true' | 'false' }[];
   };

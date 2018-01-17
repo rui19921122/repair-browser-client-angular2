@@ -1,7 +1,6 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {RepairPlanSingleDataInterface, RepairHistoryCollectStoreActions} from '../repair-history-collect.store';
+import {RepairPlanDataStoreInterface, RepairHistoryCollectStoreActions} from '../repair-history-collect.store';
 import {MatDialog} from '@angular/material';
-import {RepairPlanEditDialogComponent} from '../repair-plan-edit-dialog/repair-plan-dialog.component';
 import {AppState} from '../../store';
 import {Store} from '@ngrx/store';
 import {Subscription} from 'rxjs/Subscription';
@@ -15,9 +14,9 @@ import * as moment from 'moment';
   styleUrls: ['./repair-plan-detail-card.component.css']
 })
 export class RepairPlanDetailCardComponent implements OnInit, OnDestroy {
-  @Input() plan_data = <RepairPlanSingleDataInterface>null;
+  @Input() plan_data = <RepairPlanDataStoreInterface>null;
   @Input() history_data_id: string;
-  public data: RepairPlanSingleDataInterface;
+  public data: RepairPlanDataStoreInterface;
   public is_edit = false;
   public un: Subscription;
   public form: FormGroup;
@@ -27,10 +26,10 @@ export class RepairPlanDetailCardComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    const dialog_settings = this.store.select(state => state.repair_history_collect.dialog_settings);
+    const dialog_settings = this.store.select(state => state.repair_history_collect.content_settings.witch_number_is_in_edit);
     this.un = dialog_settings.subscribe(value => {
       if (this.plan_data) {
-        this.is_edit = this.plan_data.id === value.dialog_id && value.which_dialog_open === 'repair_plan';
+        this.is_edit = this.plan_data.id === value.number && value.method === 'plan';
         this.form = this.fb.group(
           {
             type: [''],
@@ -73,13 +72,13 @@ export class RepairPlanDetailCardComponent implements OnInit, OnDestroy {
   }
 
   handle_submit() {
-    const edited_value: RepairPlanSingleDataInterface = this.form.getRawValue();
-    const origin_value: RepairPlanSingleDataInterface = this.plan_data;
+    const edited_value: RepairPlanDataStoreInterface = this.form.getRawValue();
+    const origin_value: RepairPlanDataStoreInterface = this.plan_data;
   }
 
   open_change_dialog(id: string) {
-    this.store.dispatch(new RepairHistoryCollectStoreActions.OpenOrCloseADialog(
-      {dialog_type: 'repair_plan', dialog_id: id}
+    this.store.dispatch(new RepairHistoryCollectStoreActions.EditDataById(
+      {dialog_type: 'plan', dialog_id: id}
     ));
   }
 

@@ -4,7 +4,7 @@ import {AppState} from '../app/store';
 import {Store} from '@ngrx/store';
 import {
   RepairHistoryCollectStoreActions as actions,
-  RepairHistorySingleDataInterface
+  RepairHistoryDataStoreInterface
 } from '../app/repair-history-collect/repair-history-collect.store';
 import {Observable} from 'rxjs/Observable';
 import * as moment from 'moment';
@@ -81,12 +81,13 @@ export class RepairHistoryDetailApiService {
                 update_time: moment(),
                 canceled: false,
                 id: current,
-                longing: actual_end_time.diff(actual_start_time, 'minutes')
+                longing: actual_end_time.diff(actual_start_time, 'minutes'),
+                note: ''
               }
             }
           ));
         }, () => {
-          this.snack_bar.open(`获取${current}详情错误`, '朕知道了', this.snack_bar_config);
+          this.snack_bar.open(`获取${current}详情错误`, ...this.snack_bar_config as any);
           const next_value = this.loading_subject.getValue();
           this.loading = false;
           next_value.delete(current);
@@ -103,7 +104,7 @@ export class RepairHistoryDetailApiService {
   }
 
 
-  public get_history_detail_by_id(value: RepairHistorySingleDataInterface) {
+  public get_history_detail_by_id(value: RepairHistoryDataStoreInterface) {
     if (value.use_paper) {
       return Observable.of(1);
     } else {

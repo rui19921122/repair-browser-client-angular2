@@ -14,7 +14,7 @@ import {Observable} from 'rxjs/Observable';
 })
 export class HeaderComponent implements OnInit {
   public dialogRef: MatDialogRef<LoginFormComponent>;
-  public dialog_is_opend: boolean;
+  public dialog_is_opened: boolean;
   public login_pending: Observable<boolean>;
   public is_login: Observable<boolean>;
   public username: Observable<string>;
@@ -33,12 +33,12 @@ export class HeaderComponent implements OnInit {
     this.should_login_panel_open.subscribe(
       v => {
         if (v) {
-          if (this.dialog_is_opend) {
+          if (this.dialog_is_opened) {
           } else {
             this.OpenLoginForm();
           }
         } else {
-          if (this.dialog_is_opend) {
+          if (this.dialog_is_opened) {
             this.dialogRef.close();
           }
         }
@@ -60,8 +60,8 @@ export class HeaderComponent implements OnInit {
 
   public OpenLoginForm() {
     this.dialogRef = this.dialog.open(LoginFormComponent, {width: '600px', height: '350px', disableClose: true});
-    this.dialog_is_opend = true;
-    this.dialogRef.afterClosed().subscribe(v => this.dialog_is_opend = false);
+    this.dialog_is_opened = true;
+    this.dialogRef.afterClosed().subscribe(v => this.dialog_is_opened = false);
   }
 
 }

@@ -3,10 +3,10 @@ import {Store} from '@ngrx/store';
 import {AppState} from '../../store';
 import {Subscription} from 'rxjs/Subscription';
 import {
-  RepairHistoryDataDetailInterface,
-  RepairHistorySingleDataInterface,
-  RepairPlanAndHistoryDataSorted,
-  RepairPlanSingleDataInterface
+  RepairHistoryDetailDataStoreInterface,
+  RepairHistoryDataStoreInterface,
+  RepairPlanAndHistoryDataMappedInterface,
+  RepairPlanDataStoreInterface
 } from '../repair-history-collect.store';
 import {add_or_change_obj_from_array_by_id, get_obj_from_array_by_id} from '../../util_func';
 import {Observable} from 'rxjs/Observable';
@@ -21,17 +21,17 @@ import {RepairHistoryDetailApiService} from '../../../services/repair-collect-ge
   encapsulation: ViewEncapsulation.Native
 })
 export class RepairPlanEditTableTdComponent implements OnInit, OnDestroy {
-  public $mapped: Observable<RepairPlanAndHistoryDataSorted[]>;
-  public mapped: RepairPlanAndHistoryDataSorted[];
+  public $mapped: Observable<RepairPlanAndHistoryDataMappedInterface[]>;
+  public mapped: RepairPlanAndHistoryDataMappedInterface[];
   public mapped_sub: Subscription;
-  public $plan_data: Observable<RepairPlanSingleDataInterface[]>;
-  public plan_data: RepairPlanSingleDataInterface[];
+  public $plan_data: Observable<RepairPlanDataStoreInterface[]>;
+  public plan_data: RepairPlanDataStoreInterface[];
   public plan_data_sub: Subscription;
-  public $history_data: Observable<RepairHistorySingleDataInterface[]>;
-  public history_data: RepairHistorySingleDataInterface[];
+  public $history_data: Observable<RepairHistoryDataStoreInterface[]>;
+  public history_data: RepairHistoryDataStoreInterface[];
   public history_data_sub: Subscription;
-  public $detail_data: Observable<RepairHistoryDataDetailInterface[]>;
-  public detail_data: RepairHistoryDataDetailInterface[];
+  public $detail_data: Observable<RepairHistoryDetailDataStoreInterface[]>;
+  public detail_data: RepairHistoryDetailDataStoreInterface[];
   public detail_data_sub: Subscription;
   public $show_one_day_or_all: Observable<boolean>;
   public show_one_day_or_all: boolean;

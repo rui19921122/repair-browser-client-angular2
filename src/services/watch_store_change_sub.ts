@@ -5,9 +5,9 @@ import {Store} from '@ngrx/store';
 import {AppState} from '../app/store';
 import {
   RepairHistoryCollectStoreInterface,
-  RepairHistorySingleDataInterface,
-  RepairPlanAndHistoryDataSorted,
-  RepairPlanSingleDataInterface,
+  RepairHistoryDataStoreInterface,
+  RepairPlanAndHistoryDataMappedInterface,
+  RepairPlanDataStoreInterface,
   RepairHistoryCollectStoreActions as actions
 } from '../app/repair-history-collect/repair-history-collect.store';
 import {Observable} from 'rxjs/Observable';
@@ -22,7 +22,7 @@ import * as moment from 'moment';
 export class WatchStoreChangeService {
   public refresh_the_plan_and_history_map: Subject<null | moment.Moment> = new Subject();
   public store_observable: Observable<AppState>;
-  public plan_and_history_observable: Observable<[RepairPlanSingleDataInterface[], RepairHistorySingleDataInterface[]]>;
+  public plan_and_history_observable: Observable<[RepairPlanDataStoreInterface[], RepairHistoryDataStoreInterface[]]>;
   public watcher_the_plan_and_history_map: Subscription;
 
   constructor(public http: HttpClient,
@@ -57,20 +57,20 @@ export class WatchStoreChangeService {
       });
     } else {
       if (this.watcher_the_plan_and_history_map) {
-        this.snack_bar.open('不再自动追踪数值变化', '朕知道了', this.snack_bar_config);
+        this.snack_bar.open('不再自动追踪数值变化', ...this.snack_bar_config as any);
         this.watcher_the_plan_and_history_map.unsubscribe();
       }
     }
   }
 
 
-  private map_plan_and_history_data(plan_data: RepairPlanSingleDataInterface[],
-                                    history_data: RepairHistorySingleDataInterface[],
+  private map_plan_and_history_data(plan_data: RepairPlanDataStoreInterface[],
+                                    history_data: RepairHistoryDataStoreInterface[],
                                     prev_state?: RepairHistoryCollectStoreInterface,
-                                    start_time?: moment.Moment): RepairPlanAndHistoryDataSorted[] {
+                                    start_time?: moment.Moment): RepairPlanAndHistoryDataMappedInterface[] {
     // 首先找出人为标注的部分
     // 先找出所有日期
-    const date_list: RepairPlanAndHistoryDataSorted[] = [];
+    const date_list: RepairPlanAndHistoryDataMappedInterface[] = [];
     // 遍历计划数据，并按日期进行分类，将单个计划添加到列表中
     for (const single_plan_data of plan_data) {
       const date_index_in_date_list = date_list.findIndex(value => value.date.isSame(single_plan_data.date));

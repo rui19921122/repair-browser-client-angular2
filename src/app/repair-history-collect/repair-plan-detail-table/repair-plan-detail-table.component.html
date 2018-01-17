@@ -1,9 +1,9 @@
 <table id="hor-minimalist-a">
   <tr class="first-header">
-    <th colspan="7">
+    <th colspan="6">
       天窗修计划
     </th>
-    <th colspan="5">
+    <th colspan="9">
       天窗修实绩
     </th>
   </tr>
@@ -14,12 +14,15 @@
     <th width="80px">区域</th>
     <th width="80px">时间</th>
     <th width="30px">时长</th>
-    <th width="150px">操作</th>
     <th width="100px">计划编号</th>
     <th width="30px">纸质</th>
     <th width="80px">时间</th>
     <th width="80px">时长</th>
-    <th width="150px">操作</th>
+    <th width="80px">开始</th>
+    <th width="80px">结束</th>
+    <th width="80px">把关人</th>
+    <th width="110px">备注</th>
+    <th width="100px">操作</th>
   </tr>
   <ng-container *ngIf="show_one_day_or_all">
     <ng-container *ngFor="let detail_data of mapped|filterSelectedDateFromMappedList:

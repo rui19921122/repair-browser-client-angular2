@@ -3,10 +3,9 @@ import {Action} from '@ngrx/store';
 import * as moment from 'moment';
 import * as _ from 'lodash';
 import {
-  RepairHistoryDataApiInterface,
-  RepairHistorySingleDataApiInterface,
+  RepairHistoryApiInterface,
   RepairPlanContentInterface,
-  RepairPlanSingleDataApiInterface
+  RepairPlanDataApiInterface
 } from '../api';
 import {
   sort_data_by_date,
@@ -15,7 +14,7 @@ import {
 } from '../util_func';
 
 
-export interface RepairPlanSingleDataInterface {
+export interface RepairPlanDataStoreInterface {
   type: '局' | '站' | '垂';
   plan_time: string;
   apply_place: string;
@@ -31,7 +30,7 @@ export interface RepairPlanSingleDataInterface {
 }
 
 
-export interface RepairPlanAndHistoryDataSorted {
+export interface RepairPlanAndHistoryDataMappedInterface {
   date: moment.Moment;
   repair_plan_data_index_on_this_day: { plan_number_id: string, history_number_id: string | null, is_manual: boolean }[];
   repair_history_data_not_map_in_plan: string[];
@@ -40,10 +39,10 @@ export interface RepairPlanAndHistoryDataSorted {
 export interface RepairHistoryCollectStoreInterface {
   start_date?: moment.Moment;
   end_date?: moment.Moment;
-  repair_plan_data: RepairPlanSingleDataInterface[];
-  repair_plan_and_history_data_mapped: RepairPlanAndHistoryDataSorted[];
-  repair_detail_data: RepairHistoryDataDetailInterface[];
-  repair_history_data: RepairHistorySingleDataInterface[];
+  repair_plan_data: RepairPlanDataStoreInterface[];
+  repair_plan_and_history_data_mapped: RepairPlanAndHistoryDataMappedInterface[];
+  repair_detail_data: RepairHistoryDetailDataStoreInterface[];
+  repair_history_data: RepairHistoryDataStoreInterface[];
   show_all_dates_on_dates_header: boolean;
   pending: {
     repair_plan: boolean;
@@ -58,11 +57,11 @@ export interface RepairHistoryCollectStoreInterface {
     displayed_data: moment.Moment; // 哪个日期在单日期展示下呈现
     only_show_on_day_on_content: boolean;
     show_detail_method: 'table' | 'card';
-    can_safe_destroy: boolean
-  };
-  dialog_settings: {
-    which_dialog_open: 'repair_plan' | 'repair_history' | '';
-    dialog_id: string | null;
+    can_safe_destroy: boolean,
+    witch_number_is_in_edit: {
+      method: 'history' | 'plan' | '',
+      number: string
+    }
   };
   post_settings: {
     // 在向服务器上传数据前使用，当此项为True时，代表用户已经知晓当前要上传的日期与服务器上已存储的日期有冲突，会被覆盖
@@ -70,7 +69,7 @@ export interface RepairHistoryCollectStoreInterface {
   };
 }
 
-export interface RepairHistoryDataDetailInterface {
+export interface RepairHistoryDetailDataStoreInterface {
   update_time: moment.Moment;
   actual_start_time: moment.Moment | null;
   actual_end_time: moment.Moment | null;
@@ -80,9 +79,10 @@ export interface RepairHistoryDataDetailInterface {
   longing: number;
   canceled: boolean;
   id: string;
+  note: string;
 }
 
-export interface RepairHistorySingleDataInterface {
+export interface RepairHistoryDataStoreInterface {
   date: moment.Moment;
   repair_content: string;
   number: string;
@@ -156,7 +156,7 @@ export const UPDATE_REPAIR_HISTORY_DATA = '[repair-history-collect]UPDATE_REPAIR
 export class UpdateRepairHistoryData implements Action {
   readonly type = UPDATE_REPAIR_HISTORY_DATA;
 
-  constructor(public payload: RepairHistorySingleDataInterface[]) {
+  constructor(public payload: RepairHistoryDataStoreInterface[]) {
 
   }
 }
@@ -205,13 +205,13 @@ export class UpdateWhichDateShouldDisplayOnContent implements Action {
   }
 }
 
-export const OPEN_OR_CLOSE_A_DIALOG = '[repair-history-collect]OPEN_OR_CLOSE_A_DIALOG';  // 控制修改或者添加单元格的打开
+export const EDIT_DATA_BY_ID = '[repair-history-collect]EDIT_DATA_BY_ID';  // 控制修改或者添加单元格的打开
 
-export class OpenOrCloseADialog implements Action {
-  readonly type = OPEN_OR_CLOSE_A_DIALOG;
+export class EditDataById implements Action {
+  readonly type = EDIT_DATA_BY_ID;
 
   constructor(public payload: {
-    dialog_type: '' | 'repair_plan' | 'repair_history',
+    dialog_type: '' | 'plan' | 'history',
     dialog_id?: string
   }) {
 
@@ -223,7 +223,7 @@ export const UPDATE_REPAIR_PLAN_DATA = '[repair-history-collect]UPDATE_REPAIR_PL
 export class UpdateRepairPlanData implements Action {
   readonly type = UPDATE_REPAIR_PLAN_DATA;
 
-  constructor(public payload: RepairPlanSingleDataInterface) {
+  constructor(public payload: RepairPlanDataStoreInterface) {
 
   }
 }
@@ -235,7 +235,7 @@ export const ADD_A_REPAIR_PLAN_DATA = '[repair-history-collect]ADD_A_REPAIR_PLAN
 export class AddARepairPlanData implements Action {
   readonly type = ADD_A_REPAIR_PLAN_DATA;
 
-  constructor(public payload: { data: RepairPlanSingleDataInterface }) {
+  constructor(public payload: { data: RepairPlanDataStoreInterface }) {
 
   }
 }
@@ -246,7 +246,7 @@ export const REPLACE_ALL_HISTORY_DATA = '[repair-history-collect]REPLACE_ALL_HIS
 export class ReplaceAllHistoryData implements Action {
   readonly type = REPLACE_ALL_HISTORY_DATA;
 
-  constructor(public payload: { data: RepairHistorySingleDataInterface[] }) {
+  constructor(public payload: { data: RepairHistoryDataStoreInterface[] }) {
 
   }
 }
@@ -258,7 +258,7 @@ export const UPDATE_SINGLE_REPAIR_HISTORY_DETAIL_DATA = '[repair-history-collect
 export class UpdateSingleRepairHistoryDetailData implements Action {
   readonly type = UPDATE_SINGLE_REPAIR_HISTORY_DETAIL_DATA;
 
-  constructor(public payload: { value: RepairHistoryDataDetailInterface, id: string }) {
+  constructor(public payload: { value: RepairHistoryDetailDataStoreInterface, id: string }) {
 
   }
 }
@@ -270,7 +270,7 @@ export const REPLACE_ALL_REPAIR_DATA = '[repair-history-collect]REPLACE_ALL_REPA
 export class ReplaceAllRepairData implements Action {
   readonly type = REPLACE_ALL_REPAIR_DATA;
 
-  constructor(public payload: { data: RepairPlanSingleDataInterface[] }) {
+  constructor(public payload: { data: RepairPlanDataStoreInterface[] }) {
 
   }
 }
@@ -317,12 +317,12 @@ export type RepairHistoryCollectStoreActionType =
   | SwitchShowAllDatesOnDatesHeader   // 复制此行到ActionType中
   | SwitchPendingRepairPlan   // 复制此行到ActionType中
   | AddARepairPlanData // 复制此行到ActionType中, action type
-  | OpenOrCloseADialog  // 复制此行到ActionType中
+  | EditDataById  // 复制此行到ActionType中
   ;
 export const RepairHistoryCollectStoreActions = {
   ReplaceAllRepairData,  // 复制此行到导出的Action中,更新所以的字节 actions
   ReplaceAllHistoryData,  // 复制此行到导出的Action中,更换所有的历史数据 actions
-  OpenOrCloseADialog,  // 复制此行到导出的Action中
+  EditDataById,  // 复制此行到导出的Action中
   UpdateQueryDetailList,  // 复制此行到导出的Action中,更新query查询计划列表 actions
   AddARepairPlanData,  // 复制此行到导出的Action中, actions
   UpdateWhichDateShouldDisplayOnContent,  // 复制此行到导出的Action中,更新哪些日期可以在页面中显示 actions
@@ -358,11 +358,8 @@ const default_state: RepairHistoryCollectStoreInterface = {
     only_show_on_day_on_content: true,
     displayed_data: null,
     show_detail_method: 'card',
-    can_safe_destroy: true
-  },
-  dialog_settings: {
-    which_dialog_open: null,
-    dialog_id: null,
+    can_safe_destroy: true,
+    witch_number_is_in_edit: {method: '', number: null}
   },
   repair_detail_data: [],
   post_settings: {user_checked_the_date_is_conflicted: false},
@@ -405,14 +402,16 @@ export function reducer(state: RepairHistoryCollectStoreInterface = default_stat
         repair_plan_data: obj.objects
       };  // 复制此两行到reducer中
     case
-    OPEN_OR_CLOSE_A_DIALOG:
+    EDIT_DATA_BY_ID:
       // 打开或者关闭修改天窗修计划对话框
       return {
         ...state,
-        dialog_settings: {
-          ...state.dialog_settings,
-          which_dialog_open: action.payload.dialog_type,
-          dialog_id: action.payload.dialog_type === '' ? null : action.payload.dialog_id
+        content_settings: {
+          ...state.content_settings,
+          witch_number_is_in_edit: {
+            method: action.payload.dialog_type,
+            number: action.payload.dialog_id
+          }
         }
       };  // 复制此两行到reducer中
     case

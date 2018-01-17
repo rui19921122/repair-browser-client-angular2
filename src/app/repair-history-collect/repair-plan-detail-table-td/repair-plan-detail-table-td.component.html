@@ -10,19 +10,7 @@
   >
     <td [matTooltip]="plan_data.plan_time">不计算</td>
   </ng-container>
-  <td>{{plan_data.longing}}</td><!--时长-->
-  <td class="td-with-right-border"><!--操作-->
-    <mat-button-toggle-group>
-      <div class="button-row">
-        <button mat-button>
-          修改
-        </button>
-        <button mat-button>
-          删除
-        </button>
-      </div>
-    </mat-button-toggle-group>
-  </td>
+  <td class="td-with-right-border">{{plan_data.longing}}</td><!--时长-->
 </ng-container>
 <!--天窗修历史部分-->
 <ng-container *ngIf="history_data;else no_history_data_template">
@@ -37,10 +25,20 @@
   <td [ngClass]="{'accent-td':plan_data&& plan_data.longing&&plan_data.longing>detail_data.longing}">
     {{detail_data.longing}}
   </td>
+  <td>{{detail_data.actual_start_number}}</td>
+  <td>{{detail_data.actual_end_number}}</td>
+  <td>{{detail_data.actual_watcher}}</td>
+  <td>{{detail_data.note}}</td>
 </ng-container>
 <td><!--操作-->
   <mat-button-toggle-group>
     <div class="button-row">
+      <button mat-button
+              (click)="repair_history_detail_service.get_history_detail_by_id(history_data)"
+              *ngIf="!plan_data"
+      >
+        推导
+      </button>
       <button mat-button
               (click)="repair_history_detail_service.get_history_detail_by_id(history_data)"
               *ngIf="!loading"
@@ -53,7 +51,7 @@
       >
         ing..
       </button>
-      <button mat-button>
+      <button mat-button (click)="edit()">
         编辑
       </button>
       <button mat-button (click)="open_detail_page(history_data.inner_id)">
@@ -63,20 +61,8 @@
   </mat-button-toggle-group>
 </td>
 <ng-template #no_plan_data_template>
-  <td colspan="6">
+  <td colspan="6" class="td-with-right-border">
     无计划的数据
-  </td>
-  <td class="td-with-right-border"><!--操作-->
-    <mat-button-toggle-group>
-      <div class="button-row">
-        <button mat-button>
-          手动
-        </button>
-        <button mat-button>
-          自动
-        </button>
-      </div>
-    </mat-button-toggle-group>
   </td>
 </ng-template>
 <ng-template #no_history_data_template>
@@ -85,7 +71,7 @@
   </td>
 </ng-template>
 <ng-template #no_detail_data_template>
-  <td colspan="2">
+  <td colspan="6">
     未获取
   </td>
 </ng-template>

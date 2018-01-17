@@ -4,11 +4,11 @@ import {Store, createFeatureSelector, createSelector, MemoizedSelector} from '@n
 import {
   RepairHistoryCollectStoreInterface,
   RepairHistoryCollectStoreActions as actions,
-  RepairPlanSingleDataInterface,
-  RepairHistorySingleDataInterface,
-  RepairPlanAndHistoryDataSorted, RepairHistoryCollectStoreActions, RepairHistoryDataDetailInterface
+  RepairPlanDataStoreInterface,
+  RepairHistoryDataStoreInterface,
+  RepairPlanAndHistoryDataMappedInterface, RepairHistoryCollectStoreActions, RepairHistoryDetailDataStoreInterface
 } from '../repair-history-collect.store';
-import {RepairPlanSingleDataApiInterface} from '../../api';
+import {RepairPlanDataApiInterface} from '../../api';
 import {Observable} from 'rxjs/Observable';
 import * as moment from 'moment';
 import {Subject} from 'rxjs/Subject';
@@ -17,7 +17,7 @@ import {Http} from '@angular/http';
 import {RepairHistoryDetailApiService} from '../../../services/repair-collect-get-history-detail-data-from-server.service';
 import {HttpClient} from '@angular/common/http';
 import {RepairDataPostToServerService} from '../../../services/repair-collect-post-data-to-server.service';
-import {RepairCollectGetDataFromServerService} from '../../../services/repair-collect-get-base-data-from-server.service';
+import {RepairCollectGetBaseDataFromServerService} from '../../../services/repair-collect-get-base-data-from-server.service';
 import {pipeDef} from '@angular/core/src/view';
 import {PipeResolver} from '@angular/compiler';
 import {FilterSelectedDateFromMappedListPipe} from '../../../pipes/filter-selected-date-from-mapped-list.pipe';
@@ -31,12 +31,12 @@ import {get_obj_from_array_by_id} from '../../util_func';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContentComponent implements OnInit, OnDestroy {
-  public $repair_plan_and_history_data: Observable<RepairPlanAndHistoryDataSorted[]>;
-  public repair_plan_and_history_data: RepairPlanAndHistoryDataSorted[] = [];
+  public $repair_plan_and_history_data: Observable<RepairPlanAndHistoryDataMappedInterface[]>;
+  public repair_plan_and_history_data: RepairPlanAndHistoryDataMappedInterface[] = [];
   public repair_plan_and_history_data_sub: Subscription;
-  public $repair_plan_data: Observable<RepairPlanSingleDataInterface[]>;
-  public $repair_history_data: Observable<RepairHistorySingleDataInterface[]>;
-  public $repair_detail_data: Observable<RepairHistoryDataDetailInterface[]>;
+  public $repair_plan_data: Observable<RepairPlanDataStoreInterface[]>;
+  public $repair_history_data: Observable<RepairHistoryDataStoreInterface[]>;
+  public $repair_detail_data: Observable<RepairHistoryDetailDataStoreInterface[]>;
   public $repair_detail_data_list: Observable<Set<string>>;
   public repair_detail_data_list: Set<string>;
   public repair_detail_data_list_sub: Subscription;
@@ -58,7 +58,7 @@ export class ContentComponent implements OnInit, OnDestroy {
               public cd: ChangeDetectorRef,
               public repair_history_detail_service: RepairHistoryDetailApiService,
               public post_data_to_server_service: RepairDataPostToServerService,
-              public repair_collect_get_data_from_server_service: RepairCollectGetDataFromServerService,
+              public repair_collect_get_data_from_server_service: RepairCollectGetBaseDataFromServerService,
               public http: HttpClient,
               public filterSelectedDateFromMappedListPipe: FilterSelectedDateFromMappedListPipe) {
   }
@@ -155,7 +155,9 @@ export class ContentComponent implements OnInit, OnDestroy {
       this.only_show_one_date_on_content
     );
     let detail_data = [];
-    this.$repair_detail_data.subscribe(value => detail_data = value).unsubscribe();
+    let history_data: RepairHistoryDataStoreInterface[] = [];
+    this.$repair_detail_data.take(1).subscribe(value => detail_data = value).unsubscribe();
+    this.$repair_history_data.take(1).subscribe(value => history_data = value).unsubscribe();
     for (const map_single_day of display_date) {
       already_added_date.add(map_single_day.date);
       for (const i of map_single_day.repair_plan_data_index_on_this_day) {
@@ -189,7 +191,14 @@ export class ContentComponent implements OnInit, OnDestroy {
         }
       }
     }
-    this.repair_history_detail_service.loading_subject.next(list);
+    const another_list = new Set();
+    list.forEach(value => {
+      if (get_obj_from_array_by_id(history_data, value).obj.use_paper) {
+      } else {
+        another_list.add(value);
+      }
+    });
+    this.repair_history_detail_service.loading_subject.next(another_list);
   }
 
   post_data_to_server() {

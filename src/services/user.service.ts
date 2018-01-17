@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {MatSnackBar} from '@angular/material';
 import {Subject} from 'rxjs/Subject';
-import {SystemUserInterface} from '../app/api';
+import {SystemUserApiInterface} from '../app/api';
 import {Action, Store} from '@ngrx/store';
 import {AppState} from '../app/store';
 import {HttpClient} from '@angular/common/http';
@@ -21,9 +21,9 @@ export class UserService {
 
   public get_login_status() {
     this.store.dispatch(new SwitchLoginPending(true));
-    this.http.get('/api/system-user/system-user/').subscribe((v: SystemUserInterface) => {
+    this.http.get('/api/system-user/system-user/').subscribe((v: SystemUserApiInterface) => {
       this.login_end.next(true);
-      const json: SystemUserInterface = v;
+      const json: SystemUserApiInterface = v;
       this.store.dispatch(new UpdateUserName({username: json.username, department: json.department}));
     }, () => {
       this.login_end.next(true);

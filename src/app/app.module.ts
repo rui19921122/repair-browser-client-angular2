@@ -38,10 +38,8 @@ import {InTheMomentListPipe} from '../pipes/in-the-moment-list.pipe';
 import {GetDataByIdPipe} from '../pipes/get-data-by-id.pipe';
 import {SplitLongSentenceWithColon} from '../pipes/split-long-sentence-with-colon.pipe';
 import {MapMomentToRepairPlanAndHistoryDataPipe} from '../pipes/map-moment-to-repair-plan-and-history-data.pipe';
-import {RepairPlanEditDialogComponent} from './repair-history-collect/repair-plan-edit-dialog/repair-plan-dialog.component';
 import {RepairHistoryDetailApiService} from '../services/repair-collect-get-history-detail-data-from-server.service';
 import {GetChildObjectInObjectByIdPipe} from '../pipes/get-child-object-in-object-by-id.pipe';
-import {RepairHistoryEditDialogComponent} from './repair-history-collect/repair-history-edit-dialog/repair-history-edit-dialog.component';
 import {RepairDataPostToServerService} from '../services/repair-collect-post-data-to-server.service';
 import {PrettyprintPipe} from '../pipes/prettyprint.pipe';
 import {DiffTimeWithStringFormatPipe} from '../pipes/diff-time-with-string-format.pipe';
@@ -51,14 +49,15 @@ import {RepairHistoryQueryConnectWithServerService} from '../services/repair-que
 import {DetailTableListComponent} from './reapir-history-query/detail-table-list/detail-table-list.component';
 import {RenderShowedTimeWithGivenMomentPipe} from '../pipes/render-showed-time-with-given-moment.pipe';
 import {WatchStoreChangeService} from '../services/watch_store_change_sub';
-import {SnackBarConfig} from '../providers/snack-bar-provider';
-import {RepairCollectGetDataFromServerService} from '../services/repair-collect-get-base-data-from-server.service';
+import {SnackBarConfig, SnackBarConfigValue} from '../providers/snack-bar-provider';
+import {RepairCollectGetBaseDataFromServerService} from '../services/repair-collect-get-base-data-from-server.service';
 import {CountingMappedPlanDataWithoutHistoryPipe} from '../pipes/counting-mapped-plan-data-without-history.pipe';
 import {RepairPlanEditTableTdComponent} from './repair-history-collect/repair-plan-detail-table/repair-plan-detail-table.component';
 import {RepairPlanDetailTableTdComponent} from './repair-history-collect/repair-plan-detail-table-td/repair-plan-detail-table-td.component';
 import {FilterSelectedDateFromMappedListPipe} from '../pipes/filter-selected-date-from-mapped-list.pipe';
 import {RepairHistoryMonthQueryComponent} from './repair-history-month-query/repair-history-month-query.component';
 import {UseMockData} from '../providers/use-mock-data-provider';
+import {RepairCollectEditDataDialogComponent} from './repair-history-collect/repair-collect-edit-data-dialog/repair-collect-edit-data-dialog.component';
 
 
 export const routes: Routes = [
@@ -87,10 +86,8 @@ export const routes: Routes = [
     InTheMomentListPipe,
     GetDataByIdPipe,
     MapMomentToRepairPlanAndHistoryDataPipe,
-    RepairPlanEditDialogComponent,
     SplitLongSentenceWithColon,
     GetChildObjectInObjectByIdPipe,
-    RepairHistoryEditDialogComponent,
     PrettyprintPipe,
     DiffTimeWithStringFormatPipe,
     ReapirHistoryQueryComponent,
@@ -102,6 +99,7 @@ export const routes: Routes = [
     RepairPlanDetailTableTdComponent,
     FilterSelectedDateFromMappedListPipe,
     RepairHistoryMonthQueryComponent,
+    RepairCollectEditDataDialogComponent,
   ],
   imports: [
     NgxDatatableModule,
@@ -142,16 +140,17 @@ export const routes: Routes = [
     RepairDataPostToServerService,
     RepairHistoryQueryConnectWithServerService,
     WatchStoreChangeService,
-    RepairCollectGetDataFromServerService,
+    RepairCollectGetBaseDataFromServerService,
     {provide: LocationStrategy, useClass: HashLocationStrategy},
     {provide: LOCALE_ID, useValue: 'zh-hans'},
-    {provide: SnackBarConfig, useValue: {duration: 3000}},
+    {provide: SnackBarConfig, useValue: SnackBarConfigValue},
     FilterSelectedDateFromMappedListPipe,
     {provide: UseMockData, useValue: environment.mock_data}
   ],
   bootstrap: [AppComponent],
   entryComponents: [
-    LoginFormComponent
+    LoginFormComponent,
+    RepairCollectEditDataDialogComponent,
   ]
 })
 export class AppModule {

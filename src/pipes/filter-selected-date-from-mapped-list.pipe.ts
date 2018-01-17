@@ -1,5 +1,5 @@
 import {Pipe, PipeTransform} from '@angular/core';
-import {RepairPlanAndHistoryDataSorted} from '../app/repair-history-collect/repair-history-collect.store';
+import {RepairPlanAndHistoryDataMappedInterface} from '../app/repair-history-collect/repair-history-collect.store';
 import * as moment from 'moment';
 
 @Pipe({
@@ -7,10 +7,10 @@ import * as moment from 'moment';
 })
 export class FilterSelectedDateFromMappedListPipe implements PipeTransform {
 
-  transform(data: RepairPlanAndHistoryDataSorted[],
+  transform(data: RepairPlanAndHistoryDataMappedInterface[],
             show: moment.Moment,
             not_show: moment.Moment[],
-            display_one: boolean): RepairPlanAndHistoryDataSorted[] {
+            display_one: boolean): RepairPlanAndHistoryDataMappedInterface[] {
     if (display_one) {
       if (show) {
         return data.filter(value => value.date.isSame(show));

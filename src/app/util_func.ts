@@ -1,4 +1,4 @@
-import {RepairPlanAndHistoryDataSorted} from './repair-history-collect/repair-history-collect.store';
+import {RepairPlanAndHistoryDataMappedInterface} from './repair-history-collect/repair-history-collect.store';
 import * as moment from 'moment';
 import * as _ from 'lodash';
 
@@ -40,7 +40,7 @@ export function string_is_a_valid_time(string: string) {
   return string.match(re_time);
 }
 
-export function sort_data_by_date(data: RepairPlanAndHistoryDataSorted[]): RepairPlanAndHistoryDataSorted[] {
+export function sort_data_by_date(data: RepairPlanAndHistoryDataMappedInterface[]): RepairPlanAndHistoryDataMappedInterface[] {
   return data.sort((a, b) => a.date.isSameOrBefore(b.date) ? -1 : 1);
 }
 

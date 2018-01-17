@@ -2,9 +2,9 @@ import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, On
 import {
   RepairHistoryCollectStoreActions,
   RepairHistoryCollectStoreInterface,
-  RepairHistorySingleDataInterface,
-  RepairPlanAndHistoryDataSorted,
-  RepairPlanSingleDataInterface
+  RepairHistoryDataStoreInterface,
+  RepairPlanAndHistoryDataMappedInterface,
+  RepairPlanDataStoreInterface
 } from './repair-history-collect.store';
 import {MatDialog, MatDialogRef, MatSnackBar} from '@angular/material';
 import * as moment from 'moment';
@@ -12,16 +12,16 @@ import {Observable} from 'rxjs/Rx';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {AppState} from '../store';
 import {Store} from '@ngrx/store';
-import {RepairHistoryDataApiInterface, RepairHistorySingleDataApiInterface, RepairPlanApi} from '../api';
+import {RepairHistoryApiInterface, RepairPlanApiInterface} from '../api';
 import {Subject} from 'rxjs/Subject';
 import {Subscription} from 'rxjs/Subscription';
-import {RepairPlanEditDialogComponent} from './repair-plan-edit-dialog/repair-plan-dialog.component';
 import {dialogConfig} from '../dialog-config';
 import {mock_history_data, mock_repair_data} from './mock-data';
-import {RepairHistoryEditDialogComponent} from './repair-history-edit-dialog/repair-history-edit-dialog.component';
 import {HttpClient} from '@angular/common/http';
 import {WatchStoreChangeService} from '../../services/watch_store_change_sub';
-import {RepairCollectGetDataFromServerService} from '../../services/repair-collect-get-base-data-from-server.service';
+import {RepairCollectGetBaseDataFromServerService} from '../../services/repair-collect-get-base-data-from-server.service';
+import {SnackBarConfig} from '../../providers/snack-bar-provider';
+import {RepairCollectEditDataDialogComponent} from './repair-collect-edit-data-dialog/repair-collect-edit-data-dialog.component';
 
 class ButtonType {
   text: string;
@@ -45,22 +45,75 @@ export class RepairHistoryCollectComponent implements OnInit, AfterViewInit, OnD
   public $state: Observable<RepairHistoryCollectStoreInterface>;
   public search_for_plan_data = new Subject();
   public search_for_history_data = new Subject();
-  public $repair_plan_and_history_data: Observable<RepairPlanAndHistoryDataSorted[]>;
+  public $repair_plan_and_history_data: Observable<RepairPlanAndHistoryDataMappedInterface[]>;
   public $show_all_dates_on_header: Observable<boolean>;
   public listen_for_keyboard_click_unsubscribe: Subscription;
-  public $plan_data_dialog_number: Observable<string>;
-  public $repair_plan_data: Observable<RepairPlanSingleDataInterface[]>;
-  public $repair_history_data: Observable<RepairHistorySingleDataInterface[]>;
+  public $repair_plan_data: Observable<RepairPlanDataStoreInterface[]>;
+  public $repair_history_data: Observable<RepairHistoryDataStoreInterface[]>;
+  public edit_dialog: Observable<{ method: 'plan' | 'history' | '', number: string }>;
+  public edit_dialog_sub: Subscription;
 
   constructor(public http: HttpClient,
               public store: Store<AppState>,
               public snack_bar: MatSnackBar,
               public dialog: MatDialog,
+              public snack_bar_config: SnackBarConfig,
               public watch_store_change_service: WatchStoreChangeService,
-              public repair_collect_get_data_from_server_service: RepairCollectGetDataFromServerService,
-              fb: FormBuilder) {
+              public repair_collect_get_data_from_server_service: RepairCollectGetBaseDataFromServerService,
+              public fb: FormBuilder) {
     // 对话框相关
-    this.$plan_data_dialog_number = this.store.select(state => state.repair_history_collect.dialog_settings.dialog_id);
+  }
+
+  ngOnDestroy() {
+    if (this.listen_for_keyboard_click_unsubscribe) {
+      this.listen_for_keyboard_click_unsubscribe.unsubscribe();
+    }
+    if (this.edit_dialog_sub) {
+      this.edit_dialog_sub.unsubscribe();
+    }
+  }
+
+  ngAfterViewInit() {
+  }
+
+  handle_show_all_clicked(boolean) {
+    this.store.dispatch(new RepairHistoryCollectStoreActions.SwitchShowAllDatesOnDatesHeader(boolean));
+  }
+
+  public change_form_by_button(type: string, value: number) {
+    let start_date: moment.Moment;
+    let end_date: moment.Moment;
+    const today = moment().hours(0).minutes(0).seconds(0);
+    if (type === 'month') {
+      if (value === 0) { // 本周内
+        start_date = moment(today).days(1);
+        end_date = moment(today);
+      } else if (value === 1) {
+        start_date = moment(today).date(1);
+        end_date = moment(today);
+      } else if (value === 2) {
+        start_date = moment(today).month(today.month() - 1).date(1);
+        end_date = moment(today).date(1).add(-1, 'days');
+      }
+      this.DatePickerForm.setValue({start_date: start_date.toDate(), end_date: end_date.toDate()});
+
+    } else if (type === 'length') {
+      start_date = moment(today).add(-value, 'days');
+      end_date = moment(today);
+      this.DatePickerForm.setValue({start_date: start_date.toDate(), end_date: end_date.toDate()});
+    }
+  }
+
+
+  ngOnInit() {
+    this.edit_dialog = this.store.select(state => state.repair_history_collect.content_settings.witch_number_is_in_edit);
+    this.edit_dialog_sub = this.edit_dialog.subscribe(value => {
+      if (value.method === '') {
+        this.dialog.closeAll();
+      } else {
+        this.dialog.open(RepairCollectEditDataDialogComponent, {disableClose: true});
+      }
+    });
     this.$repair_plan_data = this.store.select(state => state.repair_history_collect.repair_plan_data);
     this.$repair_history_data = this.store.select(state => state.repair_history_collect.repair_history_data);
     this.watch_store_change_service.watch_for_plan_and_history_data_map(true);
@@ -107,7 +160,7 @@ export class RepairHistoryCollectComponent implements OnInit, AfterViewInit, OnD
       origin_start_date = v.start_date;
       origin_end_date = v.end_date;
     });
-    this.DatePickerForm = fb.group({
+    this.DatePickerForm = this.fb.group({
       'start_date': [origin_start_date ? origin_start_date.toDate() : null],
       'end_date': [origin_end_date ? origin_end_date.toDate() : null]
     });
@@ -121,47 +174,6 @@ export class RepairHistoryCollectComponent implements OnInit, AfterViewInit, OnD
     });
   }
 
-  ngOnDestroy() {
-    if (this.listen_for_keyboard_click_unsubscribe) {
-      this.listen_for_keyboard_click_unsubscribe.unsubscribe();
-    }
-  }
-
-  ngAfterViewInit() {
-  }
-
-  handle_show_all_clicked(boolean) {
-    this.store.dispatch(new RepairHistoryCollectStoreActions.SwitchShowAllDatesOnDatesHeader(boolean));
-  }
-
-  public change_form_by_button(type: string, value: number) {
-    let start_date: moment.Moment;
-    let end_date: moment.Moment;
-    const today = moment().hours(0).minutes(0).seconds(0);
-    if (type === 'month') {
-      if (value === 0) { // 本周内
-        start_date = moment(today).days(1);
-        end_date = moment(today);
-      } else if (value === 1) {
-        start_date = moment(today).date(1);
-        end_date = moment(today);
-      } else if (value === 2) {
-        start_date = moment(today).month(today.month() - 1).date(1);
-        end_date = moment(today).date(1).add(-1, 'days');
-      }
-      this.DatePickerForm.setValue({start_date: start_date.toDate(), end_date: end_date.toDate()});
-
-    } else if (type === 'length') {
-      start_date = moment(today).add(-value, 'days');
-      end_date = moment(today);
-      this.DatePickerForm.setValue({start_date: start_date.toDate(), end_date: end_date.toDate()});
-    }
-  }
-
-
-  ngOnInit() {
-  }
-
 
   public $get_repair_plan_data_from_server() {
     // 从服务器读取天窗修统计数据
@@ -172,15 +184,15 @@ export class RepairHistoryCollectComponent implements OnInit, AfterViewInit, OnD
         `=${state.start_date.format('YYYYMMDD')}&end=${state.end_date.format('YYYYMMDD')}`;
       this.http.get(url).do(() => this.store.dispatch(new RepairHistoryCollectStoreActions.SwitchPendingRepairPlan(true)))
         .subscribe(
-          (v: RepairPlanApi) => {
-            const json: RepairPlanApi = v;
+          (v: RepairPlanApiInterface) => {
+            const json: RepairPlanApiInterface = v;
           },
           () => {
           },
           () => this.store.dispatch(new RepairHistoryCollectStoreActions.SwitchPendingRepairPlan(false))
         );
     } else {
-      this.snack_bar.open('日期选择错误', 'X', {duration: 2000});
+      this.snack_bar.open('日期选择错误', ...this.snack_bar_config as any);
     }
   }
 

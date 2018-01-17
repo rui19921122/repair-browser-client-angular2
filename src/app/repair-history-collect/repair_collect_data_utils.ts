@@ -1,9 +1,12 @@
-import {RepairHistorySingleDataApiInterface, RepairPlanSingleDataApiInterface} from '../api';
-import {RepairHistorySingleDataInterface, RepairPlanSingleDataInterface} from './repair-history-collect.store';
+import {RepairHistoryApiInterface, RepairHistoryDataApiInterface, RepairPlanDataApiInterface} from '../api';
+import {
+  RepairHistoryDetailDataStoreInterface, RepairHistoryDataStoreInterface,
+  RepairPlanDataStoreInterface
+} from './repair-history-collect.store';
 import {generate_a_id, string_is_a_valid_time_range} from '../util_func';
 import * as moment from 'moment';
 
-export function convert_plan_data_server_to_store(origin: RepairPlanSingleDataApiInterface): RepairPlanSingleDataInterface {
+export function convert_plan_data_server_to_store(origin: RepairPlanDataApiInterface): RepairPlanDataStoreInterface {
   const is_a_time = string_is_a_valid_time_range(origin.plan_time);
   let type;
   switch (origin.type) {
@@ -45,7 +48,7 @@ export function convert_plan_data_server_to_store(origin: RepairPlanSingleDataAp
   };
 }
 
-export function convert_history_data_server_to_store(origin: RepairHistorySingleDataApiInterface): RepairHistorySingleDataInterface {
+export function convert_history_data_server_to_store(origin: RepairHistoryDataApiInterface): RepairHistoryDataStoreInterface {
   return {
     date: moment(origin.date),
     number: origin.number,
@@ -61,4 +64,23 @@ export function convert_history_data_server_to_store(origin: RepairHistorySingle
     cached: 0,
   };
 
+}
+
+export function check_a_plan_history_detail_group_data_is_valid(plan: RepairPlanDataStoreInterface,
+                                                                history: RepairHistoryDataStoreInterface,
+                                                                detail: RepairHistoryDetailDataStoreInterface): {
+  valid: boolean, error: string
+} {
+  if (detail) {
+    if (history.use_paper) {
+      if (detail.longing >= 0) {
+        console.log(history.use_paper);
+        console.log(detail.longing);
+        return {valid: false, error: `${plan.date.format('YYYY-MM-DD')}编号${plan.number}的天窗修计划未在系统中有电子数据，如果被取消请将时长设置为0，如果没有取消，请如实填写`};
+      }
+    }
+  } else {
+    return {valid: false, error: `${plan.date.format('YYYY-MM-DD')}编号${plan.number}的天窗修计划缺少详细数据`};
+  }
+  return {valid: true, error: ''};
 }

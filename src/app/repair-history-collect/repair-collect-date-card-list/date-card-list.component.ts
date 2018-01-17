@@ -8,7 +8,7 @@ import {Subject} from 'rxjs/Subject';
 import {Subscription} from 'rxjs/Subscription';
 import {AppState} from '../../store';
 import {Store} from '@ngrx/store';
-import {RepairPlanAndHistoryDataSorted, RepairHistoryCollectStoreActions as actions} from '../repair-history-collect.store';
+import {RepairPlanAndHistoryDataMappedInterface, RepairHistoryCollectStoreActions as actions} from '../repair-history-collect.store';
 
 @Component({
     selector: 'app-repair-collect-date-card-list',
@@ -17,7 +17,7 @@ import {RepairPlanAndHistoryDataSorted, RepairHistoryCollectStoreActions as acti
 })
 export class DateCardListComponent implements OnInit, OnDestroy {
     @Output() show_all_card_on_header_is_clicked_output: EventEmitter<boolean> = new EventEmitter();
-    public dates_collection: Observable<RepairPlanAndHistoryDataSorted[]>;
+    public dates_collection: Observable<RepairPlanAndHistoryDataMappedInterface[]>;
     public dates_opened_panel: Observable<moment.Moment[]>;
     public $only_show_one_date_on_content: Observable<boolean>;
 

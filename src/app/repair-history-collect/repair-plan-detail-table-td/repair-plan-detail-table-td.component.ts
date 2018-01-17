@@ -1,14 +1,18 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
-import {RepairHistoryDetailAPIInterface, RepairHistoryDetailApiService} from '../../../services/repair-collect-get-history-detail-data-from-server.service';
 import {
-  RepairHistoryDataDetailInterface, RepairHistorySingleDataInterface,
-  RepairPlanSingleDataInterface
+  RepairHistoryDetailAPIInterface,
+  RepairHistoryDetailApiService
+} from '../../../services/repair-collect-get-history-detail-data-from-server.service';
+import {
+  RepairHistoryDetailDataStoreInterface, RepairHistoryDataStoreInterface,
+  RepairPlanDataStoreInterface,
+  RepairHistoryCollectStoreActions
 } from '../repair-history-collect.store';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../store';
 import {Subscription} from 'rxjs/Subscription';
 import {get_obj_from_array_by_id} from '../../util_func';
-import {RepairCollectGetDataFromServerService} from '../../../services/repair-collect-get-base-data-from-server.service';
+import {RepairCollectGetBaseDataFromServerService} from '../../../services/repair-collect-get-base-data-from-server.service';
 
 @Component({
   /* tslint:disable */
@@ -23,9 +27,9 @@ export class RepairPlanDetailTableTdComponent implements OnInit, OnDestroy {
   @Input() plan_data_id: string;
   @Input() history_data_id: string;
   @Input() loading = false;
-  public plan_data: RepairPlanSingleDataInterface = null;
-  public history_data: RepairHistorySingleDataInterface = null;
-  public detail_data: RepairHistoryDataDetailInterface = null;
+  public plan_data: RepairPlanDataStoreInterface = null;
+  public history_data: RepairHistoryDataStoreInterface = null;
+  public detail_data: RepairHistoryDetailDataStoreInterface = null;
   public sub1: Subscription;
   public sub2: Subscription;
   public sub3: Subscription;
@@ -59,6 +63,14 @@ export class RepairPlanDetailTableTdComponent implements OnInit, OnDestroy {
       this.cd.markForCheck();
       value ? this.detail_data = value : this.detail_data = null;
     });
+  }
+
+  public edit() {
+    if (this.plan_data && this.plan_data.id) {
+      this.store.dispatch(new RepairHistoryCollectStoreActions.EditDataById({dialog_type: 'plan', dialog_id: this.plan_data.id}));
+    } else {
+      this.store.dispatch(new RepairHistoryCollectStoreActions.EditDataById({dialog_type: 'history', dialog_id: this.history_data.id}));
+    }
   }
 
   ngOnDestroy() {

@@ -8,9 +8,9 @@ import {
   RepairHistoryCollectStoreInterface
 } from '../app/repair-history-collect/repair-history-collect.store';
 import {
-  RepairHistoryDataApiInterface,
-  RepairPlanApi,
-  RepairPlanSingleDataApiInterface
+  RepairHistoryApiInterface,
+  RepairPlanApiInterface,
+  RepairPlanDataApiInterface
 } from '../app/api';
 import {SnackBarConfig} from '../providers/snack-bar-provider';
 import {MatSnackBar} from '@angular/material';
@@ -23,11 +23,11 @@ import {generate_a_id, get_obj_from_array_by_id} from '../app/util_func';
 import {UseMockData} from '../providers/use-mock-data-provider';
 
 @Injectable()
-export class RepairCollectGetDataFromServerService {
+export class RepairCollectGetBaseDataFromServerService {
   public repair_collect_store: Observable<RepairHistoryCollectStoreInterface>;
   private get_repair_history_data_sub_func = {
-    next: (v: RepairHistoryDataApiInterface) => {
-      const json: RepairHistoryDataApiInterface = v;
+    next: (v: RepairHistoryApiInterface) => {
+      const json: RepairHistoryApiInterface = v;
       const data_list = [];
       for (const single_data of json.data) {
         data_list.push(convert_history_data_server_to_store(single_data));
@@ -40,7 +40,7 @@ export class RepairCollectGetDataFromServerService {
     }
   };
   private get_repair_plan_data_sub_func = {
-    next: (json: RepairPlanApi) => {
+    next: (json: RepairPlanApiInterface) => {
       const data_list = [];
       for (const single_data of json.data) {
         data_list.push(convert_plan_data_server_to_store(single_data));
@@ -76,7 +76,7 @@ export class RepairCollectGetDataFromServerService {
         this.http_client.get(url, {withCredentials: true}).subscribe(this.get_repair_plan_data_sub_func);
       }
     } else {
-      this.snack_bar.open('日期选择错误', '朕知道了', this.snack_bar_config);
+      this.snack_bar.open('日期选择错误', ...this.snack_bar_config as any);
     }
   }
 
@@ -108,7 +108,7 @@ export class RepairCollectGetDataFromServerService {
           );
       }
     } else {
-      this.snack_bar.open('日期选择错误', '朕知道了', this.snack_bar_config);
+      this.snack_bar.open('日期选择错误', ...this.snack_bar_config as any);
     }
 
   }
@@ -133,7 +133,7 @@ export class RepairCollectGetDataFromServerService {
       for (const repair_history_id of miss_repair_history_data_id_list) {
         const history_detail = get_obj_from_array_by_id(current_state.repair_history_data, repair_history_id).obj;
         const number_and_type = generate_plan_number_from_history_number(history_detail.number);
-        const repair_plan_like_data: RepairPlanSingleDataApiInterface = {
+        const repair_plan_like_data: RepairPlanDataApiInterface = {
           number: number_and_type.number,
           post_date: history_detail.date.format(),
           apply_place: history_detail.apply_place,
