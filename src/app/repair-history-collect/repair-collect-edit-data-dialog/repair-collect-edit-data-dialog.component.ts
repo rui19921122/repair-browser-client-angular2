@@ -10,6 +10,7 @@ import * as moment from 'moment';
 import {convert_h_mm_time_format_to_hh_mm_time_format, get_obj_from_array_by_id} from '../../util_func';
 import {RepairHistoryApiInterface} from '../../api';
 import {Subscription} from 'rxjs/Subscription';
+import {Observable} from 'rxjs/Observable';
 
 @Component({
   selector: 'app-repair-collect-edit-data-dialog',
@@ -34,8 +35,10 @@ export class RepairCollectEditDataDialogComponent implements OnInit, OnDestroy {
   public actual_end_number_detail_group: FormControl;
   public actual_watcher_detail_group: FormControl; // 把关人
   public actual_longing_detail_group: FormControl;
+  public note_detail_group: FormControl;
   public inner_id_history_group: FormControl;
   public use_paper_history_group: FormControl;
+  public is_canceled_none_group: FormControl;
   public sub1: Subscription;
   public sub2: Subscription;
   public sub3: Subscription;
@@ -66,6 +69,7 @@ export class RepairCollectEditDataDialogComponent implements OnInit, OnDestroy {
     this.used_number_plan_group = new FormControl();
     this.used_number_plan_group.disable();
     this.longing_plan_group = new FormControl(); // 持续时间，以分钟为单位
+    this.longing_plan_group.disable();
     this.form.addControl('longing_plan', this.longing_plan_group);
     this.actual_start_time_detail_group = new FormControl();
     this.form.addControl('actual_start_time_detail', this.actual_start_time_detail_group);
@@ -83,6 +87,30 @@ export class RepairCollectEditDataDialogComponent implements OnInit, OnDestroy {
     this.form.addControl('use_paper_history', this.use_paper_history_group);
     this.actual_longing_detail_group = new FormControl();
     this.form.addControl('actual_longing', this.actual_longing_detail_group);
+    this.actual_longing_detail_group.disable();
+    this.is_canceled_none_group = new FormControl();
+    this.form.addControl('is_canceled', this.is_canceled_none_group);
+    this.note_detail_group = new FormControl();
+    this.form.addControl('note', this.note_detail_group);
+    this.is_canceled_none_group.valueChanges.subscribe((value) => {
+      if (value) {
+        this.actual_end_number_detail_group.setValue('');
+        this.actual_start_number_detail_group.setValue('');
+        this.actual_end_time_detail_group.setValue('');
+        this.actual_longing_detail_group.setValue(0);
+        this.actual_start_number_detail_group.disable();
+        this.actual_end_number_detail_group.disable();
+        this.actual_longing_detail_group.disable();
+        this.actual_start_time_detail_group.setValue('');
+        this.actual_start_time_detail_group.disable();
+        this.actual_end_time_detail_group.disable();
+      } else {
+        this.actual_start_number_detail_group.enable();
+        this.actual_end_number_detail_group.enable();
+        this.actual_start_time_detail_group.enable();
+        this.actual_end_time_detail_group.enable();
+      }
+    });
     this.store.select(state => state.repair_history_collect).take(1).subscribe(value => {
       let plan: RepairPlanDataStoreInterface, history: RepairHistoryDataStoreInterface, detail: RepairHistoryDetailDataStoreInterface;
       if (value.content_settings.witch_number_is_in_edit.method === 'plan') {
@@ -145,62 +173,9 @@ export class RepairCollectEditDataDialogComponent implements OnInit, OnDestroy {
         this.actual_end_number_detail_group.setValue(detail.actual_end_number);
         this.actual_watcher_detail_group.setValue(detail.actual_watcher);
         this.actual_longing_detail_group.setValue(detail.longing);
+      } else {
+        this.actual_longing_detail_group.setValue(0);
       }
-      this.sub1 = this.number_plan_group.valueChanges
-        .merge(this.type_plan_group.valueChanges)
-        .merge(this.date_group.valueChanges)
-        .debounceTime(10).subscribe(() => {
-          if (this.number_plan_group.value && this.type_plan_group.value && this.date_group.value) {
-            this.used_number_plan_group.setValue(`${moment(this.date_group.value).format('YYYYMMDD')}-${this.type_plan_group.value === '站'
-              ? 'Z' : (this.type_plan_group.value === '垂' ? 'D' : 'J')}${this.number_plan_group.value}`);
-          }
-        });
-      this.sub2 = this.calc_time_plan_group.valueChanges.debounceTime(10).subscribe(v => {
-        if (v) {
-          this.start_time_plan_group.disable();
-          this.start_time_plan_group.setValue('');
-          this.end_time_plan_group.disable();
-          this.end_time_plan_group.setValue('');
-          this.longing_plan_group.enable();
-          this.longing_plan_group.setValue(0);
-        } else {
-          this.start_time_plan_group.enable();
-          this.end_time_plan_group.enable();
-          this.longing_plan_group.disable();
-        }
-      });
-      this.sub3 = this.start_time_plan_group.valueChanges.merge(this.end_time_plan_group.valueChanges)
-        .subscribe(() => {
-          const start = this.start_time_plan_group.value;
-          const end = this.end_time_plan_group.value;
-          if (start && end) {
-            const start_moment = moment(start, 'HH:mm');
-            const end_moment = moment(end, 'HH:mm');
-            if (end_moment.isAfter(start_moment)) {
-              this.longing_plan_group.setValue(
-                end_moment.diff(start_moment, 'minutes')
-              );
-            } else {
-              this.longing_plan_group.setValue(0);
-            }
-          }
-        });
-      this.sub4 = this.actual_start_time_detail_group.valueChanges.merge(this.actual_end_time_detail_group.valueChanges)
-        .subscribe(() => {
-          const start = this.actual_start_time_detail_group.value;
-          const end = this.actual_end_time_detail_group.value;
-          if (start && end) {
-            const start_moment = moment(start, 'HH:mm');
-            const end_moment = moment(end, 'HH:mm');
-            if (end_moment.isAfter(start_moment)) {
-              this.actual_longing_detail_group.setValue(
-                end_moment.diff(start_moment, 'minutes')
-              );
-            } else {
-              this.actual_longing_detail_group.setValue(0);
-            }
-          }
-        });
       if (history && (!plan)) {
         this.date_group.setValue(history.date.toDate());
         const number = history.number.split('-')[1];
@@ -211,10 +186,13 @@ export class RepairCollectEditDataDialogComponent implements OnInit, OnDestroy {
         this.longing_plan_group.setValue(0);
       }
     });
+    this.change_the_whole_form_value_by_logic();
+    this.sub1 = this.form.valueChanges.throttleTime(10).subscribe(() => {
+      this.change_the_whole_form_value_by_logic();
+    });
   }
 
   ngOnDestroy() {
-    console.log('destroyed');
     if (this.sub1) {
       this.sub1.unsubscribe();
     }
@@ -229,6 +207,76 @@ export class RepairCollectEditDataDialogComponent implements OnInit, OnDestroy {
     }
     if (this.sub5) {
       this.sub5.unsubscribe();
+    }
+  }
+
+  public submit() {
+    console.log(this.form.getRawValue());
+  }
+
+  public change_the_whole_form_value_by_logic() {
+    // 根据逻辑关系重置整张表的状态
+    if (this.is_canceled_none_group.value) {
+      this.actual_end_number_detail_group.setValue('');
+      this.actual_start_number_detail_group.setValue('');
+      this.actual_end_time_detail_group.setValue('');
+      this.actual_longing_detail_group.setValue(0);
+      this.actual_start_number_detail_group.disable();
+      this.actual_end_number_detail_group.disable();
+      this.actual_longing_detail_group.disable();
+      this.actual_start_time_detail_group.setValue('');
+      this.actual_start_time_detail_group.disable();
+      this.actual_end_time_detail_group.disable();
+      this.actual_watcher_detail_group.disable();
+      this.actual_watcher_detail_group.setValue('');
+    } else {
+      this.actual_start_number_detail_group.enable();
+      this.actual_end_number_detail_group.enable();
+      this.actual_start_time_detail_group.enable();
+      this.actual_end_time_detail_group.enable();
+      this.actual_watcher_detail_group.enable();
+    }
+    if (!this.calc_time_plan_group.value) {
+      this.start_time_plan_group.disable();
+      this.start_time_plan_group.setValue('');
+      this.end_time_plan_group.disable();
+      this.end_time_plan_group.setValue('');
+      this.longing_plan_group.enable();
+      this.longing_plan_group.setValue(0);
+    } else {
+      this.start_time_plan_group.enable();
+      this.end_time_plan_group.enable();
+      this.longing_plan_group.disable();
+    }
+    if (this.number_plan_group.value && this.type_plan_group.value && this.date_group.value) {
+      this.used_number_plan_group.setValue(`${moment(this.date_group.value).format('YYYYMMDD')}-${this.type_plan_group.value === '站'
+        ? 'Z' : (this.type_plan_group.value === '垂' ? 'D' : 'J')}${this.number_plan_group.value}`);
+    }
+    const start_plan = this.start_time_plan_group.value;
+    const end_plan = this.end_time_plan_group.value;
+    if (start_plan && end_plan) {
+      const start_moment = moment(start_plan, 'HH:mm');
+      const end_moment = moment(end_plan, 'HH:mm');
+      if (end_moment.isAfter(start_moment)) {
+        this.longing_plan_group.setValue(
+          end_moment.diff(start_moment, 'minutes')
+        );
+      } else {
+        this.longing_plan_group.setValue(0);
+      }
+    }
+    const start_actual = this.actual_start_time_detail_group.value;
+    const end_actual = this.actual_end_time_detail_group.value;
+    if (start_actual && end_actual) {
+      const start_moment = moment(start_actual, 'HH:mm');
+      const end_moment = moment(end_actual, 'HH:mm');
+      if (end_moment.isAfter(start_moment)) {
+        this.actual_longing_detail_group.setValue(
+          end_moment.diff(start_moment, 'minutes')
+        );
+      } else {
+        this.actual_longing_detail_group.setValue(0);
+      }
     }
   }
 

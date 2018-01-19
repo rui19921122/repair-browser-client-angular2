@@ -1,4 +1,4 @@
-<h2 mat-dialog-title>test title</h2>
+<h2 mat-dialog-title>编号{{number_plan_group.value}}的天窗修详情修改</h2>
 <mat-dialog-content>
   <div fxLayout="column" fxFlexAlign="start center" class="form">
     <form [formGroup]="form">
@@ -60,9 +60,7 @@
           >
           <span matSuffix>分钟</span>
         </mat-form-field>
-        <mat-checkbox [formControl]="calc_time_plan_group">
-          不计算时间
-        </mat-checkbox>
+        <mat-checkbox [formControl]="calc_time_plan_group">有确切时间</mat-checkbox>
       </div>
       <div fxLayoutGap="30px" fxLayout="row" fxLayoutAlign="start center">
         <mat-form-field class="form-time-area">
@@ -77,19 +75,26 @@
           >
           <span matSuffix>分钟</span>
         </mat-form-field>
-        <mat-checkbox [formControl]="calc_time_plan_group">
-          不计算时间
+        <mat-checkbox [formControl]="use_paper_history_group">
+          是否纸质
+        </mat-checkbox>
+        <mat-checkbox [formControl]="is_canceled_none_group">
+          是否取消
         </mat-checkbox>
       </div>
       <div fxLayoutGap="30px" fxLayout="row" fxLayoutAlign="start center">
-        <mat-checkbox [formControl]="use_paper_history_group">是否纸质</mat-checkbox>
+        <mat-form-field>
+          <input matInput [formControl]="actual_watcher_detail_group" placeholder="把关人" type="text">
+        </mat-form-field>
+        <mat-form-field style="width: 400px">
+          <input matInput [formControl]="note_detail_group" placeholder="备注">
+        </mat-form-field>
       </div>
-
     </form>
   </div>
 </mat-dialog-content>
 <mat-dialog-actions>
-  <button mat-button>提交</button>
+  <button mat-button (click)="submit()">提交</button>
   <button mat-button>重置</button>
   <button mat-button (click)="close_without_save()">取消</button>
 </mat-dialog-actions>
