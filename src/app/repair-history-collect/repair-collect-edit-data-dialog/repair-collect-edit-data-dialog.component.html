@@ -94,7 +94,7 @@
   </div>
 </mat-dialog-content>
 <mat-dialog-actions>
-  <button mat-button (click)="submit()">提交</button>
-  <button mat-button>重置</button>
+  <button mat-button (click)="submit()" [disabled]="!this.form.valid">提交</button>
+  <button mat-button (click)="reset()">重置</button>
   <button mat-button (click)="close_without_save()">取消</button>
 </mat-dialog-actions>

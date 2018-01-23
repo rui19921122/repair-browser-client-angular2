@@ -11,6 +11,7 @@ import {convert_h_mm_time_format_to_hh_mm_time_format, get_obj_from_array_by_id}
 import {RepairHistoryApiInterface} from '../../api';
 import {Subscription} from 'rxjs/Subscription';
 import {Observable} from 'rxjs/Observable';
+import {ActionSequence} from 'selenium-webdriver';
 
 @Component({
   selector: 'app-repair-collect-edit-data-dialog',
@@ -92,27 +93,18 @@ export class RepairCollectEditDataDialogComponent implements OnInit, OnDestroy {
     this.form.addControl('is_canceled', this.is_canceled_none_group);
     this.note_detail_group = new FormControl();
     this.form.addControl('note', this.note_detail_group);
-    this.is_canceled_none_group.valueChanges.subscribe((value) => {
-      if (value) {
-        this.actual_end_number_detail_group.setValue('');
-        this.actual_start_number_detail_group.setValue('');
-        this.actual_end_time_detail_group.setValue('');
-        this.actual_longing_detail_group.setValue(0);
-        this.actual_start_number_detail_group.disable();
-        this.actual_end_number_detail_group.disable();
-        this.actual_longing_detail_group.disable();
-        this.actual_start_time_detail_group.setValue('');
-        this.actual_start_time_detail_group.disable();
-        this.actual_end_time_detail_group.disable();
-      } else {
-        this.actual_start_number_detail_group.enable();
-        this.actual_end_number_detail_group.enable();
-        this.actual_start_time_detail_group.enable();
-        this.actual_end_time_detail_group.enable();
-      }
+    this.reset();
+    this.change_the_whole_form_value_by_logic();
+    this.sub1 = this.form.valueChanges.throttleTime(10).subscribe(() => {
+      this.change_the_whole_form_value_by_logic();
     });
+  }
+
+  get_current_state(): {
+    plan: RepairPlanDataStoreInterface, detail: RepairHistoryDetailDataStoreInterface, history: RepairHistoryDataStoreInterface
+  } {
+    let plan: RepairPlanDataStoreInterface, history: RepairHistoryDataStoreInterface, detail: RepairHistoryDetailDataStoreInterface;
     this.store.select(state => state.repair_history_collect).take(1).subscribe(value => {
-      let plan: RepairPlanDataStoreInterface, history: RepairHistoryDataStoreInterface, detail: RepairHistoryDetailDataStoreInterface;
       if (value.content_settings.witch_number_is_in_edit.method === 'plan') {
         plan = get_obj_from_array_by_id(
           value.repair_plan_data, value.content_settings.witch_number_is_in_edit.number
@@ -142,54 +134,62 @@ export class RepairCollectEditDataDialogComponent implements OnInit, OnDestroy {
             }
           }
       }
-      if (plan) {
-        this.date_group.setValue(plan.date.toDate());
-        this.type_plan_group.setValue(plan.type);
-        this.time_plan_group.setValue(plan.plan_time);
-        this.area_plan_group.setValue(plan.area);
-        this.number_plan_group.setValue(plan.number);
-        this.calc_time_plan_group.setValue(plan.calc_time);
-        this.start_time_plan_group.setValue(
-          convert_h_mm_time_format_to_hh_mm_time_format(plan.start_time)
-        );
-        this.end_time_plan_group.setValue(
-          convert_h_mm_time_format_to_hh_mm_time_format(plan.end_time)
-        );
-        this.used_number_plan_group.setValue(plan.used_number);
-        this.longing_plan_group.setValue(plan.longing);
-      }
-      if (history) {
-        this.inner_id_history_group.setValue(history.inner_id);
-        this.use_paper_history_group.setValue(history.use_paper);
-      }
-      if (detail) {
-        this.actual_start_time_detail_group.setValue(
-          convert_h_mm_time_format_to_hh_mm_time_format(detail.actual_start_time.format('HH:mm'))
-        );
-        this.actual_end_time_detail_group.setValue(
-          convert_h_mm_time_format_to_hh_mm_time_format(detail.actual_end_time.format('HH:mm'))
-        );
-        this.actual_start_number_detail_group.setValue(detail.actual_start_number);
-        this.actual_end_number_detail_group.setValue(detail.actual_end_number);
-        this.actual_watcher_detail_group.setValue(detail.actual_watcher);
-        this.actual_longing_detail_group.setValue(detail.longing);
-      } else {
-        this.actual_longing_detail_group.setValue(0);
-      }
-      if (history && (!plan)) {
-        this.date_group.setValue(history.date.toDate());
-        const number = history.number.split('-')[1];
-        const type = number[0];
-        const converted_value = number.slice(1, number.length);
-        this.type_plan_group.setValue(type === 'J' ? '局' : (type === 'Z' ? '站' : '垂'));
-        this.number_plan_group.setValue(converted_value);
-        this.longing_plan_group.setValue(0);
-      }
     });
-    this.change_the_whole_form_value_by_logic();
-    this.sub1 = this.form.valueChanges.throttleTime(10).subscribe(() => {
-      this.change_the_whole_form_value_by_logic();
-    });
+    return {plan, detail, history};
+  }
+
+  reset() {
+    const {plan, history, detail} = this.get_current_state();
+    if (plan) {
+      this.date_group.setValue(plan.date.toDate());
+      this.type_plan_group.setValue(plan.type);
+      this.time_plan_group.setValue(plan.plan_time);
+      this.area_plan_group.setValue(plan.area);
+      this.number_plan_group.setValue(plan.number);
+      this.calc_time_plan_group.setValue(plan.calc_time);
+      this.start_time_plan_group.setValue(
+        convert_h_mm_time_format_to_hh_mm_time_format(plan.start_time)
+      );
+      this.end_time_plan_group.setValue(
+        convert_h_mm_time_format_to_hh_mm_time_format(plan.end_time)
+      );
+      this.used_number_plan_group.setValue(plan.used_number);
+      this.longing_plan_group.setValue(plan.longing);
+    }
+    if (history) {
+      this.inner_id_history_group.setValue(history.inner_id);
+      this.use_paper_history_group.setValue(history.use_paper);
+    }
+    if (detail) {
+      this.actual_start_time_detail_group.setValue(
+        convert_h_mm_time_format_to_hh_mm_time_format(detail.actual_start_time.format('HH:mm'))
+      );
+      this.actual_end_time_detail_group.setValue(
+        convert_h_mm_time_format_to_hh_mm_time_format(detail.actual_end_time.format('HH:mm'))
+      );
+      this.actual_start_number_detail_group.setValue(detail.actual_start_number);
+      this.actual_end_number_detail_group.setValue(detail.actual_end_number);
+      this.actual_watcher_detail_group.setValue(detail.actual_watcher);
+      this.actual_longing_detail_group.setValue(detail.longing);
+    } else {
+      this.actual_longing_detail_group.setValue(0);
+      this.actual_start_time_detail_group.setValue('');
+      this.actual_end_time_detail_group.setValue('');
+      this.actual_start_number_detail_group.setValue('');
+      this.actual_end_number_detail_group.setValue('');
+      this.actual_watcher_detail_group.setValue('');
+    }
+    if (history && (!plan)) {
+      this.date_group.setValue(history.date.toDate());
+      const number = history.number.split('-')[1];
+      const type = number[0];
+      const converted_value = number.slice(1, number.length);
+      this.type_plan_group.setValue(type === 'J' ? '局' : (type === 'Z' ? '站' : '垂'));
+      this.number_plan_group.setValue(converted_value);
+      this.longing_plan_group.setValue(0);
+    }
+    this.is_canceled_none_group.setValue(false);
+    return false;
   }
 
   ngOnDestroy() {
@@ -211,7 +211,32 @@ export class RepairCollectEditDataDialogComponent implements OnInit, OnDestroy {
   }
 
   public submit() {
-    console.log(this.form.getRawValue());
+    const {plan, history, detail} = this.get_current_state();
+    this.store.dispatch(new RepairHistoryCollectStoreActions.EditWholeDetail(
+      {
+        history, plan, detail,
+        form: {
+          is_canceled: this.is_canceled_none_group.value,
+          detail_start_number: this.actual_start_number_detail_group.value,
+          detail_end_number: this.actual_end_number_detail_group.value,
+          detail_watcher: this.actual_watcher_detail_group.value,
+          detail_start_time: this.start_time_plan_group.value,
+          detail_end_time: this.end_time_plan_group.value,
+          detail_longing: this.actual_longing_detail_group.value,
+          plan_end_time: this.end_time_plan_group.value,
+          plan_start_time: this.start_time_plan_group.value,
+          plan_calc_time: this.calc_time_plan_group.value,
+          plan_longing: this.longing_plan_group.value,
+          area: this.area_plan_group.value,
+          date: this.date_group.value,
+          note: this.note_detail_group.value,
+          number: this.number_plan_group.value,
+          type: this.type_plan_group.value,
+          use_paper: this.use_paper_history_group.value,
+          used_number: this.used_number_plan_group.value
+        }
+      }
+    ));
   }
 
   public change_the_whole_form_value_by_logic() {

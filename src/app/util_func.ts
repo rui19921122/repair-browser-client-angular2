@@ -58,6 +58,10 @@ export function convert_h_mm_time_format_to_hh_mm_time_format(string: string) {
   return string.length === 5 ? string : '0' + string;
 }
 
+export function convert_hh_mm_time_format_to_h_mm_time_format(string: string) {
+  return string.length === 4 ? string : string.split('0')[1];
+}
+
 export function get_csrf_token() {
   const name = 'csrftoken';
   let cookieValue = null;
@@ -100,16 +104,16 @@ export function get_obj_from_array_by_id<T extends { id: string }>(array: T[], i
 }
 
 export function delete_obj_from_array_by_id<T extends { id: string }>(array: T[], id: string): {
-  objects: T[], method: 'deleted' | 'not-found'
+  objects: T[], method: 'deleted' | 'not-found', index: number
 } {
   // 返回更新后的数组
   const new_array = Array.from(array);
   const index = new_array.findIndex(value => value.id === id);
   if (index >= 0) {
     new_array.splice(index, 1);
-    return {objects: new_array, method: 'deleted'};
+    return {objects: new_array, method: 'deleted', index: index};
   } else {
-    return {objects: new_array, method: 'not-found'};
+    return {objects: new_array, method: 'not-found', index: -1};
   }
 }
 

@@ -84,14 +84,14 @@ export interface RepairHistoryDetailDataStoreInterface {
 
 export interface RepairHistoryDataStoreInterface {
   date: moment.Moment;
-  repair_content: string;
+  repair_content?: string;
   number: string;
-  plan_type: string;
-  repair_department: string;
+  plan_type?: string;
+  repair_department?: string;
   inner_id: string;
   use_paper: boolean;
-  apply_place: string;
-  plan_time: string;
+  apply_place?: string;
+  plan_time?: string;
   id: string;
   used_number: string;
   cached: number;
@@ -297,9 +297,47 @@ export class ChangeShowDetailMethod implements Action {
   }
 }
 
+export interface EditWholeDetailInterface {
+  date: string;
+  number: string;
+  used_number: string;
+  type: '局' | '站' | '垂';
+  area: string;
+  plan_start_time?: string;
+  plan_end_time?: string;
+  plan_longing: number;
+  plan_calc_time: boolean;
+  detail_start_time?: string;
+  detail_end_time?: string;
+  detail_longing: number;
+  detail_start_number: string;
+  detail_end_number: string;
+  detail_watcher: string;
+  note: string;
+  use_paper: boolean;
+  is_canceled: boolean;
+}
+
+
+export const EDIT_WHOLE_DETAIL = '[repair-collect]EDIT_WHOLE_DETAIL';
+
+// 以一个完成的记录更新
+export class EditWholeDetail implements Action {
+  readonly type = EDIT_WHOLE_DETAIL;
+
+  constructor(public payload: {
+    form: EditWholeDetailInterface,
+    detail?: RepairHistoryDetailDataStoreInterface,
+    plan?: RepairPlanDataStoreInterface,
+    history?: RepairHistoryDataStoreInterface
+  }) {
+
+  }
+}
 
 export type RepairHistoryCollectStoreActionType =
   SwitchOpenWhichSidebar
+  | EditWholeDetail // 复制此行到ActionType中,以一个完成的记录更新 action type
   | UpdateQueryDetailList // 复制此行到ActionType中,更新query查询计划列表 action type
   | ReplaceAllRepairData // 复制此行到ActionType中,更新所以的字节 action type
   | ReplaceAllHistoryData // 复制此行到ActionType中,更换所有的历史数据 action type
@@ -337,6 +375,7 @@ export const RepairHistoryCollectStoreActions = {
   ChangeSelectedDate,
   SwitchShowAllDatesOnDatesHeader,  // 复制此行到导出的Action中
   AddOrRemoveDateToOpenedDatePanel,  // 复制此行到导出的Action中
+  EditWholeDetail,  // 复制此行到导出的Action中,以一个完成的记录更新 actions
   ChangeShowDetailMethod,  // 复制此行到导出的Action中,变更展示数据的方式 actions
 };
 
@@ -369,6 +408,83 @@ const default_state: RepairHistoryCollectStoreInterface = {
 export function reducer(state: RepairHistoryCollectStoreInterface = default_state,
                         action: RepairHistoryCollectStoreActionType): RepairHistoryCollectStoreInterface {
   switch (action.type) {
+    case EDIT_WHOLE_DETAIL:
+      let history = Array.from(state.repair_history_data);
+      let history_index = -1;
+      let plan = Array.from(state.repair_plan_data);
+      let plan_index = -1;
+      let detail = Array.from(state.repair_detail_data);
+      let detail_index = -1;
+      if (action.payload.history) {
+        const __ = delete_obj_from_array_by_id(state.repair_history_data, action.payload.history.id);
+        history = __.objects;
+        history_index = __.index;
+      }
+      if (action.payload.plan) {
+        const __ = delete_obj_from_array_by_id(state.repair_plan_data, action.payload.plan.id);
+        plan = __.objects;
+        plan_index = __.index;
+      }
+      if (action.payload.detail) {
+        const __ = delete_obj_from_array_by_id(state.repair_detail_data, action.payload.detail.id);
+        detail = __.objects;
+        detail_index = __.index;
+      }
+      const generate_history = {
+        id: generate_a_id(action.payload.form),
+        number: action.payload.form.used_number,
+        used_number: action.payload.form.used_number,
+        use_paper: action.payload.form.use_paper,
+        apply_place: action.payload.form.area,
+        inner_id: '',
+        date: moment(action.payload.form.date),
+        cached: 3
+      };
+      if (history_index < 0) {
+        history.push(
+          generate_history
+        );
+      } else {
+        history.splice(history_index, 1, generate_history);
+      }
+      const generate_plan = {
+        end_time: action.payload.form.plan_end_time,
+        start_time: action.payload.form.plan_start_time,
+        longing: action.payload.form.plan_longing,
+        used_number: action.payload.form.used_number,
+        number: action.payload.form.number,
+        calc_time: action.payload.form.plan_calc_time,
+        plan_time: `${action.payload.form.plan_start_time}-${action.payload.form.plan_end_time}`,
+        type: action.payload.form.type,
+        date: moment(action.payload.form.date),
+        apply_place: '',
+        area: action.payload.form.area,
+        id: generate_a_id(action.payload.form)
+      };
+      if (plan_index < 0) {
+        plan.push(generate_plan);
+      } else {
+        plan.splice(plan_index, 1, generate_plan);
+      }
+      const generate_detail = {
+        longing: action.payload.form.detail_longing,
+        actual_end_time: moment(action.payload.form.detail_end_time, 'HH:mm'),
+        update_time: moment(),
+        actual_start_time: moment(action.payload.form.detail_start_time, 'HH:mm'),
+        actual_watcher: action.payload.form.detail_watcher,
+        id: generate_a_id(action.payload.form),
+        actual_end_number: action.payload.form.detail_end_number,
+        actual_start_number: action.payload.form.detail_start_number,
+        note: action.payload.form.note,
+        canceled: action.payload.form.is_canceled
+      };
+      if (detail_index < 0) {
+        detail.push(generate_detail);
+      } else {
+        detail.splice(detail_index, 1, generate_detail);
+      }
+      return {...state, repair_plan_data: plan, repair_history_data: history, repair_detail_data: detail};
+    // 复制此两行到reducer中,以一个完成的记录更新 reducer
     case CHANGE_SHOW_DETAIL_METHOD:
       return {
         ...state, content_settings: {
