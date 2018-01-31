@@ -32,7 +32,11 @@ export interface RepairPlanDataStoreInterface {
 
 export interface RepairPlanAndHistoryDataMappedInterface {
   date: moment.Moment;
-  repair_plan_data_index_on_this_day: { plan_number_id: string, history_number_id: string | null, is_manual: boolean }[];
+  repair_plan_data_index_on_this_day: {
+    plan_number_id: string, history_number_id: string | null, is_manual: boolean, valid: {
+      valid: boolean, error: string
+    }
+  }[];
   repair_history_data_not_map_in_plan: string[];
 }
 
@@ -41,7 +45,7 @@ export interface RepairHistoryCollectStoreInterface {
   end_date?: moment.Moment;
   repair_plan_data: RepairPlanDataStoreInterface[];
   repair_plan_and_history_data_mapped: RepairPlanAndHistoryDataMappedInterface[];
-  repair_detail_data: RepairHistoryDetailDataStoreInterface[];
+  repair_detail_data: RepairDetailDataStoreInterface[];
   repair_history_data: RepairHistoryDataStoreInterface[];
   show_all_dates_on_dates_header: boolean;
   pending: {
@@ -61,7 +65,8 @@ export interface RepairHistoryCollectStoreInterface {
     witch_number_is_in_edit: {
       method: 'history' | 'plan' | '',
       number: string
-    }
+    },
+    only_show_invalid_data: boolean;
   };
   post_settings: {
     // 在向服务器上传数据前使用，当此项为True时，代表用户已经知晓当前要上传的日期与服务器上已存储的日期有冲突，会被覆盖
@@ -69,7 +74,7 @@ export interface RepairHistoryCollectStoreInterface {
   };
 }
 
-export interface RepairHistoryDetailDataStoreInterface {
+export interface RepairDetailDataStoreInterface {
   update_time: moment.Moment;
   actual_start_time: moment.Moment | null;
   actual_end_time: moment.Moment | null;
@@ -258,7 +263,7 @@ export const UPDATE_SINGLE_REPAIR_HISTORY_DETAIL_DATA = '[repair-history-collect
 export class UpdateSingleRepairHistoryDetailData implements Action {
   readonly type = UPDATE_SINGLE_REPAIR_HISTORY_DETAIL_DATA;
 
-  constructor(public payload: { value: RepairHistoryDetailDataStoreInterface, id: string }) {
+  constructor(public payload: { value: RepairDetailDataStoreInterface, id: string }) {
 
   }
 }
@@ -327,7 +332,7 @@ export class EditWholeDetail implements Action {
 
   constructor(public payload: {
     form: EditWholeDetailInterface,
-    detail?: RepairHistoryDetailDataStoreInterface,
+    detail?: RepairDetailDataStoreInterface,
     plan?: RepairPlanDataStoreInterface,
     history?: RepairHistoryDataStoreInterface
   }) {
@@ -396,9 +401,10 @@ const default_state: RepairHistoryCollectStoreInterface = {
     not_displayed_data: [],
     only_show_on_day_on_content: true,
     displayed_data: null,
-    show_detail_method: 'card',
+    show_detail_method: 'table',
     can_safe_destroy: true,
-    witch_number_is_in_edit: {method: '', number: null}
+    witch_number_is_in_edit: {method: '', number: null},
+    only_show_invalid_data: false
   },
   repair_detail_data: [],
   post_settings: {user_checked_the_date_is_conflicted: false},
@@ -445,7 +451,7 @@ export function reducer(state: RepairHistoryCollectStoreInterface = default_stat
           generate_history
         );
       } else {
-        history.splice(history_index, 1, generate_history);
+        history.splice(history_index, 0, generate_history);
       }
       const generate_plan = {
         end_time: action.payload.form.plan_end_time,
@@ -464,13 +470,13 @@ export function reducer(state: RepairHistoryCollectStoreInterface = default_stat
       if (plan_index < 0) {
         plan.push(generate_plan);
       } else {
-        plan.splice(plan_index, 1, generate_plan);
+        plan.splice(plan_index, 0, generate_plan);
       }
       const generate_detail = {
         longing: action.payload.form.detail_longing,
-        actual_end_time: moment(action.payload.form.detail_end_time, 'HH:mm'),
+        actual_end_time: action.payload.form.detail_end_time ? moment(action.payload.form.detail_end_time, 'HH:mm') : null,
         update_time: moment(),
-        actual_start_time: moment(action.payload.form.detail_start_time, 'HH:mm'),
+        actual_start_time: action.payload.form.detail_start_time ? moment(action.payload.form.detail_start_time, 'HH:mm') : null,
         actual_watcher: action.payload.form.detail_watcher,
         id: generate_a_id(action.payload.form),
         actual_end_number: action.payload.form.detail_end_number,
@@ -481,17 +487,13 @@ export function reducer(state: RepairHistoryCollectStoreInterface = default_stat
       if (detail_index < 0) {
         detail.push(generate_detail);
       } else {
-        detail.splice(detail_index, 1, generate_detail);
+        detail.splice(detail_index, 0, generate_detail);
       }
-      return {...state, repair_plan_data: plan, repair_history_data: history, repair_detail_data: detail};
-    // 复制此两行到reducer中,以一个完成的记录更新 reducer
-    case CHANGE_SHOW_DETAIL_METHOD:
       return {
-        ...state, content_settings: {
-          ...state.content_settings,
-          show_detail_method: state.content_settings.show_detail_method === 'card' ? 'table' : 'card'
-        }
-      }; // 复制此两行到reducer中,变更展示数据的方式 reducer
+        ...state, repair_plan_data: plan, repair_history_data: history, repair_detail_data: detail,
+        content_settings: {...state.content_settings, witch_number_is_in_edit: {number: null, method: ''}}
+      };
+    // 复制此两行到reducer中,以一个完成的记录更新 reducer
     case REPLACE_ALL_HISTORY_DATA:
       return {...state, repair_history_data: action.payload.data}; // 复制此两行到reducer中,更换所有的历史数据 reducer
     case REPLACE_ALL_REPAIR_DATA:

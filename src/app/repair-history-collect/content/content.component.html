@@ -75,67 +75,57 @@
         </button>
       </div>
     </div>
-    <div>
-      <button class="left-slider-bar-button accent-color" mat-raised-button mat-icon-button
-              matTooltip="切换卡片布局或者表格布局"
-              [matTooltipPosition]="'right'"
-              (click)="change_detail_display_method()"
-      >
-        <i class="iconfont icon-add"></i>
-      </button>
-    </div>
   </div>
   <!--卡片布局-->
-  <div fxFlex="90" class="detail-card-area"
-       style="overflow-y: auto;padding-bottom: 15px;"
-       *ngIf="display_detail_method==='card'"
-       [ngStyle]="{'height':height+'px'}">
-    <div fxLayout="column">
-      <div *ngFor="let detail of repair_plan_and_history_data|filterSelectedDateFromMappedList:
-      showed_date_on_content:not_showed_dates_on_content:only_show_one_date_on_content"
-      >
-        <div class="date-column default-primary-color">
-          <h2 class="text-primary-color">{{detail.date.format("YYYY年MM月DD日")}}</h2>
-        </div>
-        <div fxLayout="column" fxLayoutGap="25px" class="detail-card-single-date">
-          <!--天窗修计划与天窗修历史可以对应的上的部分-->
-          <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="25px"
-               *ngFor="let plan_date of detail.repair_plan_data_index_on_this_day">
-            <div fxFlex="40">
-              <app-repair-plan-detail-card
-                [plan_data]="($repair_plan_data|async)| getDataById: plan_date.plan_number_id">
-              </app-repair-plan-detail-card>
-            </div>
-            <div fxFlex="40">
-              <app-repair-history-detail-card
-                [history_data]="($repair_history_data| async)|getDataById: plan_date.history_number_id"
-                [detail_data]="($repair_detail_data|async)|getDataById: plan_date.history_number_id">
-              </app-repair-history-detail-card>
-            </div>
-          </div>
-          <!--只有天窗修历史，没有天窗修计划的部门（即站控和垂停等）-->
-          <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="25px"
-               *ngFor="let number of detail.repair_history_data_not_map_in_plan">
-            <div fxFlex="40">
-              <app-repair-plan-detail-card
-              >
-              </app-repair-plan-detail-card>
-            </div>
-            <div fxFlex="40">
-              <app-repair-history-detail-card
-                [history_data]="($repair_history_data|async)| getDataById: number"
-                [single_dog_card]="true">
-              </app-repair-history-detail-card>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <!--<div fxFlex="90" class="detail-card-area"-->
+       <!--style="overflow-y: auto;padding-bottom: 15px;"-->
+       <!--*ngIf="display_detail_method==='card'"-->
+       <!--[ngStyle]="{'height':height+'px'}">-->
+    <!--<div fxLayout="column">-->
+      <!--<div *ngFor="let detail of repair_plan_and_history_data|filterSelectedDateFromMappedList:-->
+      <!--showed_date_on_content:not_showed_dates_on_content:only_show_one_date_on_content"-->
+      <!--&gt;-->
+        <!--<div class="date-column default-primary-color">-->
+          <!--<h2 class="text-primary-color">{{detail.date.format("YYYY年MM月DD日")}}</h2>-->
+        <!--</div>-->
+        <!--<div fxLayout="column" fxLayoutGap="25px" class="detail-card-single-date">-->
+          <!--&lt;!&ndash;天窗修计划与天窗修历史可以对应的上的部分&ndash;&gt;-->
+          <!--<div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="25px"-->
+               <!--*ngFor="let plan_date of detail.repair_plan_data_index_on_this_day">-->
+            <!--<div fxFlex="40">-->
+              <!--<app-repair-plan-detail-card-->
+                <!--[plan_data]="($repair_plan_data|async)| getDataById: plan_date.plan_number_id">-->
+              <!--</app-repair-plan-detail-card>-->
+            <!--</div>-->
+            <!--<div fxFlex="40">-->
+              <!--<app-repair-history-detail-card-->
+                <!--[history_data]="($repair_history_data| async)|getDataById: plan_date.history_number_id"-->
+                <!--[detail_data]="($repair_detail_data|async)|getDataById: plan_date.history_number_id">-->
+              <!--</app-repair-history-detail-card>-->
+            <!--</div>-->
+          <!--</div>-->
+          <!--&lt;!&ndash;只有天窗修历史，没有天窗修计划的部门（即站控和垂停等）&ndash;&gt;-->
+          <!--<div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="25px"-->
+               <!--*ngFor="let number of detail.repair_history_data_not_map_in_plan">-->
+            <!--<div fxFlex="40">-->
+              <!--<app-repair-plan-detail-card-->
+              <!--&gt;-->
+              <!--</app-repair-plan-detail-card>-->
+            <!--</div>-->
+            <!--<div fxFlex="40">-->
+              <!--<app-repair-history-detail-card-->
+                <!--[history_data]="($repair_history_data|async)| getDataById: number"-->
+                <!--[single_dog_card]="true">-->
+              <!--</app-repair-history-detail-card>-->
+            <!--</div>-->
+          <!--</div>-->
+        <!--</div>-->
+      <!--</div>-->
+    <!--</div>-->
+  <!--</div>-->
   <!--表格布局-->
   <div fxFlex="90"
        style="overflow-y: auto"
-       *ngIf="display_detail_method==='table'"
   >
     <app-repair-plan-detail-table>
     </app-repair-plan-detail-table>

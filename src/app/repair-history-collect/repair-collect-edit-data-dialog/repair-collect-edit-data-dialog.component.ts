@@ -3,7 +3,7 @@ import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../store';
 import {
-  RepairHistoryCollectStoreActions, RepairHistoryDataStoreInterface, RepairHistoryDetailDataStoreInterface,
+  RepairHistoryCollectStoreActions, RepairHistoryDataStoreInterface, RepairDetailDataStoreInterface,
   RepairPlanDataStoreInterface
 } from '../repair-history-collect.store';
 import * as moment from 'moment';
@@ -98,12 +98,17 @@ export class RepairCollectEditDataDialogComponent implements OnInit, OnDestroy {
     this.sub1 = this.form.valueChanges.throttleTime(10).subscribe(() => {
       this.change_the_whole_form_value_by_logic();
     });
+    this.sub2 = this.calc_time_plan_group.valueChanges.distinctUntilChanged().subscribe(value => {
+      if (!value) {
+        this.longing_plan_group.setValue(0);
+      }
+    });
   }
 
   get_current_state(): {
-    plan: RepairPlanDataStoreInterface, detail: RepairHistoryDetailDataStoreInterface, history: RepairHistoryDataStoreInterface
+    plan: RepairPlanDataStoreInterface, detail: RepairDetailDataStoreInterface, history: RepairHistoryDataStoreInterface
   } {
-    let plan: RepairPlanDataStoreInterface, history: RepairHistoryDataStoreInterface, detail: RepairHistoryDetailDataStoreInterface;
+    let plan: RepairPlanDataStoreInterface, history: RepairHistoryDataStoreInterface, detail: RepairDetailDataStoreInterface;
     this.store.select(state => state.repair_history_collect).take(1).subscribe(value => {
       if (value.content_settings.witch_number_is_in_edit.method === 'plan') {
         plan = get_obj_from_array_by_id(
@@ -147,14 +152,19 @@ export class RepairCollectEditDataDialogComponent implements OnInit, OnDestroy {
       this.area_plan_group.setValue(plan.area);
       this.number_plan_group.setValue(plan.number);
       this.calc_time_plan_group.setValue(plan.calc_time);
-      this.start_time_plan_group.setValue(
-        convert_h_mm_time_format_to_hh_mm_time_format(plan.start_time)
-      );
-      this.end_time_plan_group.setValue(
-        convert_h_mm_time_format_to_hh_mm_time_format(plan.end_time)
-      );
-      this.used_number_plan_group.setValue(plan.used_number);
+      if (plan.calc_time) {
+        this.start_time_plan_group.setValue(
+          convert_h_mm_time_format_to_hh_mm_time_format(plan.start_time)
+        );
+        this.end_time_plan_group.setValue(
+          convert_h_mm_time_format_to_hh_mm_time_format(plan.end_time)
+        );
+      } else {
+        this.start_time_plan_group.setValue('');
+        this.end_time_plan_group.setValue('');
+      }
       this.longing_plan_group.setValue(plan.longing);
+      this.used_number_plan_group.setValue(plan.used_number);
     }
     if (history) {
       this.inner_id_history_group.setValue(history.inner_id);
@@ -162,15 +172,20 @@ export class RepairCollectEditDataDialogComponent implements OnInit, OnDestroy {
     }
     if (detail) {
       this.actual_start_time_detail_group.setValue(
-        convert_h_mm_time_format_to_hh_mm_time_format(detail.actual_start_time.format('HH:mm'))
+        detail.actual_start_time ?
+          convert_h_mm_time_format_to_hh_mm_time_format(detail.actual_start_time.format('HH:mm'))
+          : ''
       );
       this.actual_end_time_detail_group.setValue(
-        convert_h_mm_time_format_to_hh_mm_time_format(detail.actual_end_time.format('HH:mm'))
+        detail.actual_end_time ?
+          convert_h_mm_time_format_to_hh_mm_time_format(detail.actual_end_time.format('HH:mm'))
+          : ''
       );
       this.actual_start_number_detail_group.setValue(detail.actual_start_number);
       this.actual_end_number_detail_group.setValue(detail.actual_end_number);
       this.actual_watcher_detail_group.setValue(detail.actual_watcher);
       this.actual_longing_detail_group.setValue(detail.longing);
+      this.is_canceled_none_group.setValue(detail.canceled);
     } else {
       this.actual_longing_detail_group.setValue(0);
       this.actual_start_time_detail_group.setValue('');
@@ -178,6 +193,7 @@ export class RepairCollectEditDataDialogComponent implements OnInit, OnDestroy {
       this.actual_start_number_detail_group.setValue('');
       this.actual_end_number_detail_group.setValue('');
       this.actual_watcher_detail_group.setValue('');
+      this.is_canceled_none_group.setValue(false);
     }
     if (history && (!plan)) {
       this.date_group.setValue(history.date.toDate());
@@ -188,7 +204,6 @@ export class RepairCollectEditDataDialogComponent implements OnInit, OnDestroy {
       this.number_plan_group.setValue(converted_value);
       this.longing_plan_group.setValue(0);
     }
-    this.is_canceled_none_group.setValue(false);
     return false;
   }
 
@@ -220,8 +235,8 @@ export class RepairCollectEditDataDialogComponent implements OnInit, OnDestroy {
           detail_start_number: this.actual_start_number_detail_group.value,
           detail_end_number: this.actual_end_number_detail_group.value,
           detail_watcher: this.actual_watcher_detail_group.value,
-          detail_start_time: this.start_time_plan_group.value,
-          detail_end_time: this.end_time_plan_group.value,
+          detail_start_time: this.actual_start_time_detail_group.value,
+          detail_end_time: this.actual_end_time_detail_group.value,
           detail_longing: this.actual_longing_detail_group.value,
           plan_end_time: this.end_time_plan_group.value,
           plan_start_time: this.start_time_plan_group.value,
@@ -245,7 +260,6 @@ export class RepairCollectEditDataDialogComponent implements OnInit, OnDestroy {
       this.actual_end_number_detail_group.setValue('');
       this.actual_start_number_detail_group.setValue('');
       this.actual_end_time_detail_group.setValue('');
-      this.actual_longing_detail_group.setValue(0);
       this.actual_start_number_detail_group.disable();
       this.actual_end_number_detail_group.disable();
       this.actual_longing_detail_group.disable();
@@ -267,7 +281,6 @@ export class RepairCollectEditDataDialogComponent implements OnInit, OnDestroy {
       this.end_time_plan_group.disable();
       this.end_time_plan_group.setValue('');
       this.longing_plan_group.enable();
-      this.longing_plan_group.setValue(0);
     } else {
       this.start_time_plan_group.enable();
       this.end_time_plan_group.enable();
@@ -307,6 +320,25 @@ export class RepairCollectEditDataDialogComponent implements OnInit, OnDestroy {
 
   public close_without_save() {
     this.store.dispatch(new RepairHistoryCollectStoreActions.EditDataById({dialog_type: '', dialog_id: null}));
+  }
+
+  public check_form_is_valid(): boolean {
+    if (!this.calc_time_plan_group.value) {
+      if (this.longing_plan_group.value === 0) {
+        // 如果没有确切时间，则必须手动输入持续时长，且时长不应为0
+        return false;
+      }
+    } else {
+      if (this.start_time_plan_group.value === '' || this.end_time_plan_group.value === '') {
+        return false;
+      }
+    }
+    if (!this.is_canceled_none_group.value) {
+      if (this.actual_start_time_detail_group.value === '' || this.actual_end_time_detail_group.value === '') {
+        return false;
+      }
+    }
+    return true;
   }
 
 }

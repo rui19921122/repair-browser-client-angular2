@@ -1,6 +1,6 @@
 import {RepairHistoryApiInterface, RepairHistoryDataApiInterface, RepairPlanDataApiInterface} from '../api';
 import {
-  RepairHistoryDetailDataStoreInterface, RepairHistoryDataStoreInterface,
+  RepairDetailDataStoreInterface, RepairHistoryDataStoreInterface,
   RepairPlanDataStoreInterface
 } from './repair-history-collect.store';
 import {generate_a_id, string_is_a_valid_time_range} from '../util_func';
@@ -68,14 +68,16 @@ export function convert_history_data_server_to_store(origin: RepairHistoryDataAp
 
 export function check_a_plan_history_detail_group_data_is_valid(plan: RepairPlanDataStoreInterface,
                                                                 history: RepairHistoryDataStoreInterface,
-                                                                detail: RepairHistoryDetailDataStoreInterface): {
+                                                                detail: RepairDetailDataStoreInterface): {
   valid: boolean, error: string
 } {
+  if (plan) {
+  } else {
+    return {valid: false, error: '无计划数据'};
+  }
   if (detail) {
     if (history.use_paper) {
       if (detail.longing >= 0) {
-        console.log(history.use_paper);
-        console.log(detail.longing);
         return {valid: false, error: `${plan.date.format('YYYY-MM-DD')}编号${plan.number}的天窗修计划未在系统中有电子数据，如果被取消请将时长设置为0，如果没有取消，请如实填写`};
       }
     }

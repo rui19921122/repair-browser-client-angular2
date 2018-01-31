@@ -6,7 +6,7 @@ import {
   RepairHistoryCollectStoreActions as actions,
   RepairPlanDataStoreInterface,
   RepairHistoryDataStoreInterface,
-  RepairPlanAndHistoryDataMappedInterface, RepairHistoryCollectStoreActions, RepairHistoryDetailDataStoreInterface
+  RepairPlanAndHistoryDataMappedInterface, RepairHistoryCollectStoreActions, RepairDetailDataStoreInterface
 } from '../repair-history-collect.store';
 import {RepairPlanDataApiInterface} from '../../api';
 import {Observable} from 'rxjs/Observable';
@@ -36,7 +36,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   public repair_plan_and_history_data_sub: Subscription;
   public $repair_plan_data: Observable<RepairPlanDataStoreInterface[]>;
   public $repair_history_data: Observable<RepairHistoryDataStoreInterface[]>;
-  public $repair_detail_data: Observable<RepairHistoryDetailDataStoreInterface[]>;
+  public $repair_detail_data: Observable<RepairDetailDataStoreInterface[]>;
   public $repair_detail_data_list: Observable<Set<string>>;
   public repair_detail_data_list: Set<string>;
   public repair_detail_data_list_sub: Subscription;

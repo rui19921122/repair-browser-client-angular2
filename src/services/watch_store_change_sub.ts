@@ -8,7 +8,7 @@ import {
   RepairHistoryDataStoreInterface,
   RepairPlanAndHistoryDataMappedInterface,
   RepairPlanDataStoreInterface,
-  RepairHistoryCollectStoreActions as actions
+  RepairHistoryCollectStoreActions as actions, RepairDetailDataStoreInterface
 } from '../app/repair-history-collect/repair-history-collect.store';
 import {Observable} from 'rxjs/Observable';
 
@@ -17,12 +17,14 @@ import {Subscription} from 'rxjs/Subscription';
 import {Subject} from 'rxjs/Subject';
 import {SnackBarConfig} from '../providers/snack-bar-provider';
 import * as moment from 'moment';
+import {check_a_plan_history_detail_group_data_is_valid} from '../app/repair-history-collect/repair_collect_data_utils';
+import {get_obj_from_array_by_id} from '../app/util_func';
 
 @Injectable()
 export class WatchStoreChangeService {
   public refresh_the_plan_and_history_map: Subject<null | moment.Moment> = new Subject();
   public store_observable: Observable<AppState>;
-  public plan_and_history_observable: Observable<[RepairPlanDataStoreInterface[], RepairHistoryDataStoreInterface[]]>;
+  public plan_and_history_observable: Observable<any>;
   public watcher_the_plan_and_history_map: Subscription;
 
   constructor(public http: HttpClient,
@@ -31,13 +33,16 @@ export class WatchStoreChangeService {
               public snack_bar_config: SnackBarConfig) {
     this.store_observable = this.store.select(state => state);
     this.plan_and_history_observable = this.store.select(state => state.repair_history_collect.repair_plan_data)
-      .combineLatest(this.store.select(state => state.repair_history_collect.repair_history_data));
-    this.refresh_the_plan_and_history_map.withLatestFrom(this.store_observable).subscribe((value) => {
+      .combineLatest(this.store.select(state => state.repair_history_collect.repair_history_data))
+      .combineLatest(this.store.select(state => state.repair_history_collect.repair_detail_data))
+    ;
+    this.refresh_the_plan_and_history_map.distinctUntilChanged().withLatestFrom(this.store_observable).subscribe((value) => {
       const calc_value = this.map_plan_and_history_data(
         value[1].repair_history_collect.repair_plan_data,
         value[1].repair_history_collect.repair_history_data,
+        value[1].repair_history_collect.repair_detail_data,
         value[1].repair_history_collect,
-        value[0]
+        value[0],
       );
       this.store.dispatch(new actions.MapPlanAndHistoryNumber({
         data: calc_value
@@ -66,8 +71,9 @@ export class WatchStoreChangeService {
 
   private map_plan_and_history_data(plan_data: RepairPlanDataStoreInterface[],
                                     history_data: RepairHistoryDataStoreInterface[],
+                                    detail_data: RepairDetailDataStoreInterface[],
                                     prev_state?: RepairHistoryCollectStoreInterface,
-                                    start_time?: moment.Moment): RepairPlanAndHistoryDataMappedInterface[] {
+                                    start_time?: moment.Moment,): RepairPlanAndHistoryDataMappedInterface[] {
     // 首先找出人为标注的部分
     // 先找出所有日期
     const date_list: RepairPlanAndHistoryDataMappedInterface[] = [];
@@ -77,7 +83,11 @@ export class WatchStoreChangeService {
       const push_data = {
         plan_number_id: single_plan_data.id,
         is_manual: false,
-        history_number_id: null
+        history_number_id: null,
+        valid: {
+          valid: false,
+          error: 'no data'
+        }
       };
       if (date_index_in_date_list < 0) {
         date_list.push({
@@ -85,7 +95,7 @@ export class WatchStoreChangeService {
           repair_history_data_not_map_in_plan: [],
           repair_plan_data_index_on_this_day: [
             push_data
-          ]
+          ],
         });
       } else {
         date_list[date_index_in_date_list].repair_plan_data_index_on_this_day.push(
@@ -112,6 +122,11 @@ export class WatchStoreChangeService {
           const plan_data_detail = plan_data.find(value => value.id === plan_data_collection.plan_number_id);
           if (plan_data_detail.used_number === single_history_data.used_number) {
             plan_data_collection.history_number_id = single_history_data.id;
+            plan_data_collection.valid = check_a_plan_history_detail_group_data_is_valid(
+              get_obj_from_array_by_id(plan_data, plan_data_collection.plan_number_id).obj,
+              get_obj_from_array_by_id(history_data, single_history_data.id).obj,
+              get_obj_from_array_by_id(detail_data, single_history_data.id).obj
+            );
             found = true;
             break;
           }
@@ -125,6 +140,7 @@ export class WatchStoreChangeService {
       console.log(`本次更新操作耗时${moment().diff(start_time, 'millisecond')}毫秒`);
     }
     date_list.sort((a, b) => a.date.isBefore(b.date) ? -1 : 1);
+    console.log(date_list);
     return date_list;
 
   }

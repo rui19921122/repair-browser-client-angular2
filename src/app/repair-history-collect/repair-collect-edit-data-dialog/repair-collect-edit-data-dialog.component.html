@@ -42,6 +42,7 @@
           <textarea matInput
                     placeholder="区域"
                     style="resize: none"
+                    spellcheck="false"
                     [formControl]="area_plan_group"
           >
           </textarea>
@@ -84,8 +85,16 @@
       </div>
       <div fxLayoutGap="30px" fxLayout="row" fxLayoutAlign="start center">
         <mat-form-field>
+          <input matInput [formControl]="actual_start_number_detail_group" placeholder="开始号码" type="text">
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput [formControl]="actual_end_number_detail_group" placeholder="结束号码" type="text">
+        </mat-form-field>
+        <mat-form-field>
           <input matInput [formControl]="actual_watcher_detail_group" placeholder="把关人" type="text">
         </mat-form-field>
+      </div>
+      <div fxLayoutGap="30px" fxLayout="row" fxLayoutAlign="start center">
         <mat-form-field style="width: 400px">
           <input matInput [formControl]="note_detail_group" placeholder="备注">
         </mat-form-field>
@@ -94,7 +103,7 @@
   </div>
 </mat-dialog-content>
 <mat-dialog-actions>
-  <button mat-button (click)="submit()" [disabled]="!this.form.valid">提交</button>
+  <button mat-button (click)="submit()" [disabled]="!check_form_is_valid()">提交</button>
   <button mat-button (click)="reset()">重置</button>
   <button mat-button (click)="close_without_save()">取消</button>
 </mat-dialog-actions>

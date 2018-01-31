@@ -3,7 +3,7 @@ import {Store} from '@ngrx/store';
 import {AppState} from '../../store';
 import {Subscription} from 'rxjs/Subscription';
 import {
-  RepairHistoryDetailDataStoreInterface,
+  RepairDetailDataStoreInterface,
   RepairHistoryDataStoreInterface,
   RepairPlanAndHistoryDataMappedInterface,
   RepairPlanDataStoreInterface
@@ -30,8 +30,8 @@ export class RepairPlanEditTableTdComponent implements OnInit, OnDestroy {
   public $history_data: Observable<RepairHistoryDataStoreInterface[]>;
   public history_data: RepairHistoryDataStoreInterface[];
   public history_data_sub: Subscription;
-  public $detail_data: Observable<RepairHistoryDetailDataStoreInterface[]>;
-  public detail_data: RepairHistoryDetailDataStoreInterface[];
+  public $detail_data: Observable<RepairDetailDataStoreInterface[]>;
+  public detail_data: RepairDetailDataStoreInterface[];
   public detail_data_sub: Subscription;
   public $show_one_day_or_all: Observable<boolean>;
   public show_one_day_or_all: boolean;

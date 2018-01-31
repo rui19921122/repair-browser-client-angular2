@@ -21,14 +21,20 @@
 </ng-container>
 <!--天窗修实际部分-->
 <ng-container *ngIf="detail_data;else no_detail_data_template">
-  <td>{{detail_data.actual_start_time|moment:"HH:mm"}}-{{detail_data.actual_end_time|moment:"HH:mm"}}</td>
-  <td [ngClass]="{'accent-td':plan_data&& plan_data.longing&&plan_data.longing>detail_data.longing}">
-    {{detail_data.longing}}
-  </td>
-  <td>{{detail_data.actual_start_number}}</td>
-  <td>{{detail_data.actual_end_number}}</td>
-  <td>{{detail_data.actual_watcher}}</td>
-  <td>{{detail_data.note}}</td>
+  <ng-container *ngIf="detail_data.canceled">
+    <td *ngIf="detail_data.canceled" colspan="5">被取消</td>
+    <td>{{detail_data.note}}</td>
+  </ng-container>
+  <ng-container *ngIf="!detail_data.canceled">
+    <td>{{detail_data.actual_start_time|moment:"HH:mm"}}-{{detail_data.actual_end_time|moment:"HH:mm"}}</td>
+    <td [ngClass]="{'accent-td':plan_data&& plan_data.longing&&plan_data.longing>detail_data.longing}">
+      {{detail_data.longing}}
+    </td>
+    <td>{{detail_data.actual_start_number}}</td>
+    <td>{{detail_data.actual_end_number}}</td>
+    <td>{{detail_data.actual_watcher}}</td>
+    <td>{{detail_data.note}}</td>
+  </ng-container>
 </ng-container>
 <td><!--操作-->
   <mat-button-toggle-group>
@@ -42,7 +48,7 @@
       <button mat-button
               (click)="repair_history_detail_service.get_history_detail_by_id(history_data)"
               *ngIf="!loading"
-              [disabled]="history_data?.use_paper"
+              [disabled]="history_data?.use_paper||history_data?.inner_id.length===0"
       >
         自动
       </button>
@@ -51,7 +57,12 @@
       >
         ing..
       </button>
-      <button mat-button (click)="edit()">
+      <button mat-button (click)="edit()" *ngIf="valid">
+        编辑
+      </button>
+      <button mat-button (click)="edit()" *ngIf="!valid" style="color: red"
+              [matTooltip]="error"
+      >
         编辑
       </button>
       <button mat-button (click)="open_detail_page(history_data.inner_id)">

@@ -4,7 +4,7 @@ import {
   RepairHistoryDetailApiService
 } from '../../../services/repair-collect-get-history-detail-data-from-server.service';
 import {
-  RepairHistoryDetailDataStoreInterface, RepairHistoryDataStoreInterface,
+  RepairDetailDataStoreInterface, RepairHistoryDataStoreInterface,
   RepairPlanDataStoreInterface,
   RepairHistoryCollectStoreActions
 } from '../repair-history-collect.store';
@@ -27,9 +27,11 @@ export class RepairPlanDetailTableTdComponent implements OnInit, OnDestroy {
   @Input() plan_data_id: string;
   @Input() history_data_id: string;
   @Input() loading = false;
+  @Input() valid: boolean;
+  @Input() error: string;
   public plan_data: RepairPlanDataStoreInterface = null;
   public history_data: RepairHistoryDataStoreInterface = null;
-  public detail_data: RepairHistoryDetailDataStoreInterface = null;
+  public detail_data: RepairDetailDataStoreInterface = null;
   public sub1: Subscription;
   public sub2: Subscription;
   public sub3: Subscription;
@@ -83,6 +85,7 @@ export class RepairPlanDetailTableTdComponent implements OnInit, OnDestroy {
     if (this.sub3) {
       this.sub3.unsubscribe();
     }
+    console.log('i am');
   }
 
   public open_detail_page(inner_id: string) {

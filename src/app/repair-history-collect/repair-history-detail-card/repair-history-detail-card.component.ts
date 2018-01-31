@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, Component, Input, NgZone, OnDestroy, OnInit} from '@angular/core';
 import {
   RepairHistoryCollectStoreActions as actions,
-  RepairHistoryDetailDataStoreInterface,
+  RepairDetailDataStoreInterface,
   RepairHistoryDataStoreInterface
 } from '../repair-history-collect.store';
 import {RepairHistoryDetailApiService} from '../../../services/repair-collect-get-history-detail-data-from-server.service';
@@ -18,7 +18,7 @@ import {Store} from '@ngrx/store';
 export class RepairHistoryDetailCardComponent implements OnInit, OnDestroy {
   @Input() history_data: RepairHistoryDataStoreInterface;
   @Input() single_dog_card = false; // 是否为单身卡
-  @Input() detail_data: RepairHistoryDetailDataStoreInterface;
+  @Input() detail_data: RepairDetailDataStoreInterface;
   public history_data_list: Observable<string[]>;
 
   constructor(public service: RepairHistoryDetailApiService,
