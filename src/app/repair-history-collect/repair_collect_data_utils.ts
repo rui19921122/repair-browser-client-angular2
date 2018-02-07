@@ -76,11 +76,6 @@ export function check_a_plan_history_detail_group_data_is_valid(plan: RepairPlan
     return {valid: false, error: '无计划数据'};
   }
   if (detail) {
-    if (history.use_paper) {
-      if (detail.longing >= 0) {
-        return {valid: false, error: `${plan.date.format('YYYY-MM-DD')}编号${plan.number}的天窗修计划未在系统中有电子数据，如果被取消请将时长设置为0，如果没有取消，请如实填写`};
-      }
-    }
   } else {
     return {valid: false, error: `${plan.date.format('YYYY-MM-DD')}编号${plan.number}的天窗修计划缺少详细数据`};
   }

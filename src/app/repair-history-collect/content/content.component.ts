@@ -52,6 +52,10 @@ export class ContentComponent implements OnInit, OnDestroy {
   public $only_show_one_date_on_content: Observable<boolean>;
   public only_show_one_date_on_content: boolean;
   public only_show_one_date_on_content_sub: Subscription;
+  public $only_show_wrong_data: Observable<boolean>;
+  public only_show_wrong_data: boolean;
+  public only_show_wrong_data_un: Subscription;
+
   @Input('height') height: number;
 
   constructor(public store: Store<AppState>,
@@ -73,6 +77,11 @@ export class ContentComponent implements OnInit, OnDestroy {
     this.$display_detail_method = this.store.select(state => state.repair_history_collect.content_settings.show_detail_method);
     this.display_detail_method_sub = this.$display_detail_method.subscribe(value => {
       this.display_detail_method = value;
+      this.cd.markForCheck();
+    });
+    this.$only_show_wrong_data = this.store.select(state => state.repair_history_collect.content_settings.only_show_invalid_data);
+    this.only_show_wrong_data_un = this.$only_show_wrong_data.subscribe(value => {
+      this.only_show_wrong_data = value;
       this.cd.markForCheck();
     });
     this.$repair_detail_data_list = this.repair_history_detail_service.loading_subject;
@@ -126,6 +135,13 @@ export class ContentComponent implements OnInit, OnDestroy {
     if (this.only_show_one_date_on_content_sub) {
       this.only_show_one_date_on_content_sub.unsubscribe();
     }
+    if (this.only_show_wrong_data_un) {
+      this.only_show_wrong_data_un.unsubscribe();
+    }
+  }
+
+  public switch_invalid_data_display() {
+    this.store.dispatch(new RepairHistoryCollectStoreActions.SwitchInvalidDataDisplayMethod());
   }
 
   public calc_lost_repair_plan_data() {
@@ -203,5 +219,19 @@ export class ContentComponent implements OnInit, OnDestroy {
 
   post_data_to_server() {
     this.post_data_to_server_service.post_data_to_services();
+  }
+
+  public has_wrong_format(): boolean {
+    for (const i of this.repair_plan_and_history_data) {
+      for (const j of i.repair_plan_data_index_on_this_day) {
+        if (!j.valid.valid) {
+          return true;
+        }
+      }
+      if (i.repair_history_data_not_map_in_plan.length >= 0) {
+        return true;
+      }
+    }
+    return false;
   }
 }

@@ -13,6 +13,27 @@ import {
   string_is_a_valid_time_range, add_or_change_obj_from_array_by_id, get_obj_from_array_by_id, delete_obj_from_array_by_id
 } from '../util_func';
 
+export interface RepairDataInterface {
+  type: '局' | '站' | '垂';
+  plan_time: string;
+  apply_place: string;
+  area: string;
+  number: string;
+  used_number?: string;
+  date: moment.Moment;
+  id: string;
+  plan_calc_time: boolean;
+  plan_start_time?: moment.Moment;
+  plan_end_time?: moment.Moment;
+  plan_longing: number; // 持续  update_time: moment.Moment;
+  actual_start_time: moment.Moment | null;
+  actual_end_time: moment.Moment | null;
+  actual_start_number: string | null;
+  actual_end_number: string | null;
+  actual_watcher: string; // 把关人
+  actual_longing: number;
+  canceled: boolean;
+}
 
 export interface RepairPlanDataStoreInterface {
   type: '局' | '站' | '垂';
@@ -41,6 +62,7 @@ export interface RepairPlanAndHistoryDataMappedInterface {
 }
 
 export interface RepairHistoryCollectStoreInterface {
+  repair_data: RepairDataInterface[];
   start_date?: moment.Moment;
   end_date?: moment.Moment;
   repair_plan_data: RepairPlanDataStoreInterface[];
@@ -302,6 +324,17 @@ export class ChangeShowDetailMethod implements Action {
   }
 }
 
+export const SWITCH_INVALID_DATA_DISPLAY_METHOD = '[repair-collect]SWITCH_INVALID_DATA_DISPLAY_METHOD';
+
+// 切换是否仅显示有错误的计划
+export class SwitchInvalidDataDisplayMethod implements Action {
+  readonly type = SWITCH_INVALID_DATA_DISPLAY_METHOD;
+
+  constructor() {
+
+  }
+}
+
 export interface EditWholeDetailInterface {
   date: string;
   number: string;
@@ -349,6 +382,7 @@ export type RepairHistoryCollectStoreActionType =
 // 复制此行到ActionType中,更新天窗修实际查询的pending action type
   | UpdateSingleRepairHistoryDetailData  // 复制此行到ActionType中
   | UpdateRepairPlanData   // 复制此行到ActionType中
+  | SwitchInvalidDataDisplayMethod // 复制此行到ActionType中,切换是否仅显示有错误的计划 action type
   | UpdateWhichDateShouldDisplayOnContent // 复制此行到ActionType中,更新哪些日期可以在页面中显示 action type
   | SwitchOnlyShowOneDateOnContent // 复制此行到ActionType中,切换是否仅在内容框中显示一个日期 action type
   | MapPlanAndHistoryNumber   // 复制此行到ActionType中
@@ -381,11 +415,13 @@ export const RepairHistoryCollectStoreActions = {
   SwitchShowAllDatesOnDatesHeader,  // 复制此行到导出的Action中
   AddOrRemoveDateToOpenedDatePanel,  // 复制此行到导出的Action中
   EditWholeDetail,  // 复制此行到导出的Action中,以一个完成的记录更新 actions
+  SwitchInvalidDataDisplayMethod,  // 复制此行到导出的Action中,切换是否仅显示有错误的计划 actions
   ChangeShowDetailMethod,  // 复制此行到导出的Action中,变更展示数据的方式 actions
 };
 
 
 const default_state: RepairHistoryCollectStoreInterface = {
+  repair_data: [],
   repair_plan_and_history_data_mapped: [],
   start_date: null,
   end_date: null,
@@ -414,6 +450,13 @@ const default_state: RepairHistoryCollectStoreInterface = {
 export function reducer(state: RepairHistoryCollectStoreInterface = default_state,
                         action: RepairHistoryCollectStoreActionType): RepairHistoryCollectStoreInterface {
   switch (action.type) {
+    case SWITCH_INVALID_DATA_DISPLAY_METHOD:
+      return {
+        ...state, content_settings: {
+          ...state.content_settings,
+          only_show_invalid_data: !state.content_settings.only_show_invalid_data
+        }
+      }; // 复制此两行到reducer中,切换是否仅显示有错误的计划 reducer
     case EDIT_WHOLE_DETAIL:
       let history = Array.from(state.repair_history_data);
       let history_index = -1;

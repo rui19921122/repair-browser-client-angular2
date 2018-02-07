@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../store';
 import {Subscription} from 'rxjs/Subscription';
@@ -21,6 +21,7 @@ import {RepairHistoryDetailApiService} from '../../../services/repair-collect-ge
   encapsulation: ViewEncapsulation.Native
 })
 export class RepairPlanEditTableTdComponent implements OnInit, OnDestroy {
+  @Input() only_show_invalid_data: boolean;
   public $mapped: Observable<RepairPlanAndHistoryDataMappedInterface[]>;
   public mapped: RepairPlanAndHistoryDataMappedInterface[];
   public mapped_sub: Subscription;
@@ -98,6 +99,22 @@ export class RepairPlanEditTableTdComponent implements OnInit, OnDestroy {
     return this.loading_data.has(id);
   }
 
+  public filter_wrong_data(): { history: string; plan: string }[] {
+    const list: { history: string; plan: string }[] = [];
+    for (const i of this.mapped) {
+      for (const j of i.repair_history_data_not_map_in_plan) {
+        list.push({history: j, plan: null});
+      }
+      for (const j of i.repair_plan_data_index_on_this_day) {
+        if (j.valid.valid) {
+        } else {
+          list.push({plan: j.plan_number_id, history: j.history_number_id});
+        }
+      }
+    }
+    return list;
+  }
+
   ngOnDestroy() {
     if (this.loading_data_sub) {
       this.loading_data_sub.unsubscribe();
@@ -123,7 +140,6 @@ export class RepairPlanEditTableTdComponent implements OnInit, OnDestroy {
     if (this.showed_date_sub) {
       this.showed_date_sub.unsubscribe();
     }
-
   }
 
 }
