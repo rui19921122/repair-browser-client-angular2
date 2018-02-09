@@ -4,6 +4,7 @@ import {AppState} from '../app/store';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
 import {
+  RepairDataInterface,
   RepairHistoryCollectStoreActions,
   RepairHistoryCollectStoreInterface
 } from '../app/repair-history-collect/repair-history-collect.store';
@@ -15,7 +16,7 @@ import {
 import {SnackBarConfig} from '../providers/snack-bar-provider';
 import {MatSnackBar} from '@angular/material';
 import {
-  convert_history_data_server_to_store,
+  convert_history_data_server_to_store, convert_history_server_data_to_store_data,
   convert_plan_data_server_to_store
 } from '../app/repair-history-collect/repair_collect_data_utils';
 import {mock_history_data, mock_repair_data} from '../app/repair-history-collect/mock-data';
@@ -28,11 +29,14 @@ export class RepairCollectGetBaseDataFromServerService {
   private get_repair_history_data_sub_func = {
     next: (v: RepairHistoryApiInterface) => {
       const json: RepairHistoryApiInterface = v;
-      const data_list = [];
-      for (const single_data of json.data) {
-        data_list.push(convert_history_data_server_to_store(single_data));
+      const data_list: RepairDataInterface[] = [];
+      for (const origin of json.data) {
+        const converted_data = convert_history_server_data_to_store_data(origin, data_list);
+        if (converted_data) {
+          data_list.push(converted_data);
+        }
       }
-      this.store.dispatch(new RepairHistoryCollectStoreActions.ReplaceAllHistoryData(
+      this.store.dispatch(new RepairHistoryCollectStoreActions.UpdateWholeRepairData(
         {
           data: data_list
         }));
@@ -41,11 +45,11 @@ export class RepairCollectGetBaseDataFromServerService {
   };
   private get_repair_plan_data_sub_func = {
     next: (json: RepairPlanApiInterface) => {
-      const data_list = [];
+      const data_list:RepairDataInterface[] = [];
       for (const single_data of json.data) {
         data_list.push(convert_plan_data_server_to_store(single_data));
       }
-      this.store.dispatch(new RepairHistoryCollectStoreActions.ReplaceAllRepairData(
+      this.store.dispatch(new RepairHistoryCollectStoreActions.UpdateWholeRepairData(
         {
           data: data_list
         }));
