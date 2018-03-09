@@ -22,15 +22,16 @@ import {pipeDef} from '@angular/core/src/view';
 import {PipeResolver} from '@angular/compiler';
 import {FilterSelectedDateFromMappedListPipe} from '../../../pipes/filter-selected-date-from-mapped-list.pipe';
 import {get_obj_from_array_by_id} from '../../util_func';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 
 
 @Component({
-  selector: 'app-content',
-  templateUrl: './content.component.html',
-  styleUrls: ['./content.component.css'],
+  selector: 'app-repair-history-collect-content',
+  templateUrl: './repair-history-collect-content.component.html',
+  styleUrls: ['./repair-history-collect-content.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ContentComponent implements OnInit, OnDestroy {
+export class RepairHistoryCollectContentComponent implements OnInit, OnDestroy {
   public $repair_plan_and_history_data: Observable<RepairPlanAndHistoryDataMappedInterface[]>;
   public repair_plan_and_history_data: RepairPlanAndHistoryDataMappedInterface[] = [];
   public repair_plan_and_history_data_sub: Subscription;
@@ -39,22 +40,17 @@ export class ContentComponent implements OnInit, OnDestroy {
   public $repair_detail_data: Observable<RepairDetailDataStoreInterface[]>;
   public $repair_detail_data_list: Observable<Set<string>>;
   public repair_detail_data_list: Set<string>;
-  public repair_detail_data_list_sub: Subscription;
   public $display_detail_method: Observable<string>;
   public display_detail_method: string;
-  public display_detail_method_sub: Subscription;
   public $not_showed_dates_on_content: Observable<moment.Moment[]>;
   public not_showed_dates_on_content: moment.Moment[];
-  public not_showed_dates_on_content_sub: Subscription;
   public $showed_date_on_content: Observable<moment.Moment>;
   public showed_date_on_content: moment.Moment;
-  public showed_date_on_content_sub: Subscription;
   public $only_show_one_date_on_content: Observable<boolean>;
   public only_show_one_date_on_content: boolean;
-  public only_show_one_date_on_content_sub: Subscription;
   public $only_show_wrong_data: Observable<boolean>;
   public only_show_wrong_data: boolean;
-  public only_show_wrong_data_un: Subscription;
+  public component_destroy = new BehaviorSubject(false);
 
   @Input('height') height: number;
 
@@ -75,17 +71,17 @@ export class ContentComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.$display_detail_method = this.store.select(state => state.repair_history_collect.content_settings.show_detail_method);
-    this.display_detail_method_sub = this.$display_detail_method.subscribe(value => {
+    this.$display_detail_method.takeUntil(this.component_destroy).subscribe(value => {
       this.display_detail_method = value;
       this.cd.markForCheck();
     });
     this.$only_show_wrong_data = this.store.select(state => state.repair_history_collect.content_settings.only_show_invalid_data);
-    this.only_show_wrong_data_un = this.$only_show_wrong_data.subscribe(value => {
+    this.$only_show_wrong_data.takeUntil(this.component_destroy).subscribe(value => {
       this.only_show_wrong_data = value;
       this.cd.markForCheck();
     });
     this.$repair_detail_data_list = this.repair_history_detail_service.loading_subject;
-    this.repair_detail_data_list_sub = this.$repair_detail_data_list.subscribe(value => {
+    this.$repair_detail_data_list.takeUntil(this.component_destroy).subscribe(value => {
       this.repair_detail_data_list = value;
       this.cd.markForCheck();
     });
@@ -98,46 +94,27 @@ export class ContentComponent implements OnInit, OnDestroy {
     this.$repair_history_data = this.store.select(state => state.repair_history_collect.repair_history_data);
     this.$repair_plan_data = this.store.select(state => state.repair_history_collect.repair_plan_data);
     this.$not_showed_dates_on_content = this.store.select(state => state.repair_history_collect.content_settings.not_displayed_data);
-    this.not_showed_dates_on_content_sub = this.$not_showed_dates_on_content.subscribe(value => {
+    this.$not_showed_dates_on_content.takeUntil(this.component_destroy).subscribe(value => {
       this.not_showed_dates_on_content = value;
       this.cd.markForCheck();
     });
     this.$showed_date_on_content = this.store.select(state => state.repair_history_collect.content_settings.displayed_data);
-    this.showed_date_on_content_sub = this.$showed_date_on_content.subscribe(value => {
+    this.$showed_date_on_content.takeUntil(this.component_destroy).subscribe(value => {
       this.showed_date_on_content = value;
       this.cd.markForCheck();
     });
     this.$repair_detail_data = this.store.select(state => state.repair_history_collect.repair_detail_data);
     this.$only_show_one_date_on_content = this.store.select(
       state => state.repair_history_collect.content_settings.only_show_on_day_on_content);
-    this.only_show_one_date_on_content_sub = this.$only_show_one_date_on_content.subscribe(value => {
+    this.$only_show_one_date_on_content.takeUntil(this.component_destroy).subscribe(value => {
       this.only_show_one_date_on_content = value;
       this.cd.markForCheck();
     });
   }
 
   ngOnDestroy() {
-    if (this.repair_detail_data_list_sub) {
-      this.repair_detail_data_list_sub.unsubscribe();
-    }
-    if (this.display_detail_method_sub) {
-      this.display_detail_method_sub.unsubscribe();
-    }
-    if (this.repair_plan_and_history_data_sub) {
-      this.repair_plan_and_history_data_sub.unsubscribe();
-    }
-    if (this.showed_date_on_content_sub) {
-      this.showed_date_on_content_sub.unsubscribe();
-    }
-    if (this.not_showed_dates_on_content_sub) {
-      this.not_showed_dates_on_content_sub.unsubscribe();
-    }
-    if (this.only_show_one_date_on_content_sub) {
-      this.only_show_one_date_on_content_sub.unsubscribe();
-    }
-    if (this.only_show_wrong_data_un) {
-      this.only_show_wrong_data_un.unsubscribe();
-    }
+    this.component_destroy.next(true);
+    this.component_destroy.complete();
   }
 
   public switch_invalid_data_display() {

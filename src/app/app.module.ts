@@ -28,16 +28,8 @@ import {RepairHistoryCollectComponent} from './repair-history-collect/repair-his
 import {HashLocationStrategy, LocationStrategy} from '@angular/common';
 import {StoreRouterConnectingModule} from '@ngrx/router-store';
 
-import {DateCardListComponent} from './repair-history-collect/repair-collect-date-card-list/date-card-list.component';
-import {DateCardComponent} from './repair-history-collect/repair-collect-date-card/date-card.component';
-import {ContentComponent} from './repair-history-collect/content/content.component';
-import {RepairPlanDetailCardComponent} from './repair-history-collect/repair-plan-detail-card/repair-plan-detail-card.component';
-import {RepairHistoryDetailCardComponent} from './repair-history-collect/repair-history-detail-card/repair-history-detail-card.component';
-import {MomentPipe} from '../pipes/moment.pipe';
 import {InTheMomentListPipe} from '../pipes/in-the-moment-list.pipe';
 import {GetDataByIdPipe} from '../pipes/get-data-by-id.pipe';
-import {SplitLongSentenceWithColon} from '../pipes/split-long-sentence-with-colon.pipe';
-import {MapMomentToRepairPlanAndHistoryDataPipe} from '../pipes/map-moment-to-repair-plan-and-history-data.pipe';
 import {RepairHistoryDetailApiService} from '../services/repair-collect-get-history-detail-data-from-server.service';
 import {GetChildObjectInObjectByIdPipe} from '../pipes/get-child-object-in-object-by-id.pipe';
 import {RepairDataPostToServerService} from '../services/repair-collect-post-data-to-server.service';
@@ -52,12 +44,11 @@ import {WatchStoreChangeService} from '../services/watch_store_change_sub';
 import {SnackBarConfig, SnackBarConfigValue} from '../providers/snack-bar-provider';
 import {RepairCollectGetBaseDataFromServerService} from '../services/repair-collect-get-base-data-from-server.service';
 import {CountingMappedPlanDataWithoutHistoryPipe} from '../pipes/counting-mapped-plan-data-without-history.pipe';
-import {RepairPlanEditTableTdComponent} from './repair-history-collect/repair-plan-detail-table/repair-plan-detail-table.component';
-import {RepairPlanDetailTableTdComponent} from './repair-history-collect/repair-plan-detail-table-td/repair-plan-detail-table-td.component';
 import {FilterSelectedDateFromMappedListPipe} from '../pipes/filter-selected-date-from-mapped-list.pipe';
 import {RepairHistoryMonthQueryComponent} from './repair-history-month-query/repair-history-month-query.component';
 import {UseMockData} from '../providers/use-mock-data-provider';
-import {RepairCollectEditDataDialogComponent} from './repair-history-collect/repair-collect-edit-data-dialog/repair-collect-edit-data-dialog.component';
+import {NavbarButtonComponent} from './components/navbar-button/navbar-button.component';
+import {RepairHistoryCollectModule} from './repair-history-collect/repair-history-collect.module';
 
 
 export const routes: Routes = [
@@ -65,7 +56,6 @@ export const routes: Routes = [
   {path: 'home', component: HomeComponent, pathMatch: 'full'},
   {path: 'repair-history-collect', component: RepairHistoryCollectComponent, pathMatch: 'full'},
   {path: 'repair-history-query', component: ReapirHistoryQueryComponent, pathMatch: 'full'},
-  {path: 'test', component: RepairHistoryDetailCardComponent, pathMatch: 'full'},
   {path: 'repair-history-month-query', component: RepairHistoryMonthQueryComponent, pathMatch: 'full'},
 ];
 
@@ -76,17 +66,8 @@ export const routes: Routes = [
     LoginFormComponent,
     HeaderComponent,
     HomeComponent,
-    RepairHistoryCollectComponent,
-    DateCardListComponent,
-    DateCardComponent,
-    ContentComponent,
-    RepairPlanDetailCardComponent,
-    RepairHistoryDetailCardComponent,
-    MomentPipe,
     InTheMomentListPipe,
     GetDataByIdPipe,
-    MapMomentToRepairPlanAndHistoryDataPipe,
-    SplitLongSentenceWithColon,
     GetChildObjectInObjectByIdPipe,
     PrettyprintPipe,
     DiffTimeWithStringFormatPipe,
@@ -95,11 +76,8 @@ export const routes: Routes = [
     DetailTableListComponent,
     RenderShowedTimeWithGivenMomentPipe,
     CountingMappedPlanDataWithoutHistoryPipe,
-    RepairPlanEditTableTdComponent,
-    RepairPlanDetailTableTdComponent,
-    FilterSelectedDateFromMappedListPipe,
     RepairHistoryMonthQueryComponent,
-    RepairCollectEditDataDialogComponent,
+    NavbarButtonComponent,
   ],
   imports: [
     NgxDatatableModule,
@@ -132,7 +110,8 @@ export const routes: Routes = [
     StoreDevtoolsModule.instrument({maxAge: 100}),
     MatChipsModule,
     MatButtonToggleModule,
-    HttpClientModule
+    HttpClientModule,
+    RepairHistoryCollectModule
   ],
   providers: [
     UserService,
@@ -150,7 +129,6 @@ export const routes: Routes = [
   bootstrap: [AppComponent],
   entryComponents: [
     LoginFormComponent,
-    RepairCollectEditDataDialogComponent,
   ]
 })
 export class AppModule {

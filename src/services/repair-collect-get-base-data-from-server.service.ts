@@ -45,10 +45,10 @@ export class RepairCollectGetBaseDataFromServerService {
   };
   private get_repair_plan_data_sub_func = {
     next: (json: RepairPlanApiInterface) => {
-      const data_list:RepairDataInterface[] = [];
-      for (const single_data of json.data) {
-        data_list.push(convert_plan_data_server_to_store(single_data));
-      }
+      const data_list: RepairDataInterface[] = [];
+      // for (const single_data of json.data) {
+      //   data_list.push(convert_plan_data_server_to_store(single_data));
+      // }
       this.store.dispatch(new RepairHistoryCollectStoreActions.UpdateWholeRepairData(
         {
           data: data_list
@@ -147,10 +147,10 @@ export class RepairCollectGetBaseDataFromServerService {
           type: number_and_type.type,
           content: []
         };
-        repair_plan_data.push(convert_plan_data_server_to_store(repair_plan_like_data));
+        // repair_plan_data.push(convert_plan_data_server_to_store(repair_plan_like_data));
       }
     }
-    this.store.dispatch(new RepairHistoryCollectStoreActions.ReplaceAllRepairData({data: repair_plan_data}));
+    // this.store.dispatch(new RepairHistoryCollectStoreActions.ReplaceAllRepairData({data: repair_plan_data}));
   }
 
 

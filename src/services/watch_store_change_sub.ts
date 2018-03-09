@@ -44,9 +44,9 @@ export class WatchStoreChangeService {
         value[1].repair_history_collect,
         value[0],
       );
-      this.store.dispatch(new actions.MapPlanAndHistoryNumber({
-        data: calc_value
-      }));
+      // this.store.dispatch(new actions.MapPlanAndHistoryNumber({
+      //   data: calc_value
+      // }));
     });
   }
 
@@ -73,7 +73,7 @@ export class WatchStoreChangeService {
                                     history_data: RepairHistoryDataStoreInterface[],
                                     detail_data: RepairDetailDataStoreInterface[],
                                     prev_state?: RepairHistoryCollectStoreInterface,
-                                    start_time?: moment.Moment,): RepairPlanAndHistoryDataMappedInterface[] {
+                                    start_time?: moment.Moment): RepairPlanAndHistoryDataMappedInterface[] {
     // 首先找出人为标注的部分
     // 先找出所有日期
     const date_list: RepairPlanAndHistoryDataMappedInterface[] = [];

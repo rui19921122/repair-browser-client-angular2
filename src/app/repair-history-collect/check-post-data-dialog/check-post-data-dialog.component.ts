@@ -1,5 +1,6 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 
+// 展现当前将要提交的数据的错误信息
 @Component({
   selector: 'app-check-post-data-dialog',
   templateUrl: './check-post-data-dialog.component.html',
@@ -8,7 +9,8 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 })
 export class CheckPostDataDialogComponent implements OnInit {
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit() {
   }
