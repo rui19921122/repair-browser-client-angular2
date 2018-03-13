@@ -18,12 +18,12 @@ import {RepairCollectGetBaseDataFromServerService} from '../../../services/repai
   /* tslint:disable */
   selector: '[app-repair-plan-detail-table-tr]',
   /* tslint:enable */
-  templateUrl: './repair-plan-detail-table-td.component.html',
-  styleUrls: ['./repair-plan-detail-table-td.component.css'],
+  templateUrl: './table-td.component.html',
+  styleUrls: ['./table-td.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None
 })
-export class RepairPlanDetailTableTdComponent implements OnInit, OnDestroy {
+export class TableTdComponent implements OnInit, OnDestroy {
   @Input() plan_data_id: string;
   @Input() history_data_id: string;
   @Input() loading = false;

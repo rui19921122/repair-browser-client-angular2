@@ -14,13 +14,13 @@ import * as moment from 'moment';
 import {RepairHistoryDetailApiService} from '../../../services/repair-collect-get-history-detail-data-from-server.service';
 
 @Component({
-  selector: 'app-repair-plan-detail-table',
-  templateUrl: './repair-plan-detail-table.component.html',
-  styleUrls: ['./repair-plan-detail-table.component.css'],
+  selector: 'app-table',
+  templateUrl: './table.component.html',
+  styleUrls: ['./table.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.Native
 })
-export class RepairPlanEditTableTdComponent implements OnInit, OnDestroy {
+export class EditTableTdComponent implements OnInit, OnDestroy {
   @Input() only_show_invalid_data: boolean;
   public $mapped: Observable<RepairPlanAndHistoryDataMappedInterface[]>;
   public mapped: RepairPlanAndHistoryDataMappedInterface[];

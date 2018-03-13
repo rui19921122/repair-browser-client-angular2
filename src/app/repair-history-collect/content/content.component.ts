@@ -26,12 +26,12 @@ import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 
 
 @Component({
-  selector: 'app-repair-history-collect-content',
-  templateUrl: './repair-history-collect-content.component.html',
-  styleUrls: ['./repair-history-collect-content.component.css'],
+  selector: 'app-content',
+  templateUrl: './content.component.html',
+  styleUrls: ['./content.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RepairHistoryCollectContentComponent implements OnInit, OnDestroy {
+export class ContentComponent implements OnInit, OnDestroy {
   public $repair_plan_and_history_data: Observable<RepairPlanAndHistoryDataMappedInterface[]>;
   public repair_plan_and_history_data: RepairPlanAndHistoryDataMappedInterface[] = [];
   public repair_plan_and_history_data_sub: Subscription;

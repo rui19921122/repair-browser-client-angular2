@@ -14,11 +14,11 @@ import {Observable} from 'rxjs/Observable';
 import {ActionSequence} from 'selenium-webdriver';
 
 @Component({
-  selector: 'app-repair-collect-edit-data-dialog',
-  templateUrl: './repair-collect-edit-data-dialog.component.html',
-  styleUrls: ['./repair-collect-edit-data-dialog.component.css']
+  selector: 'app-edit-data-dialog',
+  templateUrl: './edit-data-dialog.component.html',
+  styleUrls: ['./edit-data-dialog.component.css']
 })
-export class RepairCollectEditDataDialogComponent implements OnInit, OnDestroy {
+export class EditDataDialogComponent implements OnInit, OnDestroy {
   public form: FormGroup;
   public date_group: FormControl;
   public type_plan_group: FormControl;

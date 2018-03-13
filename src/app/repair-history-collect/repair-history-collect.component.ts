@@ -21,7 +21,8 @@ import {HttpClient} from '@angular/common/http';
 import {WatchStoreChangeService} from '../../services/watch_store_change_sub';
 import {RepairCollectGetBaseDataFromServerService} from '../../services/repair-collect-get-base-data-from-server.service';
 import {SnackBarConfig} from '../../providers/snack-bar-provider';
-import {RepairCollectEditDataDialogComponent} from './repair-collect-edit-data-dialog/repair-collect-edit-data-dialog.component';
+import {EditDataDialogComponent} from './edit-data-dialog/edit-data-dialog.component';
+import {UserStoreInterface} from '../../services/user.service';
 
 class ButtonType {
   text: string;
@@ -37,11 +38,11 @@ class ButtonType {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RepairHistoryCollectComponent implements OnInit, AfterViewInit, OnDestroy {
+  // 此层组件作为路由的一级控件，负责
   public page_height: number;
   public month_button_choices: [ButtonType, ButtonType];
   public length_button_choices: [ButtonType, ButtonType, ButtonType];
   public DatePickerForm: FormGroup;
-  public is_login: Observable<boolean>;
   public $state: Observable<RepairHistoryCollectStoreInterface>;
   public search_for_plan_data = new Subject();
   public search_for_history_data = new Subject();
@@ -112,7 +113,7 @@ export class RepairHistoryCollectComponent implements OnInit, AfterViewInit, OnD
         this.dialog.closeAll();
       } else {
         setTimeout(
-          () => this.dialog.open(RepairCollectEditDataDialogComponent, {disableClose: true})
+          () => this.dialog.open(EditDataDialogComponent, {disableClose: true})
         );
       }
     });

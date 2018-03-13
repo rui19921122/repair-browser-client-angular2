@@ -134,3 +134,16 @@ export function add_or_change_obj_from_array_by_id<T extends { id: string }>(ori
     };
   }
 }
+import { OnDestroy } from '@angular/core';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
+
+export function componentDestroyed(component: OnDestroy) {
+  const oldNgOnDestroy = component.ngOnDestroy;
+  const destroyed$ = new ReplaySubject<void>(1);
+  component.ngOnDestroy = () => {
+    oldNgOnDestroy.apply(component);
+    destroyed$.next(undefined);
+    destroyed$.complete();
+  };
+  return destroyed$;
+}
