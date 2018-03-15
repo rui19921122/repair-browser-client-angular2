@@ -3,88 +3,93 @@
 >
   <app-not-login-page></app-not-login-page>
 </div>
-<!--详细界面-->
-<div *ngIf="has_login" class="container">
-  <mat-sidenav-container class="navbar-sidenav"
-                         [ngStyle]="{'height':(page_height)+'px'}"
-                         #container>
-    <app-content
-      style="overflow-y: auto"
-      [height]="page_height"
-    >
-    </app-content>
-    <app-side-bar
-      >
-      <div class="sidenav-content"
-           *ngIf="($state|async)?.side_nav_settings.which_sidenav_open === 'date_list'"
-      >
-        <!--<app-repair-collect-date-card-list-->
-        <!--&gt;-->
-        <!--</app-repair-collect-date-card-list>-->
-      </div>
-      <div class="sidenav-content"
-           fxLayoutAlign="start center"
-           fxLayout="column"
-           *ngIf="($state|async)?.side_nav_settings.which_sidenav_open === 'date_select'"
-      >
-        <form [formGroup]="DatePickerForm">
-          <mat-input-container class="sidenav-panel"
-                               fxLayout
-          >
-            <input matInput [matDatepicker]="start_date"
-                   placeholder="选择开始日期"
-                   [formControl]="DatePickerForm.controls['start_date']"
-            >
-
-            <mat-datepicker-toggle matSuffix [for]="start_date"></mat-datepicker-toggle>
-          </mat-input-container>
-          <mat-datepicker #start_date></mat-datepicker>
-          <mat-input-container class="sidenav-panel"
-                               fxLayout
-          >
-            <input matInput [matDatepicker]="end_date" placeholder="选择结束日期"
-                   [formControl]="DatePickerForm.controls['end_date']"
-            >
-            <mat-datepicker-toggle matSuffix [for]="end_date"></mat-datepicker-toggle>
-          </mat-input-container>
-          <mat-datepicker #end_date
-          >
-          </mat-datepicker>
-        </form>
-        <div class="sidenav-panel">
-          <button mat-raised-button
-                  *ngFor="let choice of length_button_choices"
-                  (click)="change_form_by_button('length',choice.value)"
-          >
-            {{choice.text}}
-          </button>
-        </div>
-        <div class="sidenav-panel">
-          <button mat-raised-button
-                  *ngFor="let choice of month_button_choices"
-                  (click)="change_form_by_button('month',choice.value)"
-          >
-            {{choice.text}}
-          </button>
-        </div>
-        <div class="sidenav-panel">
-          <button mat-raised-button
-                  style="background-color: #1565C0;color: white;width: 90%;"
-                  (click)="search_for_plan_data.next()"
-          >
-            搜索路局天窗修计划
-          </button>
-        </div>
-        <div class="sidenav-panel">
-          <button mat-raised-button
-                  style="background-color: #1565C0;color: white;width: 90%;"
-                  (click)="search_for_history_data.next()"
-          >
-            搜索路局天窗修历史计划
-          </button>
-        </div>
-      </div>
-    </app-side-bar>
-    <!-- primary content -->
-  </mat-sidenav-container>
+<div *ngIf="has_login">
+  <app-side-nav>
+  </app-side-nav>
+  <!--<app-content></app-content>-->
 </div>
+<!--详细界面-->
+<!--<div *ngIf="has_login" class="container">-->
+<!--<mat-sidenav-container class="navbar-sidenav"-->
+<!--[ngStyle]="{'height':(page_height)+'px'}"-->
+<!--#container>-->
+<!--<app-content-->
+<!--style="overflow-y: auto"-->
+<!--[height]="page_height"-->
+<!--&gt;-->
+<!--</app-content>-->
+<!--<app-side-bar-->
+<!--&gt;-->
+<!--<div class="sidenav-content"-->
+<!--*ngIf="which_sidebar_open === 'date_list'"-->
+<!--&gt;-->
+<!--&lt;!&ndash;<app-date-card-list&ndash;&gt;-->
+<!--&lt;!&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;</app-date-card-list>&ndash;&gt;-->
+<!--</div>-->
+<!--<div class="sidenav-content"-->
+<!--fxLayoutAlign="start center"-->
+<!--fxLayout="column"-->
+<!--*ngIf="which_sidebar_open=== 'date_select'"-->
+<!--&gt;-->
+<!--<form [formGroup]="DatePickerForm">-->
+<!--<mat-input-container class="sidenav-panel"-->
+<!--fxLayout-->
+<!--&gt;-->
+<!--<input matInput [matDatepicker]="start_date"-->
+<!--placeholder="选择开始日期"-->
+<!--[formControl]="DatePickerForm.controls['start_date']"-->
+<!--&gt;-->
+
+<!--<mat-datepicker-toggle matSuffix [for]="start_date"></mat-datepicker-toggle>-->
+<!--</mat-input-container>-->
+<!--<mat-datepicker #start_date></mat-datepicker>-->
+<!--<mat-input-container class="sidenav-panel"-->
+<!--fxLayout-->
+<!--&gt;-->
+<!--<input matInput [matDatepicker]="end_date" placeholder="选择结束日期"-->
+<!--[formControl]="DatePickerForm.controls['end_date']"-->
+<!--&gt;-->
+<!--<mat-datepicker-toggle matSuffix [for]="end_date"></mat-datepicker-toggle>-->
+<!--</mat-input-container>-->
+<!--<mat-datepicker #end_date-->
+<!--&gt;-->
+<!--</mat-datepicker>-->
+<!--</form>-->
+<!--<div class="sidenav-panel">-->
+<!--<button mat-raised-button-->
+<!--*ngFor="let choice of length_button_choices"-->
+<!--(click)="change_form_by_button('length',choice.value)"-->
+<!--&gt;-->
+<!--{{choice.text}}-->
+<!--</button>-->
+<!--</div>-->
+<!--<div class="sidenav-panel">-->
+<!--<button mat-raised-button-->
+<!--*ngFor="let choice of month_button_choices"-->
+<!--(click)="change_form_by_button('month',choice.value)"-->
+<!--&gt;-->
+<!--{{choice.text}}-->
+<!--</button>-->
+<!--</div>-->
+<!--<div class="sidenav-panel">-->
+<!--<button mat-raised-button-->
+<!--style="background-color: #1565C0;color: white;width: 90%;"-->
+<!--(click)="search_for_plan_data.next()"-->
+<!--&gt;-->
+<!--搜索路局天窗修计划-->
+<!--</button>-->
+<!--</div>-->
+<!--<div class="sidenav-panel">-->
+<!--<button mat-raised-button-->
+<!--style="background-color: #1565C0;color: white;width: 90%;"-->
+<!--(click)="search_for_history_data.next()"-->
+<!--&gt;-->
+<!--搜索路局天窗修历史计划-->
+<!--</button>-->
+<!--</div>-->
+<!--</div>-->
+<!--</app-side-bar>-->
+<!--&lt;!&ndash; primary content &ndash;&gt;-->
+<!--</mat-sidenav-container>-->
+<!--</div>-->

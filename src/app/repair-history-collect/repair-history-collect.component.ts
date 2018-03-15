@@ -66,12 +66,6 @@ export class RepairHistoryCollectComponent implements OnInit, AfterViewInit, OnD
   }
 
   ngOnDestroy() {
-    if (this.listen_for_keyboard_click_unsubscribe) {
-      this.listen_for_keyboard_click_unsubscribe.unsubscribe();
-    }
-    if (this.edit_dialog_sub) {
-      this.edit_dialog_sub.unsubscribe();
-    }
   }
 
   ngAfterViewInit() {
@@ -146,7 +140,6 @@ export class RepairHistoryCollectComponent implements OnInit, AfterViewInit, OnD
         }
       });
     this.page_height = window.innerHeight - 52;
-    this.is_login = this.store.select(state => state.user.is_login);
     this.length_button_choices = [
       {type: 'length', value: 0, text: '一天内'},
       {type: 'length', value: 7, text: '一周内'},
@@ -159,22 +152,6 @@ export class RepairHistoryCollectComponent implements OnInit, AfterViewInit, OnD
     ];
     let origin_start_date;
     let origin_end_date;
-    this.$state.take(1).subscribe(v => {
-      origin_start_date = v.start_date;
-      origin_end_date = v.end_date;
-    });
-    this.DatePickerForm = this.fb.group({
-      'start_date': [origin_start_date ? origin_start_date.toDate() : null],
-      'end_date': [origin_end_date ? origin_end_date.toDate() : null]
-    });
-    this.DatePickerForm.valueChanges.subscribe(v => {
-      this.store.dispatch(
-        new RepairHistoryCollectStoreActions.ChangeSelectedDate(
-          {
-            start_date: moment(v.start_date),
-            end_date: moment(v.end_date)
-          }));
-    });
   }
 
 

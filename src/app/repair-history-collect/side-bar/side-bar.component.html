@@ -1,9 +1,26 @@
-<mat-sidenav
-  mode="side"
-  class="sidenav-container card"
-  [ngStyle]="{'height':(page_height-25)+'px'}"
-  [opened]="state?.side_nav_settings.which_sidenav_open!==''"
-  [disableClose]="true">
+<div class="left-slider-bar default-primary-color">
+  <!--侧边选项-->
+  <app-side-bar-button tool_tip="打开侧边栏"
+                       icon_name="lock"
+                       (on_click)="open_panel('date_select')"
+  >
+  </app-side-bar-button>
+  <app-side-bar-button tool_tip="打开日期快速选择"
+                       (on_click)="open_panel('date_list')"
+                       icon_name="datepicker"
+  >
+  </app-side-bar-button>
+  <app-side-bar-button tool_tip="仅显示单日期（在网页很卡的时候使用)"
+                       (on_click)="switch_only_show_one_date_on_content()"
+                       icon_name="single"
+  >
+  </app-side-bar-button>
+  <app-side-bar-button tool_tip="打开日期快速选择"
+                       (on_click)="open_panel('date_list')"
+                       icon_name="datepicker"
+  >
+  </app-side-bar-button>
+  <app-side-bar-button tool_tip="批量获取天窗修实绩">
 
-
-</mat-sidenav>
+  </app-side-bar-button>
+</div>

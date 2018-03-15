@@ -47,8 +47,8 @@ import {CountingMappedPlanDataWithoutHistoryPipe} from '../pipes/counting-mapped
 import {FilterSelectedDateFromMappedListPipe} from '../pipes/filter-selected-date-from-mapped-list.pipe';
 import {RepairHistoryMonthQueryComponent} from './repair-history-month-query/repair-history-month-query.component';
 import {UseMockData} from '../providers/use-mock-data-provider';
-import {NavbarButtonComponent} from './components/navbar-button/navbar-button.component';
 import {RepairHistoryCollectModule} from './repair-history-collect/repair-history-collect.module';
+import { SideBarButtonComponent } from './components/side-bar-button/side-bar-button.component';
 
 
 export const routes: Routes = [
@@ -77,7 +77,6 @@ export const routes: Routes = [
     RenderShowedTimeWithGivenMomentPipe,
     CountingMappedPlanDataWithoutHistoryPipe,
     RepairHistoryMonthQueryComponent,
-    NavbarButtonComponent,
   ],
   imports: [
     NgxDatatableModule,

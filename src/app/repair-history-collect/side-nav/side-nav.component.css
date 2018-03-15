@@ -1,0 +1,42 @@
+.sidenav-content {
+  width: 400px;
+  height: 100%;
+}
+
+.sidenav-content::-webkit-scrollbar {
+  width: 0;
+}
+
+.container {
+  width: 100%;
+}
+
+.navbar-sidenav {
+}
+
+.float-button {
+  position: fixed;
+  top: 90%;
+  left: 25px;
+}
+
+.sidenav-button {
+  position: absolute;
+  z-index: 2;
+  right: -50px;
+}
+
+.sidenav-container {
+  margin-top: 15px;
+  margin-bottom: 15px;
+  height: calc(100vh - 50px);
+  width: 400px;
+}
+
+.card {
+  box-shadow: 0 3px 1px -2px rgba(0, 0, 0, .2), 0 2px 2px 0 rgba(0, 0, 0, .14), 0 1px 5px 0 rgba(0, 0, 0, .12);
+}
+
+.container {
+  position: absolute;
+}

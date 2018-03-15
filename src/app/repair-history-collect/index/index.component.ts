@@ -14,12 +14,12 @@ import {componentDestroyed} from '../../util_func';
 export class IndexComponent implements OnInit, OnDestroy {
   @Input() page_height: number;
   public has_login: boolean;
+  public which_sidebar_open: string;
 
   constructor(private store: Store<AppState>,
               public cd: ChangeDetectorRef) {
     store.select(state => state.user.is_login).takeUntil(componentDestroyed(this)).subscribe(value => {
       this.has_login = value;
-      console.log(this.has_login);
       this.cd.markForCheck();
     });
   }

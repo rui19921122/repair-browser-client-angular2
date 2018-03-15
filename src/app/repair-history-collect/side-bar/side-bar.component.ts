@@ -1,5 +1,5 @@
-import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {ApplicationInitStatus, Component, OnInit} from '@angular/core';
+import {RepairHistoryCollectStoreActions} from '../repair-history-collect.store';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../store';
 
@@ -8,27 +8,19 @@ import {AppState} from '../../store';
   templateUrl: './side-bar.component.html',
   styleUrls: ['./side-bar.component.css']
 })
-export class SideBarComponent implements OnInit, OnDestroy {
-  public state;
-  // 组建被销毁时调用，用于销毁所有绑定
-  public component_destroyed = new BehaviorSubject<boolean>(false);
+export class SideBarComponent implements OnInit {
 
-  constructor(private store: Store<AppState>,
-              public cd: ChangeDetectorRef) {
-    store.select(state => state.repair_history_collect).takeUntil(this.component_destroyed)
-      .subscribe(value => {
-        console.log(value);
-        this.state = value;
-        this.cd.markForCheck();
-      });
+  constructor(public store: Store<AppState>) {
   }
 
   ngOnInit() {
   }
 
-  ngOnDestroy() {
-    this.component_destroyed.next(true);
-    this.component_destroyed.complete();
+  public open_panel(string: 'date_list' | 'date_select') {
+    this.store.dispatch(new RepairHistoryCollectStoreActions.SwitchOpenWhichSidebar(string));
   }
 
+  public switch_only_show_one_date_on_content() {
+    this.store.dispatch(new RepairHistoryCollectStoreActions.SwitchOnlyShowOneDateOnContent());
+  }
 }

@@ -1,0 +1,17 @@
+<div>
+  <button class="accent-color side-bar-button"
+          [ngClass]="{
+              'side-bar-button-disabled': disabled
+          }"
+          mat-raised-button
+          mat-icon-button
+          [disabled]="disabled"
+          [matTooltip]="tool_tip"
+          [matTooltipPosition]="'right'"
+          (click)="handle_click()"
+  >
+    <i [ngClass]="['iconfont',convert_icon_name]">
+    </i>
+
+  </button>
+</div>

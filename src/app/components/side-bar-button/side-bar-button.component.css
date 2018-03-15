@@ -1,0 +1,15 @@
+.side-bar-button {
+  left: 45%;
+  width: 60px;
+  height: 60px;
+  margin-top: 20px;
+}
+
+.side-bar-button i {
+  font-size: 160%;
+  color: #FFFFFF;
+}
+
+.left-slider-bar-button-disabled {
+  background-color: rgb(139, 139, 139) !important;
+}

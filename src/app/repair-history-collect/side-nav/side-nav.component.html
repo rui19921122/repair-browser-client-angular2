@@ -1,0 +1,18 @@
+<mat-sidenav-container class="container">
+  <mat-sidenav
+    mode="side"
+    class="sidenav-container card"
+    [opened]="which_sidebar_open!==''"
+    [disableClose]="true">
+    <app-side-nav-datepicker-content
+      *ngIf="which_sidebar_open==='date_select'"
+    >
+    </app-side-nav-datepicker-content>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <div fxLayout="row"
+         fxLayoutAlign="space-between">
+      <app-side-bar></app-side-bar>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

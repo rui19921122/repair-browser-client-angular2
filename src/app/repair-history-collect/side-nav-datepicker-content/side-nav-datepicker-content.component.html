@@ -1,0 +1,60 @@
+<form [formGroup]="date_picker_form"
+>
+  <div
+    fxLayout="column"
+    fxLayoutAlign="space-around center"
+  >
+    <mat-input-container class="sidenav-panel"
+    >
+      <input matInput
+             [matDatepicker]="start_date"
+             placeholder="选择开始日期"
+             [formControl]="date_picker_form.controls['start_date']"
+      >
+      <mat-datepicker-toggle
+        matSuffix
+        [for]="start_date"></mat-datepicker-toggle>
+    </mat-input-container>
+    <mat-datepicker #start_date></mat-datepicker>
+    <mat-input-container class="sidenav-panel"
+    >
+      <input matInput
+             [matDatepicker]="end_date"
+             placeholder="选择结束日期"
+             [formControl]="date_picker_form.controls['end_date']"
+      >
+      <mat-datepicker-toggle
+        matSuffix
+        [for]="end_date"></mat-datepicker-toggle>
+    </mat-input-container>
+    <mat-datepicker #end_date
+    >
+    </mat-datepicker>
+    <div class="sidenav-panel">
+      <button mat-raised-button
+              *ngFor="let choice of length_button_choices"
+              (click)="change_form_by_button('length',choice.value)"
+      >
+        {{choice.text}}
+      </button>
+    </div>
+    <div class="sidenav-panel">
+      <button mat-raised-button
+              *ngFor="let choice of month_button_choices"
+              (click)="change_form_by_button('month',choice.value)"
+      >
+        {{choice.text}}
+      </button>
+    </div>
+    <div class="sidenav-panel">
+      <button mat-raised-button
+              style="background-color: #1565C0;color: white;width: 90%;"
+      >
+        搜索路局天窗修计划
+      </button>
+    </div>
+    <div class="sidenav-panel">
+
+    </div>
+  </div>
+</form>
